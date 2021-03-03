@@ -1,0 +1,5 @@
+hhs <- readr::read_rds("data/hhs.rds")
+hhs_questions <- readr::read_rds("data/hhs_questions.rds")
+hhs_q14 <- readr::read_rds("data/hhs_q14.rds")
+hhs_q44 <- readr::read_rds("data/hhs_q44.rds")
+hhs_q45 <- readr::read_rds("data/hhs_q45.rds")

@@ -1,0 +1,13 @@
+name: hhs_dashboard
+title:
+username:
+account: rare
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1582021
+bundleId: 4242245
+url: https://rare.shinyapps.io/hhs_dashboard/
+when: 1613675997.89141
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: Q46w_summary.csv|Q47w_summary.csv

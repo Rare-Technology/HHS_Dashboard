@@ -1,0 +1,1835 @@
+---
+title: "HOUSEHOLD SURVEY SUMMARY"
+subtitle: "OUTCOMES & IMPACTS \n   &nbsp;  \n `r input$Subnational_Government` \n &nbsp;  \n `r input$Country`"
+author: "FISH FOREVER SCIENCE & TECHNOLOGY TEAM"
+date: "`r Sys.Date()`"
+output:
+  word_document:
+    #reference_docx: word_rmd_style_01.docx
+    toc: yes
+    toc_depth: '4'
+  pdf_document:
+    toc: yes
+    toc_depth: '4'
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: '4'
+mainfont: Arial
+fontsize: 12pt
+always_allow_html: yes
+---
+
+```{r load-packages, include=FALSE, echo=FALSE}
+library(knitr)
+
+```
+
+\newpage
+# SUMMARY
+
+\newpage
+# INTRODUCTION
+
+Fish Forever is a community focused approach that uses a scientifically informed, community-driven process to design areas of managed access with reserves (MA+R) for multi-species coastal fisheries in developing nations. The aim of Fish Forever is to enable the effective management of coastal fisheries in an ecosystem and socio-economic context. That is, the protection of the environment and the sustainable use of natural assets are linked directly to building a resilient local economy underpinning the well-being and long-term prosperity of coastal communities. 
+
+The Fish Forever strategy is based on three program pillars that link crucial activities on community-based management, policy and governance, and blended finance, all connected by a tenet of behavior adoption. The three pillars provide a guiding framework and are used to structure program implementation across fishing communities. Eight key work areas or program elements are used to organize and deliver the program (Fig. 1). Two cross-cutting work areas (Gender Mainstreaming and Adaptive Capacity to Climate Change) inform delivery strategies across the eight core program elements.
+
+![](https://portal.rare.org/wp-content/uploads/2019/05/program-strategy.png)
+
+**Figure 1**: Fish Forever eight program elements
+
+This program strategy supports an approach that is efficient, effective, scalable, and replicable to assess and solve the problems associated with overexploitation of coastal fisheries. The ultimate goals of Fish Forever are to sustain livelihoods, alleviate poverty, secure food supply, and conserve marine biodiversity for the coastal communities that rely on local fisheries. To achieve these socio-economic and ecological goals, the Fish Forever strategy relies on a results-based framework with key indicators of success that are monitored and evaluated throughout the program. The global monitoring and evaluation (M&E) plan measures outcomes and impacts of program activities. Outcome indicators assess the results from achieving program milestones through specific activities. Impact indicators track progress towards the broader Fish Forever goals and the cumulative effects of all program activities. 
+
+Socio-economic outcomes in communities receiving the Fish Forever interventions were measured through results of interviews conducted using a standardized household survey (HHS). Table 1 and Table 2 outline the outcome and impact metrics used to assess and evaluate socioeconomic indicators of program implementation that are measured through the household survey. This report summarizes findings from a first round of household surveys conducted from `r min(as.Date(selectedData()$updatedat))` to `r max(as.Date(selectedData()$updatedat))` in `r length(unique(selectedData()$level4_id))` communities associated with `r length(unique(selectedData()$ma_name))` proposed managed access areas across `r length(unique(selectedData()$level1_name))` provinces in `r unique(selectedData()$country)`.
+
+The results of the household surveys are used to evaluate the socioeconomic outcomes and impacts of the Fish Forever program implementation in these communities. Program activities associated with three of the Fish Forever’s eight program elements (i.e., Community Engagement and Behavior Adoption, Effective Management Bodies, and Managed Access) have been implemented since ....
+
+
+\newpage
+# METHODOLGY
+
+Household surveys were conducted in `r length(unique(selectedData()$level4_id))` communities associated with `r length(unique(selectedData()$ma_name))` managed access areas throughout `r length(unique(selectedData()$level1_name))` provinces in `r unique(selectedData()$country)` (Fig. 2). Socio-economic indicators were assessed across each managed access area where the number of households interviewed ranged from `r min(summary(selectedData()$ma_name))` to `r max(summary(selectedData()$ma_name))`. For each managed access area, surveys were distributed proportionally among Fish Forever's targeted communities based on estimated population numbers of each community.
+
+The household survey has 80 core questions covering several topics that included: basic information, livelihood, fishing and related activities, household assets, financial resilience, social capital, fishery management, enforcement and compliance, food security, attitudes, and expenditures and income. Not all questions are responded by all interviewees because several are specifically tailored to fisher households, and other questions are tailored to communities with managed access areas, fishery management regulations, and/or management bodies. As such, the total number questions answer by interviewees varied across communities and proposed managed access areas.
+
+Households were randomly selected from a complete list of all the households in the community. Ideally household surveys should obtain information from both men and women distributed proportionally in the community. However, this was not possible because in many cases cultural barriers did not allow women to represent or speak on behalf of the household. As such there was a bias in the data towards male respondents, with higher number of male than females interviewed (Table 3). We are exploring strategies to collect more sex balanced data through other methods in the future.
+
+For detailed information about the methodology used in conducting household surveys please refer to the [Global Household Survey Instrument](https://portal.rare.org/wp-content/uploads/2019/07/HHS-Instrument_V2_62719.pdf). 
+
+```{r figure_2, echo=FALSE, fig.height=9, fig.width=9, dpi=300, message=FALSE, warning=FALSE, paged.print=FALSE}
+  #plot_map()
+
+```
+
+**Figure 2**. Location of communities and managed access areas where household surveys were conducted.
+
+
+**Table 3**: Summary of household sample sizes across managed access areas.
+
+```{r table_3, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+
+knitr::kable(table_summary(selectedData(), "Household Survey Summary"), 
+             align = 'r')
+        
+```
+
+\newpage
+# RESULTS AND DISCUSSION
+
+Our results showed that communities associated with managed access areas where Fish Forever’s program activities have been implemented are associated with higher socio-economic indicator values. ...
+
+*Each country team should briefly describe and discuss each result from the tables and figures below based on local and regional knowledge, experience or scientific literature.*
+
+## Outcome Indicators
+
+### I.	Program Element: Financial and Market Inclusion
+
+####   a.	Outcome: Increase provision of financial services
+
+**Table 4**. Proportion of households with active accounts in financial institutions and access to emergency funds (Q25_27).
+
+```{r table_4, echo=FALSE, message=FALSE, warning=FALSE, include= TRUE, error = TRUE}
+
+hhs_Q25 <- selectedData()[, c(
+            "ma_name",
+            "25a_financial_bank",
+            "25b_financial_micro",
+            "25c_financial_ngo",
+            "25d_financial_lender",
+            "25e_financial_insurance",
+            "25f_financial_other"
+         )] %>%
+            filter(ma_name != "")
+         #replace NA with 0s
+         hhs_Q25[is.na(hhs_Q25)] <- 0
+         
+         #Summary of financials accounts
+         hhs_Q25$X25_financial_account <-
+            as.numeric(hhs_Q25$`25a_financial_bank`) +
+            as.numeric(hhs_Q25$`25b_financial_micro`) +
+            as.numeric(hhs_Q25$`25c_financial_ngo`) +
+            as.numeric(hhs_Q25$`25d_financial_lender`) +
+            as.numeric(hhs_Q25$`25e_financial_insurance`) +
+            as.numeric(hhs_Q25$`25f_financial_other`) - 1 #to set at zero
+         
+         #Convert to 0 and 1
+         hhs_Q25$X25_financial_account_0_1 <-
+            ifelse(hhs_Q25$X25_financial_account > 0, 1, 0)
+         
+         #proportion
+         Q25_summary <-
+            proportion(hhs_Q25$X25_financial_account_0_1,
+                       hhs_Q25$ma_name,3,2)[, -3]
+         #rename columns
+         colnames(Q25_summary) <- c("MA name", "N", "Financial accounts (%)")
+         
+         hhs_Q27 <-
+               selectedData()[, c(
+               "ma_name",
+               "27a_emergency_personal",
+               "27b_emergency_family",
+               "27c_emergency_friend",
+               "27d_emergency_entrepreneur",
+               "27e_emergency_savings_club",
+               "27f_emergency_lender",
+               "27g_emergency_commercial_ind",
+               "27h_emergency_commercial_group",
+               "27i_emergency_microfinance_ind",
+               "27j_emergency_microfinance_group",
+               "27k_emergency_ngo_ind",
+               "27l_emergency_ngo_group",
+               "27m_emergency_insurance",
+               "27n_emergency_other"
+            )] %>%
+            filter(ma_name != '')
+         #sum in obe variable
+         hhs_Q27$`27n_emergency_other` <- as.numeric(as.character(hhs_Q27$`27n_emergency_other`))
+         hhs_Q27[is.na(hhs_Q27)] <- 0
+         hhs_Q27$X27_emergency_fund <-
+            hhs_Q27$`27a_emergency_personal` +
+            hhs_Q27$`27b_emergency_family` +
+            hhs_Q27$`27c_emergency_friend` +
+            hhs_Q27$`27d_emergency_entrepreneur` +
+            hhs_Q27$`27e_emergency_savings_club` +
+            hhs_Q27$`27f_emergency_lender` +
+            hhs_Q27$`27g_emergency_commercial_ind` +
+            hhs_Q27$`27h_emergency_commercial_group` +
+            hhs_Q27$`27i_emergency_microfinance_ind` +
+            hhs_Q27$`27j_emergency_microfinance_group` +
+            hhs_Q27$`27k_emergency_ngo_ind` +
+            hhs_Q27$`27l_emergency_ngo_group` +
+            hhs_Q27$`27m_emergency_insurance` +
+            hhs_Q27$`27n_emergency_other`
+         
+         #Convert to 0 and 1
+         hhs_Q27$X27_emergency_fund_0_1 <-
+            ifelse(hhs_Q27$X27_emergency_fund > 0, 1, 0)
+         
+         #proportion
+         Q27_summary <-
+            proportion(hhs_Q27$X27_emergency_fund_0_1, hhs_Q27$ma_name, 3, 2)[, -3]
+         #col rename
+         colnames(Q27_summary) <- c("MA name", "N", "Emergency Funds (%)")
+         
+  knitr::kable(left_join(Q25_summary, Q27_summary[,-2], by = "MA name"), 
+               align = 'r', full_width = F)
+  
+```
+
+### II.	Program Element: Effective Management Bodies
+
+#### a.	Outcome: Community members are confident that their fisheries will improve and/or stabilize
+
+**Table 5a**. Proportions of community members who think that fish catch has improved or stabilized in the past 2 years (Q19).
+
+```{r table_5a, echo= FALSE, message=FALSE, include= TRUE, error = TRUE}
+
+       hhs_Q19 <- selectedData()[,c("ma_name","19_current_fish_catch")] %>%
+            filter(`19_current_fish_catch` != "") %>%
+               droplevels()
+         #proportion
+         Q19_summary <- proportion(hhs_Q19$`19_current_fish_catch`, 
+                                   hhs_Q19$ma_name, 
+                                   3, type = "5")
+         Q19 <- Q19_summary %>% filter (`MA name` != "Mean ± SE")
+         
+         #Combine categories in 3 choices
+         Q19$Declined <- as.numeric(Q19$Declined.a.lot) + as.numeric(Q19$Declined.slightly)
+         Q19$Improved <- as.numeric(Q19$Improved.slightly) + as.numeric(Q19$Improved.heavily)
+         
+         #Format table for Rmarkdown report
+         Q19_summary <-
+            rbind(Q19[, c("MA name",
+                          "N",
+                          "Declined",
+                          "Stayed.the.same",
+                          "Improved")],
+                  `Mean ± SE` = c('',
+                     sum(as.numeric(Q19$N)),
+                     mean_sem(Q19$Declined, 1),
+                     mean_sem(Q19$Stayed.the.same, 1),
+                     mean_sem(Q19$Improved, 1)
+                  ))
+         colnames(Q19_summary) <-
+            c("MA name",
+              "N",
+              "Declined (%)",
+              "Stayed the same (%)",
+              "Improved (%)")
+        
+ knitr::kable(Q19_summary, align = 'r') 
+```
+
+**Table 5b**. Proportions of community members who are confident that their fisheries will improve or stabilize in the next five years (Q22).
+
+```{r table_5b, echo= FALSE, message=FALSE, include= TRUE, error = TRUE}
+
+  hhs_Q22 <- selectedData()[,c("ma_name", "22_catch_5yrs")] %>%
+                filter(`22_catch_5yrs` != '') %>%
+                  droplevels()
+         #proportion
+         Q22_summary <-
+            proportion(hhs_Q22$`22_catch_5yrs`, hhs_Q22$ma_name, 3, "5")
+         #remove summary row
+         Q22_summary_bind <- Q22_summary %>%
+                           filter(`MA name` != "Mean ± SE") %>%
+                                 droplevels()
+         #Combine categories
+         Q22_summary_bind$Declines <-
+            as.numeric(Q22_summary_bind$Declines.a.lot) +as.numeric(Q22_summary_bind$Declines.slightly)
+         Q22_summary_bind$Improves <-
+            as.numeric(Q22_summary_bind$Improves.slightly) +as.numeric(Q22_summary_bind$Improves.heavily)
+         
+         #Format table for Rmarkdown report
+         Q22_summary <-
+            rbind(Q22_summary_bind[, c("MA name",
+                                       "N",
+                                       "Declines",
+                                       "Stays.the.same",
+                                       "Improves")],
+                  `Mean ± SE` = c('',
+                     sum(as.numeric(Q22_summary_bind$N)),
+                     mean_sem(Q22_summary_bind$Declines, 1),
+                     mean_sem(Q22_summary_bind$Stays.the.same, 1),
+                     mean_sem(Q22_summary_bind$Improves),
+                     1
+                  ))
+         #rename colums
+         colnames(Q22_summary) <-
+            c("MA name",
+              "N",
+              "Decline (%)",
+              "Stay the same (%)",
+              "Improve (%)")
+
+  knitr::kable(Q22_summary, align = 'r') #
+```
+
+**Table 5c**. Proportion of participants who are confident they will continue to benefit from community management of the fishery over the next five years (Q52).
+
+```{r table_5c, echo= FALSE, message=FALSE, include= TRUE, error = TRUE}
+  
+   hhs_Q52 <- selectedData()[,c("ma_name", "52_ma_benefit_5yrs")] %>%
+                  filter(`52_ma_benefit_5yrs` != "" &
+                          `52_ma_benefit_5yrs` != "No management") %>%
+                              droplevels
+          
+         Q52_summary <- proportion(hhs_Q52$`52_ma_benefit_5yrs`,
+                                    hhs_Q52$ma_name,
+                                    3, type = 3)
+
+  knitr::kable(Q52_summary, align = 'r') 
+```
+
+#### b.	Outcome: Community is confident in the ability of the management body to manage the fishery
+
+**Table 6**. Proportion of community members who feel that the fisheries management body makes decisions that benefit the fishery and the community (Q46).
+ 
+```{r table_6, echo= FALSE, message=FALSE, include= TRUE, error = TRUE}
+
+      hhs_Q46 <- selectedData()[,c("ma_name","46_represent_interests")] %>%
+                        filter (`46_represent_interests` != "") %>%
+                           filter (`46_represent_interests` != "na") %>%
+                                droplevels()
+                           #
+        Q46_summary <- proportion (hhs_Q46$`46_represent_interests`,
+                                    hhs_Q46$ma_name,
+                                    3, 
+                                    type = length(unique(hhs_Q46$`46_represent_interests`)))
+  #table        
+  knitr::kable(Q46_summary, align = 'r')
+```
+
+#### c.	Outcome: Community members participate in management body
+
+**Table 7**. Proportion of fishers who attend management body meetings regularly (Q44).
+
+```{r table_7, echo= FALSE, message=FALSE, include= TRUE, error = TRUE}
+  
+    hhs_Q44 <- selectedData_Q44()[,c("ma_name", "44_meeting_attendance")] %>%
+                        filter(`44_meeting_attendance` != '') %>%
+                           filter (`44_meeting_attendance` != "na") %>%
+                              droplevels()
+         
+         Q44_summary <- proportion(hhs_Q44[[2]],
+                                   hhs_Q44[[1]],
+                                   3, length(unique(hhs_Q44[[2]])))
+       
+ knitr::kable(Q44_summary, align = 'r')
+
+```
+
+
+#### d.	Outcome: Decision making process is transparent
+
+**Table 8**.  Proportion of community members aware of fishing restrictions in Managed Access (MA) areas or reserves (R). N is the number of responses per MA and fishing restrictions. Blanks indicates that the area does not have this type of regulation (Q34_38).
+
+```{r table_8, echo=FALSE, warning=FALSE, include=TRUE, message=FALSE, error = TRUE}
+
+        #Q34
+         hhs_Q34 <- selectedData()[,c("ma_name", "34_gear_restrictions")] %>%
+            filter(`34_gear_restrictions` != "" &
+                      `34_gear_restrictions` != -1)
+         #proportion
+         Q34_summary <-
+            proportion(hhs_Q34$`34_gear_restrictions`, 
+                       hhs_Q34$ma_name, 
+                       3, 2)[, -3]
+         #rename
+         colnames(Q34_summary) <-
+            c("MA name", "N", "Gear Restrictions in MA")
+         
+         
+         ### Q36 Proportion of community members familar with fish size restricions
+         hhs_Q36 <- selectedData()[,c("ma_name", "36_fish_size_restriction")] %>%
+            filter(`36_fish_size_restriction` != "" &
+                      `36_fish_size_restriction` != -1)
+         #proportion
+         Q36_summary <-
+            proportion(hhs_Q36$`36_fish_size_restriction`,
+                       hhs_Q36$ma_name,
+                       3,2)[, -3]
+         #rename
+         colnames(Q36_summary) <-
+            c("MA name", "N", "Fish Size Restrictions in MA")
+         
+         
+         ### Q37 Proportion of community members familar with specific minimum fish size restricions in MA
+         hhs_Q37min <- selectedData()[,c("ma_name", "37_ability_min_size")] %>%
+                              rbind(c(NA,0), c(NA,1), c(NA,-1))
+         hhs_Q37min$`37_ability_min_size`[hhs_Q37min$`37_ability_min_size` == -1] <- 0
+         hhs_Q37min$`37_ability_min_size`[hhs_Q37min$`37_ability_min_size` == ''] <- 0
+         
+         #proportion
+         Q37_summary_min <-
+            proportion(hhs_Q37min$`37_ability_min_size`,
+                       hhs_Q37min$ma_name,
+                       3,2)[, -3]
+         #rename
+         colnames(Q37_summary_min) <-
+            c("MA name", "N", "Min fish size restrictions")
+         
+         
+         ### Q37 Proportion of community members familar with specific max fish size restricions in MA
+         hhs_Q37max <- selectedData()[,c("ma_name", "37_ability_max_size")] %>%
+                              rbind(c(NA,0), c(NA,1), c(NA,-1))
+         hhs_Q37max$`37_ability_max_size`[hhs_Q37max$`37_ability_max_size` == -1] <- 0
+         hhs_Q37max$`37_ability_max_size`[hhs_Q37max$`37_ability_max_size` == ''] <- 0
+      
+         #proportion
+         Q37_summary_max <-
+            proportion(hhs_Q37max$`37_ability_max_size`,
+                       hhs_Q37max$ma_name,
+                       3,2)[, -3]
+         #rename
+         colnames(Q37_summary_max) <-
+            c("MA name", "N", "Max fish size restrictions")
+         
+         
+         ### Q38 Proportion of commmunity members that are aware that fishing is not allowed in the reserve
+         hhs_Q38 <- selectedData()[,c("ma_name", "38_reserve_fishing_allowed")] %>%
+            filter(`38_reserve_fishing_allowed` != "" &
+                      `38_reserve_fishing_allowed` != -1)
+         #proportion
+         Q38_summary <-
+            proportion(hhs_Q38$`38_reserve_fishing_allowed`,
+                       hhs_Q38$ma_name,
+                       3,2)[, -4]
+         
+         #rename
+         colnames(Q38_summary) <-
+            c("MA name", "N", "Fishing not allowed in reserves")
+         
+         ### Combine Q34-Q38 in one table for R markdown report
+         Q34_38_summary <-
+            plyr::join_all(
+               list(
+                  Q34_summary,
+                  Q36_summary,
+                  Q37_summary_min,
+                  Q37_summary_max,
+                  Q38_summary
+               ),
+               by = 'MA name'
+            )
+
+  knitr::kable(Q34_38_summary, align = 'r')
+```
+
+#### e.	Outcome: Decision making process is effective
+
+**Table 9**.  Proportion of community members who feel that current fishing regulations are effective at managing the fishery and at ensuring catches remain stable (Q61a).
+
+```{r table_9, echo= FALSE, message=FALSE, include= TRUE, error = TRUE}
+
+       hhs_Q61a <- selectedData()[,c("ma_name", "61a_current_regulations")] %>%
+                           filter(`61a_current_regulations` %in% c(1:5)) %>%
+                              rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
+        
+         Q61a_summary <- proportion (hhs_Q61a$`61a_current_regulations`,
+                                      hhs_Q61a$ma_name,
+                                      3,5)
+         
+         Q61a_summary_grouped <- Q61a_summary %>%
+                              filter (`MA name` != "Mean ± SE")
+         #grouped
+         Q61a_summary_grouped$Disagree <-  as.numeric(Q61a_summary_grouped$X1) +
+                                           as.numeric(Q61a_summary_grouped$X2)
+         
+         Q61a_summary_grouped$`Neither agree nor disagree` <-  
+            as.numeric(Q61a_summary_grouped$X3) 
+         
+         Q61a_summary_grouped$Agree <-  as.numeric(Q61a_summary_grouped$X4) +
+                                        as.numeric(Q61a_summary_grouped$X5)
+         
+         Q61a_summary <-
+            rbind(
+               Q61a_summary_grouped[,c("MA name", "N", 
+                                       "Disagree",
+                                       "Neither agree nor disagree",
+                                       "Agree")],
+                c(NA,
+                  sum(as.numeric(Q61a_summary_grouped$N)),
+                  mean_sem(Q61a_summary_grouped$Disagree, 1),
+                  mean_sem(Q61a_summary_grouped$`Neither agree nor disagree`, 1),
+                  mean_sem(Q61a_summary_grouped$Agree, 1)
+               )
+            )
+         
+         colnames(Q61a_summary) <-
+            c("MA name",
+              "N",
+              "Disagree (%)",
+              "Neither agree nor disagree (%)",
+              "Agree (%)")
+         
+ knitr::kable(Q61a_summary, align = 'r')
+```
+
+### III.	Program Element: Managed Access
+
+#### a.	Outcome: Access rights distributed fairly
+
+**Table 10**. Proportion of fishers who believe that access rights have been distributed fairly (Q61f).
+
+```{r table_10, echo= FALSE, message=FALSE, include= TRUE, error = TRUE}
+
+    hhs_Q61f <- selectedData()[,c("ma_name", "61f_rights_distribution_fair")] %>%
+                           filter(`61f_rights_distribution_fair` %in% c(1:5)) %>%
+                              rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
+          
+         Q61f_summary <- proportion ( hhs_Q61f$`61f_rights_distribution_fair`,
+                                      hhs_Q61f$ma_name,
+                                      3,5)
+         
+         colnames(Q61f_summary) <-
+            c( "MA name",
+               "N",
+               "Strongly disagree",
+               "Disagree",
+               "Neither agree nor disagree",
+               "Agree",
+               "Strongly agree"
+            )
+
+ knitr::kable(Q61f_summary, align = 'r')
+
+```
+
+#### b.	Outcome: Perceived increase in violators being caught
+
+**Table 11**. Perceived frequency of getting caught for violating regulations (Q51d_e).
+
+```{r table_11, echo= FALSE, message=FALSE, include= TRUE, error = TRUE}
+
+  hhs_Q51d <- selectedData()[,c("ma_name", "51d_fishers_violate_fish_size")] %>%
+                        filter(`51d_fishers_violate_fish_size` != "") %>%
+                           droplevels()
+         Q51d_length <-
+            tapply(hhs_Q51d$`51d_fishers_violate_fish_size`,
+                   hhs_Q51d$ma_name,
+                   length)
+         Q51d_length <- as.vector(Q51d_length)
+         Q51d_mean <-
+            data.frame(
+               freq = tapply(
+                  hhs_Q51d$`51d_fishers_violate_fish_size`,
+                  hhs_Q51d$ma_name,
+                  mean
+               ) / 10
+            )
+         ### Proportions
+         Q51d_summary_bind <-
+            cbind(N = Q51d_length, round(Q51d_mean, 3) * 100)
+         Q51d_summary <-
+            rbind(Q51d_summary_bind, "Mean ± SE" = c(
+               sum(Q51d_summary_bind$N, na.rm = TRUE),
+               mean_sem(Q51d_summary_bind$freq, 1)
+            ))
+         colnames(Q51d_summary) <- c("N", "Fish Size Violations (%)")
+         Q51d_summary <- rownames_to_column(Q51d_summary, "MA name")
+         
+         hhs_Q51e <- selectedData()[,c("ma_name", "51e_fishers_caught")] %>%
+                        filter (`51e_fishers_caught` != "") %>%
+                           droplevels()
+            
+         Q51e_length <-
+            tapply(hhs_Q51e$`51e_fishers_caught`,
+                   hhs_Q51e$ma_name,
+                   length)
+         Q51e_length <- as.vector(Q51e_length)
+         Q51e_mean <-
+            data.frame(freq = tapply(
+               hhs_Q51e$`51e_fishers_caught`,
+               hhs_Q51e$ma_name,
+               mean
+            ) / 10)
+         Q51e_summary_bind <-
+            cbind(N = Q51e_length, round(Q51e_mean, 3) * 100)
+         Q51e_summary <-
+            rbind(Q51e_summary_bind, "Mean ± SE" = c(
+               sum(Q51e_summary_bind$N, na.rm = TRUE),
+               mean_sem(Q51e_summary_bind$freq, 1)
+            ))
+         ##rownames to column
+         Q51e_summary <- rownames_to_column(Q51e_summary, "MA name")
+         colnames(Q51e_summary) <-
+            c("MA name", "N", "Seasonal Closures Violations (%)")
+         
+         ### Combine Q51d and Q51e
+         Q51d_51e_summary <-
+            plyr::join_all(list(Q51d_summary, Q51e_summary),
+                           by = "MA name",
+                           type = "right")
+
+ knitr::kable(Q51d_51e_summary, align = 'r')
+```
+
+#### c.	Outcome: Perceived increase in compliance with regulations
+
+**Table 12**. Frequency of observed violations. Respondent is asked to estimate how many fishers out of 10 commit the following violations (Q51a_c).
+
+```{r table_12, echo= FALSE, message=FALSE,include= TRUE, error = TRUE}
+
+ hhs_Q51a <- selectedData()[,c("ma_name", "51a_fishers_gear_not_permitted")] %>%
+                        filter(`51a_fishers_gear_not_permitted` %in% c(1:10)) %>%
+                           droplevels()
+         ## Summary 
+         Q51a_length <-
+            tapply(hhs_Q51a$`51a_fishers_gear_not_permitted`,
+                   hhs_Q51a$ma_name,
+                   length)
+         Q51a_length <- as.vector(Q51a_length)
+         Q51a_mean <-
+            as.data.frame(
+               tapply(
+                  hhs_Q51a$`51a_fishers_gear_not_permitted`,
+                  hhs_Q51a$ma_name,
+                  mean
+               ) / 10
+            )
+         Q51a_summary_bind <-
+            cbind(N = Q51a_length, round(Q51a_mean, 3) * 100)
+         colnames(Q51a_summary_bind) <- c("N", "Unapproved gear (%)")
+         Q51a_summary <- rbind(Q51a_summary_bind,
+                               "Mean ± SE" = c(
+                                  sum(Q51a_summary_bind$N),
+                                  mean_sem(Q51a_summary_bind$`Unapproved gear (%)`, 1)
+                               ))
+         Q51a_summary <- rownames_to_column(Q51a_summary, "MA name")
+         
+         ### Q51b Frequency of observed fishing in reserve ##
+  hhs_Q51b <- selectedData()[,c("ma_name", "51b_fishers_reserves")] %>%
+                        filter(`51b_fishers_reserves` %in% c(1:10)) %>%
+                           droplevels()
+         Q51b_length <-
+            tapply(hhs_Q51b$`51b_fishers_reserves`,
+                   hhs_Q51b$ma_name,
+                   length)
+         Q51b_length <- as.vector(Q51b_length)
+         Q51b_mean <-
+            data.frame(avg = tapply(
+               hhs_Q51b$`51b_fishers_reserves`,
+               hhs_Q51b$ma_name,
+               mean
+            ) / 10)
+         Q51b_summary_bind <-
+            cbind(N = Q51b_length, round(Q51b_mean, 3) * 100)
+         Q51b_summary <-
+            rbind(Q51b_summary_bind, "Mean ± SE" = c(
+               sum(Q51b_summary_bind$N),
+               mean_sem(Q51b_summary_bind$avg, 1)
+            ))
+         colnames(Q51b_summary) <- c("N", "Fishing in Reserves (%)")
+         Q51b_summary <- rownames_to_column(Q51b_summary, "MA name")
+         
+         ### Q51c Frequency of observed unpermitted fishing in MA ##
+   hhs_Q51c <- selectedData()[,c("ma_name", "51c_fishers_ma_area")] %>%
+                        filter(`51c_fishers_ma_area` %in% c(1:10)) %>%
+                           droplevels()
+          Q51c_length <-
+            tapply(hhs_Q51c$`51c_fishers_ma_area`,
+                   hhs_Q51c$ma_name,
+                   length)
+         Q51c_length <- as.vector(Q51c_length)
+         Q51c_mean <-
+            data.frame(avg = tapply(
+               hhs_Q51c$`51c_fishers_ma_area`,
+               hhs_Q51c$ma_name,
+               mean
+            ) / 10)
+         Q51c_summary_bind <-
+            cbind(N = Q51c_length, round(Q51c_mean, 3) * 100)
+         colnames(Q51c_summary_bind) <-
+            c("N", "Fishing in MA Area without permission (%)")
+         Q51c_summary <-
+            rbind(Q51c_summary_bind, "Mean ± SE" = c(
+               sum(Q51c_summary_bind$N),
+               mean_sem(
+                  Q51c_summary_bind$`Fishing in MA Area without permission (%)`,
+                  1
+               )
+            ))
+         Q51c_summary <- rownames_to_column(Q51c_summary, "MA name")
+         
+         ### Combine Q51a, Q51b and Q51c ####
+         Q51a_c_summary <-
+            plyr::join_all(
+               list(Q51a_summary, Q51b_summary, Q51c_summary),
+               by = "MA name",
+               type = "left"
+            )
+
+ knitr::kable(Q51a_c_summary, align = 'r')
+```
+
+### IV.	Program Element: Behavior Adoption
+
+#### a.	Outcome: Fishers believe registering and reporting catch is important
+
+**Table 13**. Proportion of fishers who believe that registering and reporting catch will help to maintain or improve fish catch (Q61b).
+
+```{r table_13, echo= FALSE, message=FALSE, include= TRUE, error = TRUE}
+ 
+    hhs_Q61b <- selectedData()[,c("ma_name", "61b_catch_recording")] %>%
+                        filter( `61b_catch_recording` %in% c(1:5)) %>%
+                           rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5)) %>%
+                              droplevels()
+      
+    Q61b_summary <- proportion(hhs_Q61b$`61b_catch_recording`,
+                                 hhs_Q61b$ma_name,
+                                 3,5)
+      
+         colnames(Q61b_summary) <-
+            c( "MA name",
+               "N",
+               "Strongly disagree (%)",
+               "Disagree (%)",
+               "Neither agree nor disagree (%)",
+               "Agree (%)",
+               "Strongly agree (%)"
+            )
+         
+
+  knitr::kable(Q61b_summary, align = 'r')
+```
+
+#### b.	Outcome: Fishers believe that participation will improve management
+
+**Table 14**. Proportion of fishers who believe that participation in management will help to maintain or improve fish catch (Q61c). 
+
+```{r table_14, echo= FALSE, message=FALSE, include= TRUE, error = TRUE}
+
+  hhs_Q61c <- selectedData()[,c("ma_name", "61c_community_participation")] %>%
+                        filter (`61c_community_participation` %in% c(1:5)) %>%
+                            rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
+         
+         Q61c_summary <- proportion (hhs_Q61c$`61c_community_participation`,
+                                     hhs_Q61c$ma_name,
+                                     3,5)
+         
+         colnames(Q61c_summary) <- c("MA name",
+                                      "N",
+                                      "Strongly disagree (%)",
+                                      "Disagree (%)",
+                                      "Neither agree nor disagree (%)",
+                                      "Agree (%)",
+                                      "Strongly agree (%)")
+         
+ knitr::kable(Q61c_summary, align = 'r')
+```
+
+#### c.	Outcome: Fishers participate in management
+
+**Table 15**. Proportion of fishers who attend management body meetings regularly (Q44).
+
+```{r table_15, echo= FALSE, message=FALSE, include= TRUE, error = TRUE}
+
+   hhs_fishers <- selectedData()[,c("submissionid","ma_name", 
+                                          "12a_fishing_men", "12b_fishing_women",
+                                          "12c_fishing_children")] %>%
+                              filter(`12a_fishing_men` > 0 |
+                                     `12b_fishing_women` > 0 | 
+                                     `12c_fishing_children` > 0) %>%
+                                 droplevels()
+        hhs_Q44f <-
+            left_join(
+               hhs_fishers[, c("submissionid")],
+               selectedData_Q44()[,c("submissionid",
+                                     "ma_name", 
+                                     "44_meeting_attendance")],
+               by = "submissionid") %>%
+           filter(`44_meeting_attendance` != "") %>% 
+            filter(`44_meeting_attendance` != "na") %>%
+               droplevels()
+               
+        Q44f_summary <- proportion(hhs_Q44f[[3]],
+                                   hhs_Q44f[[2]],
+                                   3,
+                                   length(unique(hhs_Q44f[[3]])))
+         
+  knitr::kable(Q44f_summary, align = 'r')
+  
+```
+
+
+#### d.	Outcome: Fisher encourage others to participate
+
+**Table 16**. Proportion of fishers that encourage others (both inside and outside their local community) to participate in sustainable/responsible activity (Q53). 
+
+```{r table_16, echo= FALSE, message=FALSE, include= TRUE, error = TRUE}
+  
+  hhs_Q53 <- selectedData()[,c("ma_name", "53_encourage_regulations")] %>%
+                        filter(`53_encourage_regulations` != "" &
+                               `53_encourage_regulations` != 'No regulations') %>%
+                        droplevels()
+         
+         Q53_summary <- proportion(hhs_Q53$`53_encourage_regulations`,
+                                    hhs_Q53$ma_name,
+                                    3,5)
+         colnames(Q53_summary) <-
+            c(
+               "MA name",
+               "N",
+               "Never (%)",
+               "Rarely (%)",
+               "Sometimes (%)",
+               "Often (%)",
+               "Very often (%)"
+            )
+
+ knitr::kable(Q53_summary, align = 'r')
+```
+
+
+#### e.	Outcome: Fishers believe that compliance with fishing regulations will improve catch
+
+**Table 17**. Proportion of fishers who believe that compliance with fishing regulations will help to maintain or improve fish catch (Q61a).
+
+```{r table_17, echo= FALSE, message=FALSE, include= TRUE, error = TRUE}
+ 
+       hhs_Q61a <- selectedData()[,c("ma_name", "61a_current_regulations", 
+                                  "12a_fishing_men", "12b_fishing_women", 
+                                  "12c_fishing_children")] %>%
+                      filter(`61a_current_regulations` %in% c(1:5)) %>%
+                      filter(`12a_fishing_men` > 0 |
+                               `12b_fishing_women` > 0 |
+                                `12c_fishing_children`  > 0 ) %>%
+                      rbind(c(NA,1,NA,NA,NA),c(NA,2,NA,NA,NA),
+                            c(NA,3,NA,NA,NA),c(NA,4,NA,NA,NA),
+                            c(NA,5,NA,NA,NA)) %>%
+                      droplevels()
+        
+         Q61a_summary <- proportion (hhs_Q61a$`61a_current_regulations`,
+                                      hhs_Q61a$ma_name,
+                                      3,5)
+         
+         Q61a_summary_grouped <- Q61a_summary %>%
+                              filter (`MA name` != "Mean ± SE")
+         #grouped
+         Q61a_summary_grouped$Disagree <-  as.numeric(Q61a_summary_grouped$X1) +
+                                           as.numeric(Q61a_summary_grouped$X2)
+         
+         Q61a_summary_grouped$`Neither agree nor disagree` <-  
+            as.numeric(Q61a_summary_grouped$X3) 
+         
+         Q61a_summary_grouped$Agree <-  as.numeric(Q61a_summary_grouped$X4) +
+                                        as.numeric(Q61a_summary_grouped$X5)
+         
+         Q61a_summary <-
+            rbind(
+               Q61a_summary_grouped[,c("MA name", "N", 
+                                       "Disagree",
+                                       "Neither agree nor disagree",
+                                       "Agree")],
+                c(NA,
+                  sum(as.numeric(Q61a_summary_grouped$N)),
+                  mean_sem(Q61a_summary_grouped$Disagree, 1),
+                  mean_sem(Q61a_summary_grouped$`Neither agree nor disagree`, 1),
+                  mean_sem(Q61a_summary_grouped$Agree, 1)
+               )
+            )
+         
+         colnames(Q61a_summary) <-
+            c("MA name",
+              "N",
+              "Disagree (%)",
+              "Neither agree nor disagree (%)",
+              "Agree (%)")
+
+ knitr::kable(Q61a_summary, align = 'r')
+```
+
+#### f.	Outcome: Fishers comply with fishing regulations
+
+**Table 18**. Proportion of fishers who claim that other fishers comply with fishing regulations. Respondent is asked to estimate how many fishers out of 10 commit the following violations (Q51a_c).
+
+```{r table_18, echo= FALSE, message=FALSE, include= TRUE, error = TRUE}
+
+hhs_Q51a <- selectedData()[,c("ma_name", "51a_fishers_gear_not_permitted")] %>%
+                        filter(`51a_fishers_gear_not_permitted` %in% c(1:10)) %>%
+                           droplevels()
+         ## Summary 
+         Q51a_length <-
+            tapply(hhs_Q51a$`51a_fishers_gear_not_permitted`,
+                   hhs_Q51a$ma_name,
+                   length)
+         Q51a_length <- as.vector(Q51a_length)
+         Q51a_mean <-
+            as.data.frame(
+               tapply(
+                  hhs_Q51a$`51a_fishers_gear_not_permitted`,
+                  hhs_Q51a$ma_name,
+                  mean
+               ) / 10
+            )
+         Q51a_summary_bind <-
+            cbind(N = Q51a_length, round(Q51a_mean, 3) * 100)
+         colnames(Q51a_summary_bind) <- c("N", "Unapproved gear (%)")
+         Q51a_summary <- rbind(Q51a_summary_bind,
+                               "Mean ± SE" = c(
+                                  sum(Q51a_summary_bind$N),
+                                  mean_sem(Q51a_summary_bind$`Unapproved gear (%)`, 1)
+                               ))
+         Q51a_summary <- rownames_to_column(Q51a_summary, "MA name")
+         
+         ### Q51b Frequency of observed fishing in reserve ##
+  hhs_Q51b <- selectedData()[,c("ma_name", "51b_fishers_reserves")] %>%
+                        filter(`51b_fishers_reserves` %in% c(1:10)) %>%
+                           droplevels()
+         Q51b_length <-
+            tapply(hhs_Q51b$`51b_fishers_reserves`,
+                   hhs_Q51b$ma_name,
+                   length)
+         Q51b_length <- as.vector(Q51b_length)
+         Q51b_mean <-
+            data.frame(avg = tapply(
+               hhs_Q51b$`51b_fishers_reserves`,
+               hhs_Q51b$ma_name,
+               mean
+            ) / 10)
+         Q51b_summary_bind <-
+            cbind(N = Q51b_length, round(Q51b_mean, 3) * 100)
+         Q51b_summary <-
+            rbind(Q51b_summary_bind, "Mean ± SE" = c(
+               sum(Q51b_summary_bind$N),
+               mean_sem(Q51b_summary_bind$avg, 1)
+            ))
+         colnames(Q51b_summary) <- c("N", "Fishing in Reserves (%)")
+         Q51b_summary <- rownames_to_column(Q51b_summary, "MA name")
+         
+         ### Q51c Frequency of observed unpermitted fishing in MA ##
+   hhs_Q51c <- selectedData()[,c("ma_name", "51c_fishers_ma_area")] %>%
+                        filter(`51c_fishers_ma_area` %in% c(1:10)) %>%
+                           droplevels()
+          Q51c_length <-
+            tapply(hhs_Q51c$`51c_fishers_ma_area`,
+                   hhs_Q51c$ma_name,
+                   length)
+         Q51c_length <- as.vector(Q51c_length)
+         Q51c_mean <-
+            data.frame(avg = tapply(
+               hhs_Q51c$`51c_fishers_ma_area`,
+               hhs_Q51c$ma_name,
+               mean
+            ) / 10)
+         Q51c_summary_bind <-
+            cbind(N = Q51c_length, round(Q51c_mean, 3) * 100)
+         colnames(Q51c_summary_bind) <-
+            c("N", "Fishing in MA Area without permission (%)")
+         Q51c_summary <-
+            rbind(Q51c_summary_bind, "Mean ± SE" = c(
+               sum(Q51c_summary_bind$N),
+               mean_sem(
+                  Q51c_summary_bind$`Fishing in MA Area without permission (%)`,
+                  1
+               )
+            ))
+         Q51c_summary <- rownames_to_column(Q51c_summary, "MA name")
+         
+         ### Combine Q51a, Q51b and Q51c ####
+         Q51a_c_summary <-
+            plyr::join_all(
+               list(Q51a_summary, Q51b_summary, Q51c_summary),
+               by = "MA name",
+               type = "left"
+            )
+         
+ knitr::kable(Q51a_c_summary, align = 'r')
+  
+
+```
+
+### V.	Program Element: Gender Mainstreaming
+
+#### a.	Outcome: Strengthen women's role in financial decision making 
+
+**Table 19**. Proportion of women in community who make financial decisions for the household (Q78). 
+
+```{r table_19, echo= FALSE, message=FALSE,include= TRUE, error = TRUE}
+
+    hhs_Q78 <- selectedData()[,c("6_gender", "ma_name", "78_financial_decisions")] %>%
+                              filter(`78_financial_decisions` != "") %>%
+                                  droplevels()
+            
+         hhs_Q78_f <- (subset(hhs_Q78, `6_gender` == "F"))
+         hhs_Q78_m <- (subset(hhs_Q78, `6_gender` == "M"))
+         
+         Q78_length <-
+            tapply(hhs_Q78$`78_financial_decisions`,
+                   hhs_Q78$ma_name,
+                   length)
+         Q78_length <- as.vector(Q78_length)
+         Q78_count_f <-
+            as.data.frame(tapply(
+               hhs_Q78_f$`78_financial_decisions`,
+               list(
+                  hhs_Q78_f$ma_name,
+                  hhs_Q78_f$`78_financial_decisions`
+               ),
+               length
+            ))
+         Q78_count_m <-
+            as.data.frame(tapply(
+               hhs_Q78_m$`78_financial_decisions`,
+               list(
+                  hhs_Q78_m$ma_name,
+                  hhs_Q78_m$`78_financial_decisions`
+               ),
+               length
+            ))
+         Q78_count_f[is.na(Q78_count_f)] <- 0
+         Q78_count_m[is.na(Q78_count_m)] <- 0
+         Q78_count_both <-  (Q78_count_f$Both +  Q78_count_m$Both)
+         Q78_count_f_total <-
+            Q78_count_f$`Female partner` + Q78_count_f$Myself + Q78_count_m$`Female partner`
+         Q78_count_m_total <-
+            Q78_count_m$`Male partner` + Q78_count_m$Myself + Q78_count_f$`Male partner`
+         
+         ### Proportions
+         Q78_summary_bind <-
+            data.frame(
+               "MA name" = levels(hhs_Q78_f$ma_name),
+               N = as.numeric(Q78_length),
+               Female = round(Q78_count_f_total / Q78_length, 3) *
+                  100,
+               Male = round(Q78_count_m_total / Q78_length, 3) *
+                  100,
+               Both = round(Q78_count_both / Q78_length, 3) *
+                  100
+            )
+         Q78_summary <-
+            rbind(Q78_summary_bind,
+                  c(
+                     "",
+                     sum(Q78_summary_bind$N),
+                     mean_sem(Q78_summary_bind$Female, 1),
+                     mean_sem(Q78_summary_bind$Male, 1),
+                     mean_sem(Q78_summary_bind$Both, 1)
+                  ))
+         colnames(Q78_summary) <-
+            c("MA name", "N", "Female (%)", "Male (%)", "Both (%)")
+
+  knitr::kable(Q78_summary, align = 'r')
+```
+
+
+#### b.	Outcome: Increased participation by women in fisheries management
+
+**Table 20**. Proportion of households with a woman who participate in management by attending meetings and holding leadership positions (Q44_45).
+
+```{r table_20, echo= FALSE, message=FALSE,include= TRUE, error = TRUE}
+ 
+   hhs_Q44 <- selectedData_Q44()[,c("ma_name", "44_meeting_attendance")] %>%
+                        filter(`44_meeting_attendance` != '') %>%
+                           filter (`44_meeting_attendance` != "na") %>%
+                              droplevels()
+         
+         Q44_summary <- proportion(hhs_Q44[[2]],
+                                   hhs_Q44[[1]],
+                                   3, length(unique(hhs_Q44[[2]])))
+         
+   hhs_Q45 <- selectedData_Q45()[,c("ma_name", "45_leadership_position")] %>%
+            filter(`45_leadership_position`!= "") %>%
+               filter(`45_leadership_position`!= "na") %>%
+                  droplevels()
+          
+         Q45_summary <- proportion(hhs_Q45[[2]],
+                                    hhs_Q45[[1]],
+                                    3,
+                                    length(unique(hhs_Q45[[2]])))
+         
+    Q44_45_summary <- left_join(Q44_summary[,c("MA name", "N", "Yes.female")],
+                              Q45_summary[,c("MA name", "N", "Yes.female")],
+                              by = "MA name")
+    
+    colnames(Q44_45_summary) <- c("MA name", "N", "Meeting attendance (%)", 
+                                              "N", "Leadership position (%)")
+  
+  knitr::kable(Q44_45_summary, align = 'r')
+```
+
+#### c.	Outcome: Women's interests represented, and contributions recognized by management
+
+**Table 21**. Proportion of women who feel that their contributions to the fishery are recognized. N is the total number of interviews with women (Q47).
+
+```{r table_21, echo=FALSE, message=FALSE, warning=TRUE, include=TRUE, error = TRUE}
+
+    hhs_Q47 <- selectedData()[,c("ma_name", "6_gender", "47_represent_contributions")] %>%
+             filter(`47_represent_contributions` %in% 
+                      c("Agree",  "Neither",  "Disagree")) %>%
+                        droplevels()
+     #Subset by female
+     hhs_Q47f <- hhs_Q47 %>%
+                    filter(`6_gender` == "F") %>%
+                      rbind(c(NA,NA,"Agree"), c(NA,NA,"Neither"), c(NA,NA,"Disagree")) %>%
+                        droplevels()
+                  
+     Q47w_summary <- proportion(hhs_Q47f$`47_represent_contributions`,
+                                hhs_Q47f$ma_name,
+                               3, 
+                               type = length(unique(hhs_Q47f$`47_represent_contributions`)))
+    
+knitr::kable(Q47w_summary, align = 'r')
+```
+
+
+**Table 22** Proportion of women who feel that their interests are represented in decision-making processes. N is the total number of interviews with women (Q46).
+
+```{r table_22, echo=FALSE, message=FALSE, warning=TRUE, include=TRUE, error = TRUE}
+
+         hhs_Q46 <- selectedData()[,c("ma_name","6_gender","46_represent_interests")] %>%
+                        filter (`46_represent_interests` != "") %>%
+                           filter (`46_represent_interests` != "na") %>%
+                              filter (`46_represent_interests` != "No management") %>%
+                                droplevels()
+          #Subset by woman
+         hhs_Q46w <- hhs_Q46 %>%
+                      filter (`6_gender` == "F") %>% 
+                        droplevels()
+         
+         Q46w_summary <- proportion (hhs_Q46w$`46_represent_interests`,
+                                    hhs_Q46w$ma_name,
+                                    3, 
+                                    type = length(unique(hhs_Q46w$`46_represent_interests`)))
+      
+    knitr::kable(Q46w_summary, align = 'r')
+    
+```
+
+
+## Impact Indicators
+
+### I.	Goal: Improve Well-Being
+
+The socio-economic baseline for well-being from fishing activities was assessed (Table 23)...
+
+The perceptions of well-being improvement across communities depend on many interacting factors. Improve in well-being may be a reflection of localized catch declines, compliance with fisheries regulations, the current stage and function of community-based management, and/or government fisheries management bodies.
+
+**Table 23**. Summary of well-being indicators (Q32, Q30a, Q30b, Q30c, Q31, Q23)
+
+```{r table_23, echo=FALSE, message=FALSE, include=TRUE, error = TRUE}
+
+#Q32
+    hhs_Q32 <- selectedData()[,c("ma_name", "32_fishery_benefit_equal")] %>%
+      filter(`32_fishery_benefit_equal` %in% c(0,1)) %>%
+      droplevels()
+    #proportion
+    Q32_summary <-
+      proportion(hhs_Q32$`32_fishery_benefit_equal`,
+                 hhs_Q32$ma_name,
+                 3, type = 2)[, -3]
+    #summary for table
+    colnames(Q32_summary) <- c("MA name", "N", "Social Equity")
+    
+    Q32_summary <- Q32_summary[,c("MA name", "Social Equity")]
+    
+    Q32_summary <- Q32_summary %>%
+       filter (`MA name` != "Mean ± SE")
+
+#Q30a
+  hhs_Q30a <- selectedData()[,c("ma_name", "30_trust_local_decision")] %>%
+    filter(`30_trust_local_decision` %in% c(1:5)) %>%
+      rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5)) %>%
+                  droplevels()
+  #propoortion
+  Q30a_summary <- proportion(hhs_Q30a$`30_trust_local_decision`,
+                             hhs_Q30a$ma_name,
+                             3, type=5)[,-c(3:5)]
+  
+  colnames(Q30a_summary) <- c("MA name", 
+                              "N", 
+                              "Agree",
+                              "Strongly agree")
+  Q30a <- Q30a_summary %>%
+    filter(`MA name` != "Mean ± SE")
+  #combine answer
+  Q30a$`Social Trust` <- as.numeric(Q30a$Agree) + as.numeric(Q30a$`Strongly agree`)
+  
+  Q30a_summary_grouped <- Q30a[,c("MA name","Social Trust")]
+
+#Q30b
+  hhs_Q30b <- selectedData()[,c("ma_name", "30_trust_regional_decision")] %>%
+    filter(`30_trust_regional_decision` %in% c(1:5)) %>%
+      rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5)) %>%
+           droplevels()
+  #proportion
+  Q30b_summary <-
+    proportion (hhs_Q30b$`30_trust_regional_decision`,
+                hhs_Q30b$ma_name,
+                3, type = 5)[,-c(3:5)]
+  
+  colnames(Q30b_summary) <- c("MA name", 
+                              "N", 
+                              "Agree",
+                              "Strongly agree")
+  Q30b <- Q30b_summary %>%
+    filter(`MA name` != "Mean ± SE")
+
+  #sum agree and strongly agree
+  Q30b$`Political Trust` <- as.numeric(Q30b$Agree) + as.numeric(Q30b$`Strongly agree`)
+  Q30b_summary_grouped <- Q30b[, c("MA name", "Political Trust")]
+
+#Q30c
+  hhs_Q30c <- selectedData()[,c("ma_name", "30_trust_community")] %>%
+    filter(`30_trust_community` %in% c(1:5)) %>%
+      rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5)) %>%
+           droplevels()
+  #propoortion
+  Q30c_summary<-
+    proportion(hhs_Q30c$`30_trust_community`, 
+               hhs_Q30c$ma_name, 
+               3, type =5)[,-c(3:5)]
+  colnames(Q30c_summary) <- c("MA name", 
+                              "N", 
+                              "Agree",
+                              "Strongly agree")
+  Q30c <- Q30c_summary %>%
+    filter(`MA name` != "Mean ± SE")
+
+#sum agree and strongly agree
+  Q30c$`Social Cohesion` <- as.numeric(Q30c$Agree) + as.numeric(Q30c$`Strongly agree`)
+  Q30c_summary_grouped <- Q30c[, c("MA name", "Social Cohesion")]
+
+#Q31
+  hhs_Q31 <- selectedData()[,c("ma_name", "31_my_community_ability")] %>%
+    filter(`31_my_community_ability` != "") %>%
+    filter(`31_my_community_ability` != "No dependance") %>%
+    droplevels()
+  #proportion
+  Q31_summary <-
+    proportion(hhs_Q31$`31_my_community_ability`,
+               hhs_Q31$ma_name,
+               3, type=5)[,c("MA name", "N", "Agree", "Strongly.agree")]
+  Q31 <- Q31_summary %>%
+    filter(`MA name` != "Mean ± SE")
+
+# combine agree answer
+  Q31$`Collective Efficacy` <- as.numeric(Q31$Agree) + as.numeric(Q31$Strongly.agree)
+  Q31_summary_grouped <- Q31[, c("MA name", "Collective Efficacy")]
+
+#Q23
+  hhs_Q23 <- selectedData()[,c("ma_name", "23_job_secure")] %>%
+                filter(`23_job_secure` != '') %>%
+                    filter(!is.na(`23_job_secure`)) %>%
+                        droplevels()
+  #proportion
+  Q23_summary <- proportion(hhs_Q23$`23_job_secure`, 
+                            hhs_Q23$ma_name, 
+                            rounding = 3,
+                            type = 2)[, -3]
+  #rename columns
+    colnames(Q23_summary) <- c("MA name", "N", "Job secured")
+  ## add total and mean
+    Q23_summary <- Q23_summary[,c("MA name", "Job secured")] %>% 
+          filter (`MA name` != "Mean ± SE")
+
+        
+#Well_being_summary_metric
+ well_being_summary_metric <- left_join(Q32_summary, Q30a_summary_grouped, by= "MA name") %>%
+                              left_join(Q30b_summary_grouped, by = "MA name") %>%
+                              left_join(Q30c_summary_grouped, by = "MA name") %>%
+                              left_join(Q31_summary_grouped, by = "MA name") %>%
+                              left_join(Q23_summary, by = "MA name")
+ 
+ colnames(well_being_summary_metric) <- c("MA name", 
+                                          "Social Equity",
+                                          "Social Trust",
+                                          "Political Trust",
+                                          "Social Cohesion",
+                                          "Collective Efficacy",
+                                          "Job Secured")
+
+knitr::kable(well_being_summary_metric, align = 'r')
+
+```
+
+<font size = "6">
+*Social Equity: Proportion community members that believe they benefit equally from fishery as other households*
+
+*Political Trust: Proportion community members who trust in the national government to make decisions that benefit small scale fishing communities*
+
+*Social Trust: Proportion community members who trust in their fellow community members*
+
+*Social Cohesion: Proportion community members who trust in local decision-makers to make decisions that benefit the community over their personal interests*
+
+*Collective Efficacy: Proportion community members who believe that the community can manage the fishery effectively to maximize food and profits*
+
+*Job Secured: Proportion of fishers who are confident that their jobs are secure*
+</font>                       
+
+### II.	Goal: Secure Food Supply 
+
+Food security is related to the ability of community members to continuously have enough food to feed their families. ... 
+
+**Table 24**. Summary of food supply indicators (Q59, Q56, Q55, Q60, Q68)
+
+```{r table_24, echo=FALSE, message=FALSE, include=TRUE, error = TRUE}
+
+#Q59
+
+   hhs_Q59 <- selectedData()[,c("ma_name","59_food_procurement")] %>%
+                        filter(`59_food_procurement` != "") %>%
+                           rbind(c(NA, "Confident not"), 
+                                 c(NA, "Uncertain"),
+                                 c(NA, "High chance"),
+                                 c(NA, "Very confident not"),
+                                 c(NA, "not Certain")) %>%
+                           droplevels()
+        
+         Q59_summary <- proportion (hhs_Q59$`59_food_procurement`,
+                                     hhs_Q59$ma_name,
+                                     3,5)
+         
+         colnames(Q59_summary) <- c("MA name", "N", 
+                                    "Certain",
+                                    "High chance",
+                                    "Uncertain",
+                                    "Not confident", 
+                                    "Not very confident")
+         Q59_summary <- Q59_summary %>%
+                            filter (`MA name` != "Mean ± SE")
+         
+         Q59_summary$`Food secured` <- as.numeric(Q59_summary$`Not confident`) +
+                                      as.numeric(Q59_summary$`Not very confident`)
+         
+         Q59_summary <- Q59_summary[,c("MA name", "Food secured")]
+         
+ #Q56
+    hhs_Q56 <- selectedData()[,c("ma_name", "56_reduce_meal_size_adult")] %>%
+                        filter (`56_reduce_meal_size_adult` != "") %>%
+                           droplevels()
+         
+         Q56_summary <- proportion (hhs_Q56$`56_reduce_meal_size_adult`,
+                                      hhs_Q56$ma_name,
+                                      3,2)[,-3]
+         
+         colnames(Q56_summary) <- c("MA name", "N", "Reduced meal size")
+         
+         Q56_summary <- Q56_summary[,c("MA name", "Reduced meal size")] %>%
+                     filter(`MA name` != "Mean ± SE")
+         
+#Q55
+  hhs_Q55 <- selectedData()[,c("ma_name", "55_worry_food")] %>%
+                        filter(`55_worry_food` != "") %>% 
+                           droplevels()
+         
+         Q55_summary <- proportion(hhs_Q55$`55_worry_food`,
+                        hhs_Q55$ma_name,
+                        3,3)
+         
+         Q55_summary <- Q55_summary %>%
+                     filter(`MA name` != "Mean ± SE")
+         
+         Q55_summary$`Worry about food` <- as.numeric(Q55_summary$Often) +
+                                    as.numeric(Q55_summary$Sometimes)
+         
+         Q55_summary <- Q55_summary[,c("MA name", "Worry about food")]
+        
+  
+#Q60
+  
+    hhs_Q60 <- selectedData()[,c("ma_name", "60_hh_fish_consumption")] %>%
+                      filter(`60_hh_fish_consumption` != "") %>%
+                           droplevels()
+         
+          Q60_summary <- proportion(hhs_Q60$`60_hh_fish_consumption`,
+                                    hhs_Q60$ma_name,
+                                    rounding = 3, type = 5)
+          
+          colnames(Q60_summary) <- c("MA name", "N", "Few",
+                                     "Few per month", "Few per week",
+                                     "More than few per week", "Rarely")
+          Q60_summary <- Q60_summary %>%
+                            filter(`MA name` != "Mean ± SE")
+          
+          Q60_summary$`Fish eaten often` <- as.numeric(Q60_summary$`Few per week`) +
+                                          as.numeric(Q60_summary$`More than few per week`)
+          
+          Q60_summary <- Q60_summary[,c("MA name", "Fish eaten often")]
+                        
+  
+#Q68
+      hhs_Q68 <- selectedData()[,c("ma_name", "68_fish_eaten", "68_fish_sold")] %>%
+                        dplyr::filter(!is.na(`68_fish_sold`)) %>%
+                            filter(`68_fish_eaten` < 800000)
+         Q68_fish_eaten <-
+            tapply(hhs_Q68$`68_fish_eaten`, hhs_Q68$ma_name, mean, na.rm = TRUE)
+         Q68_fish_sold <-
+            tapply(hhs_Q68$`68_fish_sold`, hhs_Q68$ma_name, mean, na.rm = TRUE)
+         Q68_summary_bind <-
+            as.data.frame(cbind(as.vector(summary(
+               hhs_Q68$ma_name
+            )),
+            round(
+               Q68_fish_sold / (Q68_fish_eaten + Q68_fish_sold), 3
+            ) * 100))
+         colnames(Q68_summary_bind) <- c("N", "Fish sold for subsistence")
+         Q68_summary <-
+            rbind(Q68_summary_bind, "Mean ± SE" = c(
+               sum(Q68_summary_bind$N),
+               mean_sem(Q68_summary_bind$`Fish for subsistence`, 1)
+            ))
+         
+         Q68_summary <- rownames_to_column(Q68_summary_bind, "MA name")
+         
+         Q68_summary <- Q68_summary[,c("MA name", "Fish sold for subsistence")] %>% 
+                          filter (`MA name` !=  "Mean ± SE")
+          
+          
+#Food Security Metrics
+          food_security_metrics_summary <- left_join(Q59_summary, Q56_summary, by = "MA name") %>%
+                                            left_join(Q55_summary, by = "MA name") %>%
+                                            left_join(Q60_summary, by = "MA name") %>%
+                                            left_join(Q68_summary, by = "MA name")
+
+  knitr::kable(food_security_metrics_summary, align = 'r')
+```
+
+<font size="6"> 
+*Food secured: Proportion of households that are confident that they will be able to procure enough food for them and their family for the next 12 months*
+
+*Reduced meals: Proportion of households that had to reduce meal size due to not having enough food in the last 12 months*
+
+*Worry about food: Proportion of households who often worry about not having enough food for everyone in the household*
+
+*Fish eaten often: Proportion of households fish consumption (Fish consumed more than few times per week)*
+
+*Fish for subsistence: Proportion of catch used for subsistence*
+</font> 
+
+
+### III.	Goal: Sustain Livelihoods
+
+Baseline impact indicators for financial capacity, value retention, assets, and dependence on fishing as a livelihood source were assessed (Table 25).
+
+**Table 25**. Summary of livelihood indicators (Q27, Q72, Q73, Q77, Q26, Q70)
+
+```{r table_25, echo=FALSE, message=FALSE, include=TRUE, error = TRUE}
+
+    #Q27
+      hhs_Q27 <-
+      selectedData()[, c(
+        "ma_name",
+        "27a_emergency_personal",
+        "27b_emergency_family",
+        "27c_emergency_friend",
+        "27d_emergency_entrepreneur",
+        "27e_emergency_savings_club",
+        "27f_emergency_lender",
+        "27g_emergency_commercial_ind",
+        "27h_emergency_commercial_group",
+        "27i_emergency_microfinance_ind",
+        "27j_emergency_microfinance_group",
+        "27k_emergency_ngo_ind",
+        "27l_emergency_ngo_group",
+        "27m_emergency_insurance",
+        "27n_emergency_other"
+      )] %>%
+      filter(ma_name != '')
+    #sum in obe variable
+    hhs_Q27$`27n_emergency_other` <- as.numeric(as.character(hhs_Q27$`27n_emergency_other`))
+    hhs_Q27[is.na(hhs_Q27)] <- 0
+    hhs_Q27$X27_emergency_fund <-
+      hhs_Q27$`27a_emergency_personal` +
+      hhs_Q27$`27b_emergency_family` +
+      hhs_Q27$`27c_emergency_friend` +
+      hhs_Q27$`27d_emergency_entrepreneur` +
+      hhs_Q27$`27e_emergency_savings_club` +
+      hhs_Q27$`27f_emergency_lender` +
+      hhs_Q27$`27g_emergency_commercial_ind` +
+      hhs_Q27$`27h_emergency_commercial_group` +
+      hhs_Q27$`27i_emergency_microfinance_ind` +
+      hhs_Q27$`27j_emergency_microfinance_group` +
+      hhs_Q27$`27k_emergency_ngo_ind` +
+      hhs_Q27$`27l_emergency_ngo_group` +
+      hhs_Q27$`27m_emergency_insurance` +
+      hhs_Q27$`27n_emergency_other`
+    
+    #Convert to 0 and 1
+    hhs_Q27$X27_emergency_fund_0_1 <-
+      ifelse(hhs_Q27$X27_emergency_fund > 0, 1, 0)
+    
+    #add missing options
+     hhs_Q27 <- rbind(hhs_Q27, c(NA,0), c(NA,1))
+        
+    #proportion
+    Q27_summary <-
+      proportion(hhs_Q27$X27_emergency_fund_0_1, hhs_Q27$ma_name, 3, 2)[, -3]
+    #col rename
+    colnames(Q27_summary) <- c("MA name", "N", "Emergency funds")
+    #summary
+    Q27_summary <- Q27_summary[,c("MA name", "Emergency funds")] %>%
+      filter(`MA name` != "Mean ± SE")
+    
+    #Q72-73
+    
+    hhs_Q72 <- selectedData()[,c("ma_name", "72_current_economic")] %>%
+      filter(`72_current_economic`!= "")
+    
+    Q72_length <-
+      tapply(hhs_Q72$`72_current_economic` ,
+             hhs_Q72$ma_name,
+             length)
+    hhs_Q72$`72_current_economic_no` <-
+      as.numeric(as.character(
+        recode_factor(
+          hhs_Q72$`72_current_economic`,
+          "Much better" = "5",
+          "Slightly better" = "4",
+          "Neither" = "3",
+          "Slightly worse" = "2",
+          "Much worse" = "1"
+        )
+      ))
+    Q72_summary_bind <-
+      data.frame(N = Q72_length, AVG = round(
+        tapply(
+          hhs_Q72$`72_current_economic_no`,
+          hhs_Q72$ma_name,
+          mean
+        ),
+        2
+      ))
+    
+    Q72_summary <- rownames_to_column(Q72_summary_bind, "MA name")
+    colnames(Q72_summary) <- c("MA name", "N", "Current economic situation")
+    
+    ### Q73 Future economic income ####
+    
+    hhs_Q73 <- selectedData()[,c("ma_name", "73_future_economic")] %>%
+      filter(`73_future_economic` != "")
+    
+    Q73_length <-
+      tapply(hhs_Q73$`73_future_economic` ,
+             hhs_Q73$ma_name,
+             length)
+    hhs_Q73$`73_future_economic_no` <-
+      as.numeric(as.character(
+        recode_factor(
+          hhs_Q73$`73_future_economic`,
+          "Much better" = "5",
+          "Slightly better" = "4",
+          "Neither" = "3",
+          "Slightly worse" = "2",
+          "Much worse" = "1"
+        )
+      ))
+    Q73_summary_bind <- data.frame(N = Q73_length,
+                                   AVG = round(
+                                     tapply(
+                                       hhs_Q73$`73_future_economic_no`,
+                                       hhs_Q73$ma_name,
+                                       mean
+                                     ),
+                                     2
+                                   ))
+    
+    
+    Q73_summary <- rownames_to_column(Q73_summary_bind, "MA name")
+    colnames(Q73_summary) <- c("MA name", "N", "Future economic situation")
+    
+    #combine Q72 and Q73
+    Q72_73_summary <- left_join(Q72_summary[,c("MA name", "Current economic situation")], 
+                                Q73_summary[,c("MA name", "Future economic situation")],
+                                by = "MA name")
+
+    #Q77
+    hhs_Q77 <- selectedData()[,c("ma_name", "77_hh_ends_meet")] %>%
+                        filter(`77_hh_ends_meet` != "") %>%
+                           droplevels()
+         
+         Q77_summary <- proportion(hhs_Q77$`77_hh_ends_meet`,
+                                   hhs_Q77$ma_name,
+                                   3, type=5)
+         
+         Q77 <- Q77_summary %>%
+                           filter(`MA name` != "Mean ± SE")
+             
+          #### Recode answers 
+         Q77$`HH make ends meet` <- as.numeric(Q77$Easy) +
+                                      as.numeric(Q77$`Fairly.easy`) +
+                                        as.numeric(Q77$`Very.easy`)
+         
+         Q77_summary <- Q77[,c("MA name", "HH make ends meet")]
+         
+  #Q26
+     hhs_Q26 <- selectedData()[,c("ma_name", "26_fishing_income_save")] %>%
+            filter(`26_fishing_income_save` != "")
+         
+         #Convert to 0 and 1
+         hhs_Q26$X26_fishing_income_save_0_1 <-
+            ifelse(hhs_Q26$`26_fishing_income_save` > 0, 1, 0)
+         
+         #proportion
+         Q26_summary <-
+            proportion(hhs_Q26$X26_fishing_income_save_0_1,
+                       hhs_Q26$ma_name,
+                       3,2)[, -3]
+         #rename
+         colnames(Q26_summary) <- c("MA name", "N", "Fishing income saved")
+         
+         #summary
+         Q26_summary <- Q26_summary[,c("MA name", "Fishing income saved")] %>%
+                     filter (`MA name` != "Mean ± SE")
+         
+#Q70 
+    
+      if (input$Country == "IDN") {
+            conversion <- quantmod::getQuote("IDRUSD=X")$Last
+         }
+      if (input$Country == "HND") {
+            conversion <- quantmod::getQuote("HNLUSD=X")$Last
+         }
+      if (input$Country == "PHL") {
+            conversion <- quantmod::getQuote("PHPUSD=X")$Last
+         }
+      if (input$Country == "MOZ") {
+            conversion <- quantmod::getQuote("MZNUSD=X")$Last
+         }
+      if (input$Country == "BRA") {
+            conversion <- quantmod::getQuote("BRLUSD=X")$Last
+         }
+
+     hhs_Q70 <- selectedData()[c("ma_name", "70_hh_average_income")] %>%
+                    filter (between(
+                            as.numeric(`70_hh_average_income`), 10, 1.00e+09)) %>%
+                                droplevels()
+
+    Q70_summary <- hhs_Q70 %>%
+                       dplyr::group_by(ma_name) %>%
+                          summarise (N = n(), 
+                              "Avg Income"  = round(
+                                              mean(`70_hh_average_income`, 
+                                                   na.rm = TRUE) * conversion,
+                                              1)
+                                    )
+    colnames(Q70_summary) <- c("MA name", "N", "Houseld income USD")
+    
+    Q70_summary <- Q70_summary[,c("MA name", "Houseld income USD")]
+    
+#Q70 fp
+    
+    Q70_lenght <- tapply(hhs_Q70$`70_hh_average_income`,
+                        hhs_Q70$ma_name,
+                          length)
+    
+         income_source <-
+            selectedData()[, c(
+               "ma_name",
+               "11a_income_farming",
+               "11b_income_harvesting",
+               "11c_income_fishing_artisanal",
+               "11d_income_fishing_industrial",
+               "11e_income_buying_trading",
+               "11f_income_processing",
+               "11g_income_aquaculture",
+               "11h_income_extraction",
+               "11i_income_tourism",
+               "11k_income_other",
+               "70_hh_average_income"
+            )] %>%
+           filter (between(
+                           as.numeric(`70_hh_average_income`), 10, 1.00e+09)) %>%
+                              droplevels()
+         
+         income_source[is.na(income_source)] <- 0
+         income_source <- data.frame(income_source)
+         ## Agregate income
+         income_summary <-
+            aggregate(. ~ ma_name,
+                      FUN = mean,
+                      na.rm = TRUE,
+                      data = income_source)
+         
+        HH_avg_income <- data.frame (
+            N = Q70_lenght,
+            Farming = round(income_summary$X11a_income_farming, 1) /
+               rowSums(income_summary[, c(2:11)], na.rm = TRUE) * 100,
+            Harvesting = round(income_summary$X11b_income_harvesting, 1) /
+               rowSums(income_summary[, c(2:11)], na.rm = TRUE) * 100,
+            Artisinal_Fishing = round(income_summary$X11c_income_fishing_artisanal, 1) /
+               rowSums(income_summary[, c(2:11)], na.rm = TRUE) * 100,
+            Industrial_Fishing = round(income_summary$X11d_income_fishing_industrial, 1) /
+               rowSums(income_summary[, c(2:11)], na.rm = TRUE) * 100,
+            Buying_Trading = round(income_summary$X11e_income_buying_trading, 1) /
+               rowSums(income_summary[, c(2:11)], na.rm = TRUE) * 100,
+            Processing_Fish = round(income_summary$X11f_income_processing, 1) /
+               rowSums(income_summary[, c(2:11)], na.rm = TRUE) * 100,
+            Aquaculture = round(income_summary$X11g_income_aquaculture, 1) /
+               rowSums(income_summary[, c(2:11)], na.rm = TRUE) * 100,
+            Extraction = round(income_summary$X11h_income_extraction, 1) /
+               rowSums(income_summary[, c(2:11)], na.rm = TRUE) * 100,
+            Tourism = round(income_summary$X11i_income_tourism, 1) /
+               rowSums(income_summary[, c(2:11)], na.rm = TRUE) * 100,
+            Other = round(income_summary$X11k_income_other, 1) /
+               rowSums(income_summary[, c(2:11)], na.rm = TRUE) * 100
+         )
+        
+        HH_avg_income$`Fishing income (%)` <- round(
+                       HH_avg_income$Artisinal_Fishing + 
+                        HH_avg_income$Industrial_Fishing +
+                            HH_avg_income$Buying_Trading +
+                                HH_avg_income$Processing_Fish, 1)
+        
+       Q70_summary_fp <- rownames_to_column(HH_avg_income, "MA name")
+    
+    
+      Q70_summary_fp <- Q70_summary_fp[,c("MA name", "Fishing income (%)")]
+    
+      #Livelihood Summary
+       livelihood_summary <- left_join(Q27_summary, Q72_73_summary, by = "MA name") %>%
+                              left_join(Q77_summary, by = "MA name") %>%
+                              left_join(Q26_summary, by = "MA name") %>%
+                              left_join(Q70_summary, by = "MA name") %>%
+                              left_join(Q70_summary_fp, by = "MA name") 
+
+
+knitr::kable(livelihood_summary, align = 'r')
+```
+
+<font size="6"> 
+*Emergency funds: Proportion community members have access to emergency funds*
+
+*Current economic situation: Mean perception of current economic situation*
+
+*Future economic situation: Mean perception of future economic situation*
+
+*HH makes end meets: Proportion community members that have enough income to cover their family's needs*
+
+*Fishing income saved: Enough income saved from fishing*
+
+*Household income USD: Average monthly household income in USD*
+
+*Fishing income: Proportion monthly fisher income from fishing*
+</font>
+
+**Table 26**. Proportion of household that have the specific assets. Last row includes mean ± standard error for each asset (Q24)
+
+```{r table_26, echo=FALSE, message=FALSE, include=TRUE, error = TRUE}
+
+   hhs_Q24 <-
+            selectedData()[, c(
+               "24a_item_radio_no",
+               "24b_item_tv_no",
+               "24c_item_satellite_no",
+               "24d_item_phone_no",
+               "24e_item_washing_maching_no",
+               "24f_item_generator_no",
+               "24g_item_fridge_no",
+               "24h_item_motorboat_no",
+               "24i_item_outboard_no",
+               "24j_item_inboard_no",
+               "24k_item_sailboat_no",
+               "24l_item_bicycle_no",
+               "24m_item_motorcycle_no",
+               "24n_item_car_no",
+               "24o_item_internet_no",
+               "24p_item_other_no"
+            )]
+         #replace NA with 0s
+         hhs_Q24[is.na(hhs_Q24)] <- 0
+         hhs_Q24_01_items <- hhs_Q24
+         
+         #Convert matrix to 0 and 1 (ignore wanrning)
+         hhs_Q24_01_items[hhs_Q24_01_items > 0] = 1
+         
+         hhs_Q24_01 <-
+            data.frame(hhs_Q24_01_items, ma_name = selectedData()$ma_name)
+         
+         #Estimate Proportion of community members with each asset
+         prop <- function(x) {
+            round(sum(x) / length(x) * 100, 1)
+         }
+         
+         assets_prop <-
+            aggregate(
+               cbind(
+                  hhs_Q24_01[, 1],
+                  hhs_Q24_01[, 2],
+                  hhs_Q24_01[, 3],
+                  hhs_Q24_01[, 4],
+                  hhs_Q24_01[, 5],
+                  hhs_Q24_01[, 6],
+                  hhs_Q24_01[, 7],
+                  hhs_Q24_01[, 8],
+                  hhs_Q24_01[, 9],
+                  hhs_Q24_01[, 10],
+                  hhs_Q24_01[, 11],
+                  hhs_Q24_01[, 12],
+                  hhs_Q24_01[, 13],
+                  hhs_Q24_01[, 14],
+                  hhs_Q24_01[, 15],
+                  hhs_Q24_01[, 16]
+               ) ~ ma_name,
+               data = hhs_Q24_01,
+               FUN = prop
+            )
+         
+         N_assets <- tapply(hhs_Q24_01[, 1], hhs_Q24_01[, 17], length)
+         
+         #Rename columns
+         colnames(assets_prop) <-
+            c(
+               "MA name",
+               "Radio",
+               "TV",
+               "Satellite",
+               "Phone",
+               "Washing_Machine",
+               "Generator",
+               "Fridge",
+               "Motorboat",
+               "Outboard",
+               "Inboard",
+               "Sailboat",
+               "Bicycle",
+               "Motorcycle",
+               "Car",
+               "Internet",
+               "Other"
+            )
+         ## Assest by MA
+         assets_prop_totals <-
+            rbind(
+               assets_prop,
+               c(
+                  NA,
+                  mean_sem(assets_prop[[2]], 1),
+                  mean_sem(assets_prop[[3]], 1),
+                  mean_sem(assets_prop[[4]], 1),
+                  mean_sem(assets_prop[[5]], 1),
+                  mean_sem(assets_prop[[6]], 1),
+                  mean_sem(assets_prop[[7]], 1),
+                  mean_sem(assets_prop[[8]], 1),
+                  mean_sem(assets_prop[[9]], 1),
+                  mean_sem(assets_prop[[10]], 1),
+                  mean_sem(assets_prop[[11]], 1),
+                  mean_sem(assets_prop[[12]], 1),
+                  mean_sem(assets_prop[[13]], 1),
+                  mean_sem(assets_prop[[14]], 1),
+                  mean_sem(assets_prop[[15]], 1),
+                  mean_sem(assets_prop[[16]], 1),
+                  mean_sem(assets_prop[[17]], 1)
+               )
+            )
+         
+knitr::kable(assets_prop_totals, align = 'r')
+```
+
+
+# CONCLUSIONS
+
+Fishing is an important livelihood activity in the studied villages associated with proposed managed access areas across SE Sulawesi. The baseline of the analyzed Fish Forever program pillars indicates that there are several challenges:
+
+  1.. 
+  2..
+  3..
+  
+The goal of the Fish Forever interventions at the early stage of implementation will enable the effective management of coastal fisheries in an ecosystem and socio-economic context. That is, the protection of the environment and the sustainable use of natural assets will be linked to building a resilient local economy underpinning the well-being and long-term prosperity of coastal communities. These results will be used as baseline to assess program success. 
+
+# REFERENCES
+
+
+
