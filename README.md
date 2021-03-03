@@ -27,7 +27,7 @@ The following are the data files column names and associated **metadata**:
 **level4_name**: Community or Village name                       
 **level4_id**: Community or Village unique ID linked to level4_name (can be used to join datasets)     
 **lat**: Latitude of the Community in decimal degress      
-**lon**: Longitute of the Community in decimal degrees       
+**lon**: Longitude of the Community in decimal degrees       
 **ma_name**: Managed Access Area name (proposed or established)        
 **ma_area**: Managed Access Area in hectares   
 **ma_status**: Managed Access Area status (Proposed or Established)       
@@ -72,7 +72,7 @@ The following are the data files column names and associated **metadata**:
 **11k_months_other**: 1-12 (Jan - Dec), NA (no answered)                    
 **11k_income_other**: 0-100 (percent), NA (no answered)       
 **12a_fishing_men**: Integer, NA (no answered)        
-**12b_fishing_women**: Integer, NA (no answered)
+**12b_fishing_women**: Integer, NA (no answered)        
 **12c_fishing_children**: Integer, NA (no answered)         
 **13a_processing_men**: Integer, NA (no answered)           
 **13b_processing_women**: Integer, NA (no answered)  
