@@ -24,7 +24,7 @@ The following are the data files column names and associated **metadata**:
 **level1_name**: Subnational goverment name (usually State or Province)    
 **level2_name**: Local goverment name (usually Municipality or District)     
 **level3_name**: Sublocal goverment name (usually Subdistrict)      
-**level4_name**: Community or Village name                       
+**level4_name**: Community or Village name        
 **level4_id**: Community or Village unique ID linked to level4_name (can be used to join datasets)     
 **lat**: Latitude of the Community in decimal degress      
 **lon**: Longitude of the Community in decimal degrees       
@@ -75,8 +75,8 @@ The following are the data files column names and associated **metadata**:
 **12b_fishing_women**: Integer, NA (no answered)        
 **12c_fishing_children**: Integer, NA (no answered)         
 **13a_processing_men**: Integer, NA (no answered)           
-**13b_processing_women**: Integer, NA (no answered)  
- [57] "13c_processing_children"          
+**13b_processing_women**: Integer, NA (no answered)            
+**13c_processing_children**: Integer, NA (no answered)                
  "14_responsibilities_other"       
  [59] "16_hh_main_fisher"                
  "16_hh_other_fisher"              
