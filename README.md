@@ -2,7 +2,7 @@
 
 This tool summarizes information collected through the Fish Forever Household Survey (HHS). The HHS contains defined-answer questions assessing respondents’ livelihoods, engagement with the local fishery, resilience to economic shocks, social capital, knowledge of fishing regulations, attitudes toward fisheries management, participation in fisheries management, and perceptions of current management approaches.
 
-Here is a the metadata associated with the dataset. Each HHS question starts with a number (1 to 83). The rest of the columns are information regarding administration levels, management levels, date of survey, submission ids, etc. The data is divided in **eight data files** depending on the type of questions asked. These data files can be joined together by a unique *submissionid* for analysis.
+Here is a the metadata associated with the dataset. Please refer to the HHS Guide [link] for the Survey questions and answers. Each HHS question starts with a number (1 to 83).  The rest of the columns are information regarding administration levels, management levels, date of survey, submission ids, etc. The data is divided in **eight data files** depending on the type of questions asked. These data files can be joined together by a unique *submissionid* for analysis.
 
 
 The data files are:       
@@ -80,15 +80,14 @@ The following are the data files column names and associated **metadata**:
 **14_responsibilities_other**: Factor, names of other responsibilities                                
 **16_hh_main_fisher**: Factor, 6 levels, blanks (no answered)       
 **16_hh_other_fisher**: Name of other option in question 16         
-**17_fishing_low_profit**: Factor, 5 levels (first version of HHS had different wording than the last version)    
-**18_fishing_high_profit**: Factor, 5 levels (first version of HHS had different wording than the last version)     
- [63] "19_current_fish_catch"            
- "20a_gear_hand"                   
- "20b_gear_stationary_net"          
- "20c_gear_mobile_net"             
- "20d_gear_stationary_line"         
- "20e_gear_mobile_line"            
- "20f_gear_explosives"              
+**17_fishing_low_profit**: Factor, 9 levels (first HHS version had different options than the last version)    
+**18_fishing_high_profit**: Factor, 12 levels (first HHS version had different options than the last version)   **19_current_fish_catch**: Factor, 5 levels, blanks (no answered)      
+**20a_gear_hand**: 1 (Yes), 0 (No), NA (no answered)                     
+**20b_gear_stationary_net**: 1 (Yes), 0 (No), NA (no answered)        
+**20c_gear_mobile_net**: 1 (Yes), 0 (No), NA (no answered)      
+**20d_gear_stationary_line**: 1 (Yes), 0 (No), NA (no answered)            
+**20e_gear_mobile_line**: 1 (Yes), 0 (No), NA (no answered)        
+**20f_gear_explosives**: 1 (Yes), 0 (No), NA (no answered)          
  "20g_gear_other"                  
  "21_boat_owner_status"             
  "22_catch_5yrs"                   
