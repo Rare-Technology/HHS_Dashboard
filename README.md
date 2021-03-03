@@ -17,8 +17,10 @@ The data files are:
 
 The following are the data files column names and associated **metadata**:
 
-#### HHS_surveys metadata **id**:  Unique numeric identifier  
-**country**: Country name    
+#### HHS_surveys metadata 
+
+**id**:  Unique numeric identifier  
+**country**: Country name   
 **level1_name**: Subnational goverment name (usually State or Province)    
 **level2_name**: Local goverment name (usually Municipality or District)     
 **level3_name**: Sublocal goverment name (usually Subdistrict)      
