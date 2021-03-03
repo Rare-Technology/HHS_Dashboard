@@ -18,34 +18,34 @@ The following are the data files column names and associated **metadata**:
 
 #### HHS_surveys metadata
 
-**id** -  Unique numeric identifier  
-**country** - Country name    
-**level1_name** - Subnational goverment name (usually State or Province)    
-**level2_name** - Local goverment name (usually Municipality or District)     
-**level3_name** - Sublocal goverment name (usually Subdistrict)     
-**level4_id** - Community or Village unique ID linked to level4_name      
-**lat** - Latitude of the Community in decimal degress      
-**lon** - Longitute of the Community in decimal degrees       
-**ma_name** - Managed Access Area name (proposed or established)        
-**ma_area** - Managed Access Area in hectares   
-**ma_status** - Managed Access Area status (Proposed or Established)       
-**reserves** - Number of reserves within the the Managaed Access Area         
-**reserve_status** - Reserve status (Proposed or Established)
-**username** - User name for entering data in FastField (no available in data dowloads)   
-**submissionid** - Unique submission Id from FastField    
-**updatedat** - Submission date as Factor in Year-month-dat-time format ("2019-07-12T03:01:46")   
-**startformtimestamp** - Start time of the survey     
-**endformtimestamp** - End time of the survey       
-**1_interviewer** - Name of interviewer   
-**2_affiliation** - Affiliation of interviewer       
-**3_community** - Name of community or village    
-**5_hh_status** - Household status of interviewed person                        
-**6_gender** - Sex of the interviewee   
-**8_religion** - Religion of the household head (dropdown list)   
-**8_religion_other** - Other religion not in the list above     
-**9_region_member** - Region identification: 1 (Yes), 0 (No), NA (no answered)    
-**9_region_name** - Region name   
-**10_mpa_important**: 1 (Yes), 0 (No), -1 (Neutral), NA (no answered) 
+**id**:  Unique numeric identifier  
+**country**: Country name    
+**level1_name**: Subnational goverment name (usually State or Province)    
+**level2_name**: Local goverment name (usually Municipality or District)     
+**level3_name**: Sublocal goverment name (usually Subdistrict)     
+**level4_id**: Community or Village unique ID linked to level4_name      
+**lat**: Latitude of the Community in decimal degress      
+**lon**: Longitute of the Community in decimal degrees       
+**ma_name**: Managed Access Area name (proposed or established)        
+**ma_area**: Managed Access Area in hectares   
+**ma_status**: Managed Access Area status (Proposed or Established)       
+**reserves**: Number of reserves within the the Managaed Access Area         
+**reserve_status**: Reserve status (Proposed or Established)
+**username**: User name for entering data in FastField (no available in data dowloads)   
+**submissionid**: Unique submission Id from FastField    
+**updatedat**: Submission date as Factor in year-month-day:time format ("2019:-07-12T03:01:46")   
+**startformtimestamp** : Start time of the survey     
+**endformtimestamp** : End time of the survey       
+**1_interviewer** : Name of interviewer   
+**2_affiliation** : Affiliation of interviewer       
+**3_community** : Name of community or village    
+**5_hh_status** : Household status of interviewed person                        
+**6_gender** : Sex of the interviewee   
+**8_religion** : Religion of the household head (dropdown list)   
+**8_religion_other** : Other religion not in the list above     
+**9_region_member** : Region identification: 1 (Yes), 0 (No), NA (no answered)    
+**9_region_name** : Region name   
+**10_mpa_important**: 1 (Yes), 0 (No), :1 (Neutral), NA (no answered) 
 
  [29] "11a_months_farming"               "11a_income_farming"              
  [31] "11b_months_harvesting"            "11b_income_harvesting"           
