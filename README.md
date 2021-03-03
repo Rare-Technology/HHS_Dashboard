@@ -4,6 +4,7 @@ This tool summarizes information collected through the Fish Forever Household Su
 
 Here is a the metadata associated with the dataset. Each HHS question starts with a number (1 to 83). The rest of the columns are information regarding administration levels, management levels, date of survey, submission ids, etc. The data is divided in **eight data files** depending on the type of questions asked. These data files can be joined together by a unique *submissionid* for analysis.
 
+
 The data files are:       
 *hhs_surveys* - Most questions         
 *hhs_people* - Q7     
