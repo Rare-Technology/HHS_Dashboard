@@ -46,10 +46,11 @@ The following are the data files column names and associated **metadata**:
 **8_religion_other** : Other religion not in the list above     
 **9_region_member** : Region identification: 1 (Yes), 0 (No), NA (no answered)    
 **9_region_name** : Region name   
-**10_mpa_important**: 1 (Yes), 0 (No), :1 (Neutral), NA (no answered) 
-
- [29] "11a_months_farming"               "11a_income_farming"              
- [31] "11b_months_harvesting"            "11b_income_harvesting"           
+**10_mpa_important**: 1 (Yes), 0 (No), -1 (Neutral), NA (no answered)     
+**11a_months_farming**: 1-12 (Jan - Dec), NA (no answered)      
+**11a_income_farming**: 0-100 (percent), NA (no answered)       
+**11b_months_harvesting**: 1-12 (Jan - Dec), NA (no answered)               
+"11b_income_harvesting"           
  [33] "11c_months_fishing_artisanal"     "11c_income_fishing_artisanal"    
  [35] "11d_months_fishing_industrial"    "11d_income_fishing_industrial"   
  [37] "11e_months_buying_trading"        "11e_income_buying_trading"       
