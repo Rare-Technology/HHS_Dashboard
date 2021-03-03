@@ -12,7 +12,7 @@ The data files are:
 *hhs_activities* - Q15      
 *hhs_meeting* - Q44     
 *hhs_leadership* - Q45      
-*hhs_enforcement* - Q47         
+*hhs_enforcement* - Q48        
 *hhs_customers* - Q69     
 
 The following are the data files column names and associated **metadata**:
@@ -36,17 +36,17 @@ The following are the data files column names and associated **metadata**:
 **username**: User name for entering data in FastField (no available in data dowloads)   
 **submissionid**: Unique submission Id from FastField    
 **updatedat**: Submission date as Factor in year-month-day:time format ("2019:-07-12T03:01:46")   
-**startformtimestamp** : Start time of the survey     
-**endformtimestamp** : End time of the survey       
-**1_interviewer** : Name of interviewer   
-**2_affiliation** : Affiliation of interviewer       
-**3_community** : Name of community or village    
-**5_hh_status** : Household status of interviewed person                        
-**6_gender** : Sex of the interviewee   
-**8_religion** : Religion of the household head (dropdown list)   
-**8_religion_other** : Other religion not in the list above     
-**9_region_member** : Region identification: 1 (Yes), 0 (No), NA (no answered)    
-**9_region_name** : Region name   
+**startformtimestamp**: Start time of the survey     
+**endformtimestamp**: End time of the survey       
+**1_interviewer**: Name of interviewer   
+**2_affiliation**: Affiliation of interviewer       
+**3_community**: Name of community or village    
+**5_hh_status**: Household status of interviewed person                        
+**6_gender**: Sex of the interviewee   
+**8_religion**: Religion of the household head (dropdown list)   
+**8_religion_other**: Other religion not in the list above     
+**9_region_member**: Region identification: 1 (Yes), 0 (No), NA (no answered)    
+**9_region_name**: Region name   
 **10_mpa_important**: 1 (Yes), 0 (No), -1 (Neutral), NA (no answered)     
 **11a_months_farming**: 1-12 (Jan - Dec), NA (no answered)      
 **11a_income_farming**: 0-100 (percent), NA (no answered)       
@@ -73,15 +73,15 @@ The following are the data files column names and associated **metadata**:
 **11k_income_other**: 0-100 (percent), NA (no answered)       
 **12a_fishing_men**: Integer, NA (no answered)        
 **12b_fishing_women**: Integer, NA (no answered)        
-**12c_fishing_children**: Integer, NA (no answered)         
-**13a_processing_men**: Integer, NA (no answered)           
-**13b_processing_women**: Integer, NA (no answered)            
-**13c_processing_children**: Integer, NA (no answered)                
- "14_responsibilities_other"       
- [59] "16_hh_main_fisher"                
- "16_hh_other_fisher"              
- [61] "17_fishing_low_profit"            
- "18_fishing_high_profit"          
+**12c_fishing_children**: Integer, NA (no answered)              
+**13a_processing_men**: Integer, NA (no answered)                 
+**13b_processing_women**: Integer, NA (no answered)                 
+**13c_processing_children**: Integer, NA (no answered)      
+**14_responsibilities_other**: Factor, names of other responsibilities                                
+**16_hh_main_fisher**: Factor, 6 levels, blanks (no answered)       
+**16_hh_other_fisher**: Name of other option in question 16         
+**17_fishing_low_profit**: Factor, 5 levels (first version of HHS had different wording than the last version)    
+**18_fishing_high_profit**: Factor, 5 levels (first version of HHS had different wording than the last version)     
  [63] "19_current_fish_catch"            
  "20a_gear_hand"                   
  "20b_gear_stationary_net"          
