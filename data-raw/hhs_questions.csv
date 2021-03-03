@@ -1,0 +1,98 @@
+﻿page,section,q_no,question,question_no_included,field_key
+2,Basic Information,1,Household Survey Summary,,
+2,Basic Information,7,,"7. Please list all the people who currently live in your household, including yourself, and provide their gender, age education and relationship to you.",textlabel_4
+2,Basic Information,8,8. What is the religion of the head of household?,8. What is the religion of the head of household?,religion
+2,Basic Information,9,9. Do you identify yourself as a member of a specific region or sub-national geographic area?,,region_member
+2,Basic Information,10,10. Is it important to you that the region is managed and protected?,,MPA_important
+3,Livelihood,11,11. Sources of household income this year and estimated contribution to overall household income,,textlabel_6
+4,Fishing and related activities,12,12. How many members of the household regularly go fishing?,,textlabel_5
+4,Fishing and related activities,13,13. How many members of the household regularly participate in post-processing activities to prepare the fish for sale?,,textlabel_1
+4,Fishing and related activities,14,14. What activities are the responsibility of the women in the household in a typical week?,,responsibilities_women
+4,Fishing and related activities,15,,15. How much time do you allocate to other activities in a typical week?,textlabel_25
+4,Fishing and related activities,16,16. Consider the main fisher in the household. Does this person fish?,,hh_main_fisher
+4,Fishing and related activities,17,17. How often did the main fisher go fishing during lean season or less profitable fishing season?,,fishing_low_profit
+4,Fishing and related activities,18,18. How often did the main fisher go fishing in the more profitable fishing season?,,fishing_high_profit
+4,Fishing and related activities,19,"19. Compared to 2 years ago, the current fish catch has...",,current_fish_catch
+4,Fishing and related activities,20,,20. Has your family been fishing in the last 12 months? What fishing gears were used?,fishing_12months
+4,Fishing and related activities,21,,"21. For fishing purposes, does the household own a boat, share a boat, rent a boat from others, or does not use a boat?",boat_owner_status
+4,Fishing and related activities,22,"22. In the next 5 years, how do you think the fish catch will be compared to today?",,catch_5yrs
+4,Fishing and related activities,23,23. Do you believe that the job of a fisher is secure in the future?,,job_secure
+5,Household Assets,24,24. Please indicate the number of items that are owned in the previous 12 months by the household,,textlabel_8
+6,Financial Resilience,25,"25. Does any household member have an account at a financial institution or keep money in any of the following ways? If yes, please specify.",,textlabel_9
+6,Financial Resilience,26,26. Does your income provide enough to save?,,fishing_income_save
+6,Financial Resilience,27,"27. Does any household member have access to one of the following sources of funds (enough to replace fishing gear, or primary livelihood gear, boat repairs)? If yes, please specify.",,textlabel_10
+6,Financial Resilience,28,28. Does your household take out loans from fish buyers or traders?,,buyer_loans
+6,Financial Resilience,29,29. To cover family needs your household income is…,,family_income
+7,Social Capital,30a,30a. Please rate your agreement with the following statement: Local decision-makers/ local authorities can be trusted to make decisions that benefit the community over their own interests,,textlabel_11
+7,Social Capital,30b,30b. Please rate your agreement with the following statement: Regional decision-makers/ regional authorities can be trusted to make decisions that benefit the community over their own interests,,
+7,Social Capital,30c,"30c. Please rate your agreement with the following statement: Generally speaking, most people in my community can be trusted",,
+7,Social Capital,30d,"30d. Please rate your agreement with the following statement: In this village, you have to be alert to someone taking advantage of you",,
+7,Social Capital,30e,,"30e. Please rate your agreement with the following statement: Generally speaking, religious leaders can be trusted",
+7,Social Capital,30f,  ,"30f. Please rate your agreement with the following statement: Generally speaking, NGOs can be trusted to make decisions in our best interest",
+7,Social Capital,30g,,"30g. Please rate your agreement with the following statement: Generally speaking, the fishers from this community can be trusted not to break the rules",
+7,Social Capital,30h,,"30h. Please rate your agreement with the following statement: Generally speaking, the fishers from other communities can be trusted not to break the rules ",
+7,Social Capital,30i,,"30i. Please rate your agreement with the following statement: Generally speaking, most people in neighboring communities can be trusted. ",
+7,Social Capital,31,31. How much do you agree or disagree with the following statement? “My community has the ability to manage my fishery effectively and to maximize food and profits?”,  ,
+7,Social Capital,32,32. Do you believe you benefit equally from the fishery as other members of the community?,,fishery_benefit_equal
+8,Knowledge,33,33. Are you familiar with the managed access and reserve area management approach?,,ma_familiar
+8,Knowledge,34,34. Are there restrictions on the type of gear that may be used in the fisheries management/managed access area?,,gear_restrictions
+8,Knowledge,35,,"35. For each of the types of gear, indicate if they are permitted in the fisheries management/managed access area...",textlabel_12
+8,Knowledge,36,36. Are there restrictions on the allowed fish size in the fisheries management/managed access area?,,fish_size_restriction
+8,Knowledge,37,"37. Please consider a type of fish that you catch frequently. For this type of fish, what are the size restrictions?",,fish_catch
+8,Knowledge,38,38. Is fishing allowed in the reserve area?,,reserve_fishing_allowed
+8,Knowledge,39,39. Would you agree with the statement that most fishers in your community are aware of the boundaries of the fisheries management/managed access area?,,ma_boundaries_aware
+8,Knowledge,40,"40. Out of ten fishers in your community, how many would you guess know where the reserve boundary is?",,reserve_boundaries_aware
+8,Knowledge,41,41. Who is allowed to fish in the fisheries management/managed access area?,,ma_fishers_allowed
+8,Knowledge,42,42. Do you know how fishing with restricted gear affect the fishery?,,
+8,Knowledge,42,42. Do you know how fishing undersize fish affect the fishery?,,
+8,Knowledge,42,42. Do you know how fishing inside the reserve affect the fishery?,,
+8,Knowledge,42,42. Do you know how unauthorized fishers fishing inside the managed access area affect the fishery?,,
+8,Knowledge,43,43. Do you think there is any benefit to regulating fishing via a managed access area and a reserve area?,,ma_benefits
+9,"Fishery Management, Enforcement and Compliance ",44,44a. Have you or anyone in the household attended a fisheries management body meeting in the last month?,,fisheries_management_meeting
+9,"Fishery Management, Enforcement and Compliance ",44,44b. Have a fisher in the household attended a fisheries management body meeting in the last month?,,
+9,"Fishery Management, Enforcement and Compliance ",45,45. Do you or anyone in the household hold a leadership position in the fisheries management body?,,fisheries_management_leader
+9,"Fishery Management, Enforcement and Compliance ",46,46. Do you agree that the fisheries management body represents your interests to the fishery?,,represent_interests
+9,"Fishery Management, Enforcement and Compliance ",47,47. Do you agree that the fisheries management body represents your contributions to the fishery?,,represent_contributions
+9,"Fishery Management, Enforcement and Compliance ",48,,"48. In the last month, has any household member participated in enforcement or surveillance activities of fishing grounds?",enforcement_participation
+9,"Fishery Management, Enforcement and Compliance ",49,,49. Who is responsible for enforcement in your community?,enforcement_responsible
+9,"Fishery Management, Enforcement and Compliance ",50,,50. How severe is the punishment when a person gets caught violating the fishing regulations in the fisheries management/managed access area?,ma_punishment
+9,"Fishery Management, Enforcement and Compliance ",51a,"51a. Out of 10 fishers in your community waters, how many would you guess use gear that is not permitted?",,textlabel_14
+9,"Fishery Management, Enforcement and Compliance ",51b,"51b. Out of 10 fishers in your community waters, how many would you guess fished in the reserve in the last month?",,
+9,"Fishery Management, Enforcement and Compliance ",51c,"51c. Out of 10 fishers in the managed access area, how many would you guess do not have permission to fish there?",,
+9,"Fishery Management, Enforcement and Compliance ",51d,"51d. Out of 10 fishers in your community waters who violate the regulations in the managed access area, how many would you guess get caught?",,
+9,"Fishery Management, Enforcement and Compliance ",51e,"51e. Out of 10 fishers who fished in the reserve, how many would you guess get caught?",,
+9,"Fishery Management, Enforcement and Compliance ",52,52. Do you think the fisheries management/managed access and reserve approach will benefit the community over the next five years?,,ma_benefit_5yrs
+9,"Fishery Management, Enforcement and Compliance ",53,53. How often do you encourage others (both inside and outside their local community) to comply with fishing regulations?,,encourage_regulations
+10,Food Security,54,54. How do you rate the last year in terms of food availability?,,food_availability
+10,Food Security,55,"55. Consider the following statement: 'I worry about not having enough food for everyone in the household'. Was that often, sometimes or never true for you in the last 12 months?",,worry_food
+10,Food Security,56,"56. In the last 12 months, did any adults in the household ever reduce the size of meals because there wasn’t enough food to eat?",,reduce_meal_size_adult
+10,Food Security,57,,"57. How often did this happen – almost every month, some months but not every month, or in only one or two months?",reduce_meal_size_frequency
+10,Food Security,58,,"58. In the last 12 months, did you ever reduce the size of a child’s meal because there wasn’t enough food?",reduce_meal_size_child
+10,Food Security,59,59. Are you confident that you will be able to procure enough food for you and your family for the next 12 months?,,food_procurement
+10,Food Security,60,"60. In the last 12 months, how often did your household eat fresh fish?",,hh_fish_consumption
+11,Attitudes,61a,61a. Please state your level of agreement with the following statement: Current fishing regulations are effective at ensuring catches remain stable or improve.,,current_regulations
+11,Attitudes,61b,61b. Please state your level of agreement with the following statement: Registering and recording fish catch will help to maintain or improve fish catch,,
+11,Attitudes,61c,61c. Please state your level of agreement with the following statement: Local community participation in management will help to maintain or improve fish catch,,
+11,Attitudes,61d,61d. Please state your level of agreement with the following statement: It is important to have a strong enforcement system,,
+11,Attitudes,61e,61e. Please state your level of agreement with the following statement: Access rights to the managed access area have been distributed fairly to fishers,,
+11,Attitudes,61f,61f. Please state your level of agreement with the following statement: I am willing to change my fishing behavior,,
+11,Attitudes,61g,"61g. Please state your level of agreement with the following statement: Through my individual fishing behavior, I can make a meaningful contribution to the sustainability of the fishery",,
+11,Attitudes,61h,61h. Please state your level of agreement with the following statement: It is important for me to be able to help my neighbors in times of need,,
+11,Attitudes,62,,62. What do you think will happen if everyone complies with the reserve?,reserve_compliance
+11,Attitudes,63,"63. Some people fish in the reserve and some people do not. In the past month, have you fished in the reserve?",,fishing_in_reserve
+11,Attitudes,64,64. How wrong would it be for someone to fish in the reserve?,,wrong_fishing_in_reserve
+11,Attitudes,65,"65. Out of ten members of your community, how many would you guess believe it is wrong to fish in the reserve?",,no_wrong_fishing_in_reserve
+11,Attitudes,66,,"66. If people in the community found out that a fisher was fishing in the reserve, would they say or do anything in response?",response_to_fishing_in_reserve
+11,Attitudes,67,67. Do you know where the boundary of the reserve is?,,reserve_boundry
+12,Expenditures and Income,68,"68. Based on your recollection, enter total number of kilograms of fish sold and eaten (consumed) in your household per week in the last 6 months...",,textlabel_27
+12,Expenditures and Income,69,,"69. Please list the three types of fish that you catch most commonly, in decreasing order.  For each fish type, please provide the customer to whom you sell the fish and the unit price paid for the fish",textlabel_18
+12,Expenditures and Income,70a,"70a. What is your households’ average monthly income from all activities, including salaried and non-salaried labor?",,hh_average_income
+13,Expenditures and Income,70b,70b. What is your households’ average monthly income from all fishing related activities?,,
+12,Expenditures and Income,71,,"71. Over the past month, what is the average time spent and income earned on cleaning and processing activities to prepare the fish for sale?",textlabel_19
+12,Expenditures and Income,72,72. How do you judge the value of your catch compared to two years ago?,,current_economic
+12,Expenditures and Income,73,73. How do you expect the value of your catch to develop in the next two years?,,future_economic
+12,Expenditures and Income,74,,"74. In the past month, about how much did you and your household spend on housing costs such as rent and electricity etc?",housing_costs
+12,Expenditures and Income,75,,"75. In the past month, about how much did you and your household spend on luxury goods and services?",luxury_goods
+12,Expenditures and Income,76,,"76. In the past month, about how much did you and your household spend on fishing costs?",fishing_costs
+12,Expenditures and Income,77,"77. Thinking of your household’s total income, is your household able to make ends meet?",,hh_ends_meet
+12,Expenditures and Income,78,78. Who makes the financial decisions in your household?,,financial_decisions

@@ -1,0 +1,12 @@
+name: RARE_HHS_Dashboard
+title: RARE_HHS_Dashboard
+username:
+account: rare
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3484799
+bundleId: 4118401
+url: https://rare.shinyapps.io/RARE_HHS_Dashboard/
+when: 1611085341.71961
+asMultiple: FALSE
+asStatic: FALSE
