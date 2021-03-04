@@ -22,8 +22,7 @@ PHL_hhs <- data.table::fread(#"data-raw/hh_surveys_phl.csv",
 #Load MOZ data from data world
 MOZ_hhs <- data.table::fread(#"data-raw/hh_surveys_moz.csv",
                              "https://query.data.world/s/3wu6qfkst77upiqryvvyymkkwa5bst",
-                             stringsAsFactors = TRUE, encoding = "UTF-8") %>% subset(ma_name !='') %>%
-  filter (ma_name != "Baixo Pinda") %>% droplevels()
+                             stringsAsFactors = TRUE, encoding = "UTF-8") %>% subset(ma_name !='') 
 
 #Load FSM data from data world
 FSM_hhs <- data.table::fread(#"data-raw/hh_surveys_fsm.csv",
@@ -54,8 +53,7 @@ HND_hhs_Q14 <- data.table::fread("https://query.data.world/s/edjccr3vwnnr3jgl6su
 BRA_hhs_Q14 <- data.table::fread("https://query.data.world/s/5o37qji6r6542sbxa2o4by3pitk2hh",
                                   stringsAsFactors = TRUE)
 MOZ_hhs_Q14 <- data.table::fread("https://query.data.world/s/e6efeftjpmv5jpx5x56rokw6qgxqct",
-                                  stringsAsFactors = TRUE) %>%
-  filter (ma_name != "Baixo Pinda") %>% droplevels()
+                                  stringsAsFactors = TRUE) 
 FSM_hhs_Q14 <- data.table::fread("https://query.data.world/s/zosmnctknxod3i5ygyo2hlkmh6ubxm",
                                   stringsAsFactors = TRUE)
 
