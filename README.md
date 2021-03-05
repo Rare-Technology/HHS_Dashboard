@@ -2,7 +2,7 @@
 
 This tool summarizes information collected through the Fish Forever Household Survey (HHS). The HHS contains defined-answer questions assessing respondents’ livelihoods, engagement with the local fishery, resilience to economic shocks, social capital, knowledge of fishing regulations, attitudes toward fisheries management, participation in fisheries management, and perceptions of current management approaches.
 
-Here is a the metadata associated with the dataset. Please refer to the HHS Guide [link] for the Survey questions and answers. Each HHS question starts with a number (1 to 83).  The rest of the columns are information regarding administration levels, management levels, date of survey, submission ids, etc. The data is divided in **eight data files** depending on the type of questions asked. These data files can be joined together by a unique *submissionid* for analysis.
+Here is a the metadata associated with the dataset. Please refer to the [HHS Guidance document](https://portal.rare.org/wp-content/uploads/2021/01/HHS-Instrument_updated_011221.pdf) for the Survey questions and answers. Each HHS question starts with a number (1 to 83).  The rest of the columns are information regarding administration levels, management levels, date of survey, submission ids, etc. The data is divided in **eight data files** depending on the type of questions asked. These data files can be joined together by a unique *submissionid* for analysis.
 
 
 The data files are:       
@@ -17,7 +17,7 @@ The data files are:
 
 The following are the data files column names and associated **metadata**:
 
-### HHS_surveys metadata 
+### HHS_surveys metadata
 
 **id**:  Unique numeric identifier  
 **country**: Country name   
@@ -190,29 +190,29 @@ The following are the data files column names and associated **metadata**:
 **39_ma_boundaries_aware**: Factor, 6 levels, na (not answered)         
 **40_reserve_boundaries_aware**: Integer 0-10 in last HHS verison, but as factor (5 levels) for Mozambique        
 **41_ma_fishers_allowed**: Factor, 9 levels, na (not answered)            
-**42a_problem_regulation**           
-**42b_problem_restricted_gear**     
-**42c_problem_undersize**            
-**42d_problem_inside_reserve**      
-**42e_problem_unauthorized**         
-**43_ma_benefits**                  
-**43_ma_benefits_opinion**           
-**46_represent_interests**          
-**47_represent_contributions**       
-**49_enforcement_responsible**      
-**50_ma_punishment**                 
-**51a_fishers_gear_not_permitted**  
-**51b_fishers_reserves**             
-**51c_fishers_ma_area**             
-**51d_fishers_violate_fish_size**    
-**51e_fishers_caught**              
-**52_ma_benefit_5yrs**               
-**53_encourage_regulations**        
-**54_food_availability**             
-**55_worry_food**                   
-**56_reduce_meal_size_adult**        
-**57_reduce_meal_size_frequency**   
-**58_reduce_meal_size_child**        
+**42a_problem_regulation**: 1 (Yes), 0 (No), NA (not answered)   
+**42b_problem_restricted_gear**: 1 (Yes), 0 (No), NA (not answered), -1 (not answered, 1st hhs had NA as default)  
+**42c_problem_undersize**: 1 (Yes), 0 (No), NA (not answered), -1 (not answered)            
+**42d_problem_inside_reserve**: 1 (Yes), 0 (No), NA (not answered), -1 (not answered)               
+**42e_problem_unauthorized**: 1 (Yes), 0 (No), NA (not answered), -1 (not answered)             
+**43_ma_benefits**: 1 (Yes), 0 (No), NA (not answered), -1 (not answered)             
+**43_ma_benefits_opinion**: Factor, many levels, open answer          
+**46_represent_interests**: Factor, 4 levels, na (not answered)             
+**47_represent_contributions**: Factor, 4 levels, na (not answered)         
+**49_enforcement_responsible**: Factor, 5 levels (multiple choice allowed), na OR blanks (not answered)         
+**50_ma_punishment**: Factor, 6 levels, na (not answered)           
+**51a_fishers_gear_not_permitted**: Integer (0-10): NA (not answered), values >10 are entry errors     
+**51b_fishers_reserves**: Integer (0-10): NA (not answered), values >10 are entry errors     
+**51c_fishers_ma_area**: Integer (0-10): NA (not answered), values >10 are entry errors          
+**51d_fishers_violate_fish_size**: Integer (0-10): NA (not answered), values >10 are entry errors        
+**51e_fishers_caught**: Integer (0-10): NA (not answered), values >10 are entry errors             
+**52_ma_benefit_5yrs**: Factor, 4 levels, na OR blanks (not answered)         
+**53_encourage_regulations**: Factor, 6 levels, blanks (not answered)             
+**54_food_availability**: Factor, 5 levels, blanks (not answered)             
+**55_worry_food**: Factor, 3 levels, blanks (not answered)            
+**56_reduce_meal_size_adult**: 1 (Yes), 0 (No), NA (not answered)         
+**57_reduce_meal_size_frequency**: Factor, 3 levels, blanks (not answered)          
+**58_reduce_meal_size_child**: 1 (Yes), 0 (No), NA (not answered)       
 **59_food_procurement**             
 **60_hh_fish_consumption**           
 **61a_current_regulations**         
