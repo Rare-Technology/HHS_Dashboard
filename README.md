@@ -190,9 +190,9 @@ The following are the data files column names and associated **metadata**:
 **39_ma_boundaries_aware**: Factor, 6 levels, na (not answered)         
 **40_reserve_boundaries_aware**: Integer 0-10 in last HHS verison, but as factor (5 levels) for Mozambique        
 **41_ma_fishers_allowed**: Factor, 9 levels, na (not answered)            
-**42a_problem_regulation**           
-**42b_problem_restricted_gear**     
-**42c_problem_undersize**            
+**42a_problem_regulation**: 1 (Yes), 0 (No), NA (not answered)   
+**42b_problem_restricted_gear**: 1 (Yes), 0 (No), NA (not answered), -1 (not answered, 1st hhs had NA as default), 
+**42c_problem_undersize**: 
 **42d_problem_inside_reserve**      
 **42e_problem_unauthorized**         
 **43_ma_benefits**                  
