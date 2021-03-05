@@ -15,7 +15,7 @@ The data files are:
 *hhs_enforcement* - Q48        
 *hhs_customers* - Q69     
 
-The following are the data files column names and associated **metadata**:
+The following are the data files and column names with associated **metadata** (variable types, answer codes, notes):
 
 ### HHS_surveys metadata
 
@@ -213,6 +213,28 @@ The following are the data files column names and associated **metadata**:
 **56_reduce_meal_size_adult**: 1 (Yes), 0 (No), NA (not answered)         
 **57_reduce_meal_size_frequency**: Factor, 3 levels, blanks (not answered)          
 **58_reduce_meal_size_child**: 1 (Yes), 0 (No), NA (not answered)       
+**42b_problem_restricted_gear**: 1 (Yes), 0 (No), NA (not answered), -1 (not answered, 1st hhs had NA as default)     
+**42c_problem_undersize**: 1 (Yes), 0 (No), NA (not answered), -1 (not answered, 1st hhs had NA as default)       
+**42d_problem_inside_reserve**: 1 (Yes), 0 (No), NA (not answered), -1 (not answered, 1st hhs had NA as default)      
+**42e_problem_unauthorized**: 1 (Yes), 0 (No), NA (not answered), -1 (not answered, 1st hhs had NA as default)      
+**43_ma_benefits**: 1 (Yes), 0 (No), NA (not answered), -1 (no managed access, 1st hhs had NA as default)       
+**43_ma_benefits_opinion**: Factor, many levels, open answer          
+**46_represent_interests**: Factor, 4 levels, blanks OR na (not answered)       
+**47_represent_contributions**: Factor, 4 levels, blanks OR na (not answered)         
+**49_enforcement_responsible**: Factor, 5 levels, 1st HHS had multiple selection active, blanks OR na (not answered)        
+**50_ma_punishment**: Factor, 6 levels, blanks OR na (not answered)     
+**51a_fishers_gear_not_permitted**  
+**51b_fishers_reserves**             
+**51c_fishers_ma_area**             
+**51d_fishers_violate_fish_size**    
+**51e_fishers_caught**              
+**52_ma_benefit_5yrs**               
+**53_encourage_regulations**        
+**54_food_availability**             
+**55_worry_food**                   
+**56_reduce_meal_size_adult**        
+**57_reduce_meal_size_frequency**   
+**58_reduce_meal_size_child**        
 **59_food_procurement**             
 **60_hh_fish_consumption**           
 **61a_current_regulations**         
