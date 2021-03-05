@@ -6,18 +6,18 @@ Here is a the metadata associated with the dataset. Please refer to the [HHS Gui
 
 
 The data files are:       
-*hhs_surveys* - Most questions         
-*hhs_people* - Q7     
-*hhs_responsabilities* - Q14      
-*hhs_activities* - Q15      
-*hhs_meeting* - Q44     
-*hhs_leadership* - Q45      
-*hhs_enforcement* - Q48        
-*hhs_customers* - Q69     
+*hh_surveys* - Most questions         
+*hh_people* - Q7     
+*hh_responsabilities* - Q14      
+*hh_activities* - Q15      
+*hh_meeting* - Q44     
+*hh_leadership* - Q45      
+*hh_enforcement* - Q48        
+*hh_customers* - Q69     
 
 The following are the data files and column names with associated **metadata** (variable types, answer codes, notes):
 
-### HHS_surveys metadata
+### HH_surveys metadata
 
 **id**:  Unique numeric identifier  
 **country**: Country name   
@@ -289,4 +289,36 @@ The following are the data files and column names with associated **metadata** (
 **81_name_other**: Name of other interviewee (CONFIDENTIAL)              
 **81_telephone_other**: Phone number of interviewee                 
 **82_comments_interviewee**: Text, open answer          
-**83_comments_interviewer**: Text, open answer        
+**83_comments_interviewer**: Text, open answer              
+
+
+
+### hh_people (Q7) metadata (first columns as in HH_surveys)           
+
+**7_gender**: Factor, 2 levels (Sex: M, F), blank OR NA (not answered)            
+**7_age**: Integer, blank OR NA (not answer)            
+**7_relationship**: Factor, 10 levels, blank OR NA (not answered)             
+**7_education**: Factor, 6 levels, blank OR NA (not answered)         
+
+
+### hh_responsibilities (Q14)  metadata (first columns as in HH_surveys)        
+
+**14_responsibility**: Factor, 6 levels, may vary by country, blank OR NA (not answered)        
+
+
+### hh_activities (Q15) metadata (first columns as in HH_surveys)         
+
+**15_activity**: Factor, many levels, open answer, blank OR NA (not answered)       
+**15_hours**: Integer (0-168), values >168 should be ignore as that is more than the number of hours in a week
+
+
+*hh_meeting* - Q44     
+*hh_leadership* - Q45      
+*hh_enforcement* - Q48        
+*hh_customers* - Q69     
+
+
+
+
+
+
