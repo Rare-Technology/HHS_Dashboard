@@ -15,7 +15,7 @@ The data files are:
 *hhs_enforcement* - Q48        
 *hhs_customers* - Q69     
 
-The following are the data files column names and associated **metadata**:
+The following are the data files and column names with associated **metadata** (variable types, answer codes, notes):
 
 ### HHS_surveys metadata
 
@@ -213,43 +213,80 @@ The following are the data files column names and associated **metadata**:
 **56_reduce_meal_size_adult**: 1 (Yes), 0 (No), NA (not answered)         
 **57_reduce_meal_size_frequency**: Factor, 3 levels, blanks (not answered)          
 **58_reduce_meal_size_child**: 1 (Yes), 0 (No), NA (not answered)       
-**59_food_procurement**             
-**60_hh_fish_consumption**           
-**61a_current_regulations**         
-**61b_catch_recording**              
-**61c_community_participation**     
-**61d_strong_enforcement**           
-**61e_violations_decrease_profit**  
-**61f_rights_distribution_fair**     
-**61g_fishing_change_behavior**     
-**61h_individual_behavior**          
-**61i_help_neighbors**              
-**62_reserve_compliance**            
-**63_fishing_in_reserve**           
-**63_times_fishing_reserve**         
-**64_wrong_fishing_reserve**        
-**65_no_wrong_fishing_reserve**      
-**66_response_fishing_reserve**     
-**66_reaction_fishing_reserve**      
-**67_reserve_boundry**              
-**68_fish_eaten**                    
-**68_fish_sold**                    
-**70_hh_average_income**             
-**71_post_hours_man**               
-**71_post_income_man**               
-**71_post_hours_woman**             
-**71_post_income_woman**             
-**72_current_economic**             
-**73_future_economic**               
-**74_housing_costs**                
-**75_luxury_goods**                  
-**76_fishing_costs**                
-**77_hh_ends_meet**                  
-**78_financial_decisions**          
-**79_allow_reinterview**             
-**79_interview_years**              
-**80_full_name**                     
-**81_name_other**                   
-**81_telephone_other**               
-**82_comments_interviewee**         
-**83_comments_interviewer**          
+**42b_problem_restricted_gear**: 1 (Yes), 0 (No), NA (not answered), -1 (not answered, 1st hhs had NA as default)     
+**42c_problem_undersize**: 1 (Yes), 0 (No), NA (not answered), -1 (not answered, 1st hhs had NA as default)       
+**42d_problem_inside_reserve**: 1 (Yes), 0 (No), NA (not answered), -1 (not answered, 1st hhs had NA as default)      
+**42e_problem_unauthorized**: 1 (Yes), 0 (No), NA (not answered), -1 (not answered, 1st hhs had NA as default)      
+**43_ma_benefits**: 1 (Yes), 0 (No), NA (not answered), -1 (no managed access, 1st hhs had NA as default)       
+**43_ma_benefits_opinion**: Factor, many levels, open answer              
+**46_represent_interests**: Factor, 4 levels, blanks OR na (not answered)           
+**47_represent_contributions**: Factor, 4 levels, blanks OR na (not answered)           
+**49_enforcement_responsible**: Factor, 5 levels, 1st HHS had multiple selection active, blanks OR na (not answered)            
+**50_ma_punishment**: Factor, 6 levels, blanks OR na (not answered)         
+**51a_fishers_gear_not_permitted**: Integer (0-10): NA (not answered), values >10 are data entry errors      
+**51b_fishers_reserves**: Integer (0-10): NA (not answered), values >10 are data entry errors      
+**51c_fishers_ma_area**: Integer (0-10): NA (not answered), values >10 are data entry errors     
+**51d_fishers_violate_fish_size**: Integer (0-10): NA (not answered), values >10 are data entry errors     
+**51e_fishers_caught**: Integer (0-10): NA (not answered), values >10 are data entry errors       
+**52_ma_benefit_5yrs**: Factor, 4 levels, blanks OR na (not answered)       
+**53_encourage_regulations**: Factor, 6 levels, blanks (not answered)       
+**54_food_availability**: Factor, 5 levels, blanks (not answered)             
+**55_worry_food**: Factor, 3 levels, blanks (not answered)          
+**56_reduce_meal_size_adult**: 1 (Yes), 0 (No), NA (not answered)           
+**57_reduce_meal_size_frequency**:  Factor, 3 levels, blanks (not answered)       
+**58_reduce_meal_size_child**: 1 (Yes), 0 (No), NA (not answered)           
+**59_food_procurement**: Factor, 5 levels, NA (not answered), "Very confident not" = "Very not confident", "Confident not" = "Not confident"            
+**60_hh_fish_consumption**: Factor, 5 levels, blank (not answered)          
+**61a_current_regulations**: 1 (strongly disagree), 2 (disagree), 3 (neither), 4 (agree), 5 (strongly agree), 0 OR -1 (not answered), NA (not applicable)        
+**61b_catch_recording**: 1 (strongly disagree), 2 (disagree), 3 (neither), 4 (agree), 5 (strongly agree), 0 OR -1 (not answered), NA (not applicable)     
+**61c_community_participation**: 1 (strongly disagree), 2 (disagree), 3 (neither), 4 (agree), 5 (strongly agree), 0 OR -1 (not answered), NA (not applicable)     
+**61d_strong_enforcement**: 1 (strongly disagree), 2 (disagree), 3 (neither), 4 (agree), 5 (strongly agree), 0 OR -1 (not answered), NA (not applicable)     
+**61e_violations_decrease_profit**: 1 (strongly disagree), 2 (disagree), 3 (neither), 4 (agree), 5 (strongly agree), 0 OR -1 (not answered), NA (not applicable)     
+**61f_rights_distribution_fair**: 1 (strongly disagree), 2 (disagree), 3 (neither), 4 (agree), 5 (strongly agree), 0 OR -1 (not answered), NA (not applicable)     
+**61g_fishing_change_behavior**: 1 (strongly disagree), 2 (disagree), 3 (neither), 4 (agree), 5 (strongly agree), 0 OR -1 (not answered), NA (not applicable)     
+**61h_individual_behavior**: 1 (strongly disagree), 2 (disagree), 3 (neither), 4 (agree), 5 (strongly agree), 0 OR -1 (not answered), NA (not applicable)     
+**61i_help_neighbors**: 1 (strongly disagree), 2 (disagree), 3 (neither), 4 (agree), 5 (strongly agree), 0 OR -1 (not answered), NA (not applicable)     
+**62_reserve_compliance**: Factor, 4 levels, blank (not answered), for Honduras there was a value coding issue, answers should be coded as:           
+"La captura de los pescadores disminuirá" = "go down",          
+"2. La captura de los pescadores seguirá igual" = "stay the same",          
+"3. La captura de los pescadores aumentará" = "go up",            
+"4. No sabe" = "not know"                 
+**63_fishing_in_reserve**: 1 (Yes), 0 (No), -1 OR NA (not answered)         
+**63_times_fishing_reserve**: Integer, NA (not answered)          
+**64_wrong_fishing_reserve**: Factor, 5 levels, blanks (not answered), for Honduras there was a value coding issue, answers should be coded as:       
+"1. Nada malo" = "not at all",        
+"Un poquito malo" = "slightly",
+"3. Moderadamente malo" = "moderately",            
+"4. Muy malo" = "very wrong",         
+"5. Extremadamente malo" = "extremely wrong",         
+**65_no_wrong_fishing_reserve**: Integer (0-10), any values > 10 are data entry errors, NA (not answered)         
+**66_response_fishing_reserve**: 1 (Yes), 0 (No), -1 OR NA (not answered)         
+**66_reaction_fishing_reserve**: Factor, 3 levels, blanks (not answered), for Honduras there was a value coding issue, answers should be coded as:                 
+"1. No aplicaría ninguna sanción" = "non-sanction",             
+"2. Aplicaría una sanción negativa informal" = "negative informal sanction",               
+"3. Aplicaría una sanción negativa formal" = "negative formal sanction",              
+"1. Non-sanction" = "non-sanction",           
+"2. Negative informal sanction" = "negative informal sanction",         
+"Negative formal sanction" = "negative formal sanction"             
+**67_reserve_boundry**: 1 (Yes), 0 (No), -1 OR NA (not answered)            
+**68_fish_eaten**: Integer, this should be number or weight of fish eaten, NA (not answered), Other (data entry error)          
+**68_fish_sold**: Integer, this should be number or weight of fish sold, NA (not answered), Other (data entry error)          
+**70_hh_average_income**: Integer, income in local currency, NA (not answered), for Honduras there are five income ranges, which are: 0-2500L, 2500-5000L, 5000-10000L, 10000-50000L, >50000L, L is lempira        
+**71_post_hours_man**: Integer, it should be < 24 (max hours per day), values > 24 should be discarded, NA (not answered)         
+**71_post_income_man**: Integer, income in local currency, NA (not answered), NA (not answered)         
+**71_post_hours_woman**: Integer, it should be < 24 (max hours per day), values > 24 should be discarded, NA (not answered)       
+**71_post_income_woman**: Integer, income in local currency, NA (not answered), NA (not answered)              
+**72_current_economic**: Factor, 5 levels, blank (not answered)                       
+**73_future_economic**: Factor, 5 levels, blank (not answered)                    
+**74_housing_costs**: Integer, values are in local currenty, NA (not answered)        
+**75_luxury_goods**: Integer, values are in local currenty, NA (not answered)         
+**76_fishing_costs**: Integer, values are in local currenty, NA (not answered)        
+**77_hh_ends_meet**: Factor, 5 levels, blank (not answered)                   
+**78_financial_decisions**: Factor, 4 levels, blank (not answered)              
+**79_allow_reinterview**: 1 (Yes), 0 (No), NA (not answered)          
+**79_interview_years**: Integer, NA (not answered)           
+**80_full_name**: Name of interviewee (CONFIDENTIAL)           
+**81_name_other**: Name of other interviewee (CONFIDENTIAL)              
+**81_telephone_other**: Phone number of interviewee                 
+**82_comments_interviewee**: Text, open answer          
+**83_comments_interviewer**: Text, open answer        
