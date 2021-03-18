@@ -1,3 +1,8 @@
+---
+output:
+  word_document: default
+  html_document: default
+---
 ## RARE HHS Dashboard for Socioeconomic Data Visualization
 
 ### Tool Objective

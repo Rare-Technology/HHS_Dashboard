@@ -137,7 +137,7 @@ proportion <- function(question, grouping, rounding, type)
         )
     }
     
-  rownames_to_column(result, "MA name")
+  tibble::rownames_to_column(result, "MA name")
   
 }
 

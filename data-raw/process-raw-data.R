@@ -31,17 +31,22 @@ FSM_hhs <- data.table::fread(#"data-raw/hh_surveys_fsm.csv",
 
 PLW_hhs <- data.table::fread("https://query.data.world/s/r577gevshvjb74ilkdia5ugl43desr",
                             stringsAsFactors = TRUE, encoding = "UTF-8") %>% subset(ma_name !='')
-
+PLW_hhs$level2_name <- PLW_hhs$level1_name
+PLW_hhs$ma_name <- PLW_hhs$level1_name
 
 #Combine all countries
 ALL_hhs <- data.table::rbindlist(list(IDN_hhs, PHL_hhs, HND_hhs, BRA_hhs, MOZ_hhs, FSM_hhs, PLW_hhs), 
                                  use.names=TRUE, fill = TRUE, idcol=NULL)
 
-
 ## Run for specific countries
 #ALL_hhs <- ALL_hhs
 #rename
 hhs <- droplevels(subset(ALL_hhs, ma_name != ""))
+
+
+#HHS Q07
+all_hhs_Q07 <- data.table::fread("https://query.data.world/s/kw5t42zthtskhvq6fbntufdpexbdql",
+                                 stringsAsFactors = TRUE)
 
 ### Q14 What activities are the responsibility of the women in the household in a typical week?
 IDN_hhs_Q14 <- data.table::fread("https://query.data.world/s/bwn7y6xnmeefrsndef4irtxq3iwchq",
@@ -63,7 +68,6 @@ q14 <- dplyr::tibble(data.table::rbindlist(list(IDN_hhs_Q14,
                                                 MOZ_hhs_Q14, 
                                                 BRA_hhs_Q14,
                                                 FSM_hhs_Q14), use.names = TRUE))    
-
 
 
 ### Q44 Proportion of community members who attend management body meetings regularly #####
@@ -155,7 +159,15 @@ initial_table <- hhs %>%
 
 readr::write_rds(tibble(hhs), "data/hhs.rds")
 readr::write_rds(tibble(hhs_questions), "data/hhs_questions.rds")
+#readr::write_rds(tibble(q07), "data/hhs_q07.rds") ### <- ###
 readr::write_rds(tibble(q14), "data/hhs_q14.rds")
+readr::write_rds(tibble(q14), "data/hhs_q15.rds") ### <- ###
 readr::write_rds(tibble(q44), "data/hhs_q44.rds")
 readr::write_rds(tibble(q45), "data/hhs_q45.rds")
+#readr::write_rds(tibble(q48), "data/hhs_q48.rds") ### <- ###
+#readr::write_rds(tibble(q69), "data/hhs_q69.rds") ### <- ###
+
+
+
+
 

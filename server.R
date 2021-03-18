@@ -2612,7 +2612,7 @@ shinyServer(function(input, output, session) {
         
           ### Q51a Frequency of observed used of unapproved gear
          hhs_Q51a <- selectedData()[,c("ma_name", "51a_fishers_gear_not_permitted")] %>%
-                        filter(`51a_fishers_gear_not_permitted` %in% c(1:10)) %>% 
+                        filter(`51a_fishers_gear_not_permitted` %in% c(0:10)) %>% 
                            droplevels()
          ## Summary 
          Q51a_length <-
@@ -2640,7 +2640,7 @@ shinyServer(function(input, output, session) {
          
          ### Q51b Frequency of observed fishing in reserve ####
          hhs_Q51b <- selectedData()[,c("ma_name", "51b_fishers_reserves")] %>%
-                        filter(`51b_fishers_reserves` %in% c(1:10)) %>%
+                        filter(`51b_fishers_reserves` %in% c(0:10)) %>%
                            droplevels()
          Q51b_length <-
             tapply(hhs_Q51b$`51b_fishers_reserves`,
@@ -2665,7 +2665,7 @@ shinyServer(function(input, output, session) {
          
          ### Q51c Frequency of observed unpermitted fishing in MA ####
          hhs_Q51c <- selectedData()[,c("ma_name", "51c_fishers_ma_area")] %>%
-                        filter(`51c_fishers_ma_area` %in% c(1:10)) %>%
+                        filter(`51c_fishers_ma_area` %in% c(0:10)) %>%
                            droplevels()
           Q51c_length <-
             tapply(hhs_Q51c$`51c_fishers_ma_area`,
@@ -3989,7 +3989,7 @@ shinyServer(function(input, output, session) {
       else if (input$hhs_question == "65. Out of ten members of your community, how many would you guess believe it is wrong to fish in the reserve?") {
         
           hhs_Q65 <- selectedData()[,c("ma_name", "65_no_wrong_fishing_reserve")] %>%
-                        dplyr::filter(`65_no_wrong_fishing_reserve` %in% c(1:10))
+                        dplyr::filter(`65_no_wrong_fishing_reserve` %in% c(0:10))
           
          Q65_length <-
             tapply(hhs_Q65$`65_no_wrong_fishing_reserve`,
