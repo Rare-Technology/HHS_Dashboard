@@ -85,23 +85,31 @@ shinyServer(function(input, output, session) {
          input$Local_Government,
          input$Managed_Access
       )
-
-      # TODO: do we need to drop levels each time? That's expensive
-      hhs %>%
+       hhs %>%
          dplyr::filter(
             country == input$Country,
             level1_name %in% input$Subnational_Government,
             level2_name %in% input$Local_Government,
             ma_name %in% input$Managed_Access
-         )%>% 
+         ) %>% 
          droplevels()
 
    })
    
    #Selected Data
+   selectedData_Q07 <- reactive ({
+      hhs_q07 %>%
+         dplyr::filter(
+            country == input$Country,
+            level1_name %in% input$Subnational_Government,
+            level2_name %in% input$Local_Government,
+            ma_name %in% input$Managed_Access
+         ) %>% 
+         droplevels()
+   })
+   
+   #Selected Data
    selectedData_Q14 <- reactive ({
-      
-      # TODO: do we need to drop levels each time? That's expensive
       hhs_q14 %>%
          dplyr::filter(
             country == input$Country,
@@ -113,9 +121,19 @@ shinyServer(function(input, output, session) {
    })
    
    #Selected Data
+   selectedData_Q15 <- reactive ({
+      hhs_q15 %>%
+         dplyr::filter(
+            country == input$Country,
+            level1_name %in% input$Subnational_Government,
+            level2_name %in% input$Local_Government,
+            ma_name %in% input$Managed_Access
+         ) %>% 
+         droplevels()
+   })
+   
+   #Selected Data
    selectedData_Q44 <- reactive ({
-      
-      # TODO: do we need to drop levels each time? That's expensive
       hhs_q44 %>%
          dplyr::filter(
             country == input$Country,
@@ -128,9 +146,7 @@ shinyServer(function(input, output, session) {
    
    #Selected Data
    selectedData_Q45 <- reactive ({
-
-      # TODO: do we need to drop levels each time? That's expensive
-      hhs_q45 %>%
+       hhs_q45 %>%
          dplyr::filter(
             country == input$Country,
             level1_name %in% input$Subnational_Government,
@@ -140,6 +156,28 @@ shinyServer(function(input, output, session) {
          droplevels()
    })
    
+   selectedData_Q48 <- reactive ({
+      hhs_q48 %>%
+         dplyr::filter(
+            country == input$Country,
+            level1_name %in% input$Subnational_Government,
+            level2_name %in% input$Local_Government,
+            ma_name %in% input$Managed_Access
+         )%>% 
+         droplevels()
+   })
+   
+   
+   selectedData_Q69 <- reactive ({
+      hhs_q69 %>%
+         dplyr::filter(
+            country == input$Country,
+            level1_name %in% input$Subnational_Government,
+            level2_name %in% input$Local_Government,
+            ma_name %in% input$Managed_Access
+         )%>% 
+         droplevels()
+   })
    ## ------------------------ HHS SUMMARY ------------------------------------------- #####
    
    output$table_summary <- renderTable({
@@ -147,9 +185,7 @@ shinyServer(function(input, output, session) {
       print("in table")
       req(nrow(selectedData()) > 0 && !input$hhs_question == "")
       table_summary(selectedData(), input$hhs_question)
-   
-      }, 
-      
+   }, 
       striped = TRUE, hover = TRUE, bordered = FALSE, spacing = 'xs',
       align = c('?', 'l', 'l', 'c', 'c', 'c', 'c', 'c', 'c'), 
       na ='', 
@@ -5016,7 +5052,7 @@ shinyServer(function(input, output, session) {
    output$downloadRawData1 <- downloadHandler(
       filename = function() {
          paste0(
-            "HHS_Raw_Data_",
+            "HHS_data_",
             input$Country,
             ".csv",
             sep = ""
@@ -5024,7 +5060,7 @@ shinyServer(function(input, output, session) {
       },
       content = function(file) {
          #filter out variables of no interest
-         downloaded_data <- dplyr::select(selectedData(), 
+         hh_surveys <- dplyr::select(selectedData(), 
                                             -c("level4_id",
                                              "1_interviewer",
                                              "username_2",
@@ -5037,81 +5073,204 @@ shinyServer(function(input, output, session) {
                                              )
                                           )
          #add NA or 0 to blanks
-         downloaded_data$`11a_months_farming`[is.na(downloaded_data$`11a_months_farming`)] <- 0
-         downloaded_data$`11a_income_farming`[is.na(downloaded_data$`11a_income_farming`)] <- 0
-         downloaded_data$`11b_months_harvesting`[is.na(downloaded_data$`11b_months_harvesting`)] <- 0
-         downloaded_data$`11b_income_harvesting`[is.na(downloaded_data$`11b_income_harvesting`)] <- 0
-         downloaded_data$`11c_months_fishing_artisanal`[is.na(downloaded_data$`11c_months_fishing_artisanal`)] <-0
-         downloaded_data$`11c_income_fishing_artisanal`[is.na(downloaded_data$`11c_income_fishing_artisanal`)] <- 0
-         downloaded_data$`11d_months_fishing_industrial`[is.na(downloaded_data$`11d_months_fishing_industrial`)] <- 0
-         downloaded_data$`11d_income_fishing_industrial`[is.na(downloaded_data$`11d_income_fishing_industrial`)] <- 0
-         downloaded_data$`11e_months_buying_trading`[is.na(downloaded_data$`11e_months_buying_trading`)] <- 0
-         downloaded_data$`11e_income_buying_trading`[is.na(downloaded_data$`11e_income_buying_trading`)] <- 0
-         downloaded_data$`11f_months_processing`[is.na(downloaded_data$`11f_months_processing`)] <- 0
-         downloaded_data$`11f_income_processing`[is.na(downloaded_data$`11f_income_processing`)] <- 0
-         downloaded_data$`11g_months_aquaculture`[is.na(downloaded_data$`11g_months_aquaculture`)] <- 0
-         downloaded_data$`11g_income_aquaculture`[is.na(downloaded_data$`11g_income_aquaculture`)] <- 0
-         downloaded_data$`11h_months_extraction`[is.na(downloaded_data$`11h_months_extraction`)] <- 0
-         downloaded_data$`11h_income_extraction`[is.na(downloaded_data$`11h_income_extraction`)] <- 0
-         downloaded_data$`11i_months_tourism`[is.na(downloaded_data$`11i_months_tourism`)] <- 0
-         downloaded_data$`11i_income_tourism`[is.na(downloaded_data$`11i_income_tourism`)] <- 0
-         downloaded_data$`11j_months_other_wage`[is.na(downloaded_data$`11j_months_other_wage`)] <- 0
-         downloaded_data$`11j_income_other_wage`[is.na(downloaded_data$`11j_income_other_wage`)] <- 0
-         downloaded_data$`11k_months_other`[is.na(downloaded_data$`11k_months_other`)] <- 0
-         downloaded_data$`11k_income_other`[is.na(downloaded_data$`11k_income_other`)] <- 0
+         hh_surveys$`11a_months_farming`[is.na(hh_surveys$`11a_months_farming`)] <- 0
+         hh_surveys$`11a_income_farming`[is.na(hh_surveys$`11a_income_farming`)] <- 0
+         hh_surveys$`11b_months_harvesting`[is.na(hh_surveys$`11b_months_harvesting`)] <- 0
+         hh_surveys$`11b_income_harvesting`[is.na(hh_surveys$`11b_income_harvesting`)] <- 0
+         hh_surveys$`11c_months_fishing_artisanal`[is.na(hh_surveys$`11c_months_fishing_artisanal`)] <-0
+         hh_surveys$`11c_income_fishing_artisanal`[is.na(hh_surveys$`11c_income_fishing_artisanal`)] <- 0
+         hh_surveys$`11d_months_fishing_industrial`[is.na(hh_surveys$`11d_months_fishing_industrial`)] <- 0
+         hh_surveys$`11d_income_fishing_industrial`[is.na(hh_surveys$`11d_income_fishing_industrial`)] <- 0
+         hh_surveys$`11e_months_buying_trading`[is.na(hh_surveys$`11e_months_buying_trading`)] <- 0
+         hh_surveys$`11e_income_buying_trading`[is.na(hh_surveys$`11e_income_buying_trading`)] <- 0
+         hh_surveys$`11f_months_processing`[is.na(hh_surveys$`11f_months_processing`)] <- 0
+         hh_surveys$`11f_income_processing`[is.na(hh_surveys$`11f_income_processing`)] <- 0
+         hh_surveys$`11g_months_aquaculture`[is.na(hh_surveys$`11g_months_aquaculture`)] <- 0
+         hh_surveys$`11g_income_aquaculture`[is.na(hh_surveys$`11g_income_aquaculture`)] <- 0
+         hh_surveys$`11h_months_extraction`[is.na(hh_surveys$`11h_months_extraction`)] <- 0
+         hh_surveys$`11h_income_extraction`[is.na(hh_surveys$`11h_income_extraction`)] <- 0
+         hh_surveys$`11i_months_tourism`[is.na(hh_surveys$`11i_months_tourism`)] <- 0
+         hh_surveys$`11i_income_tourism`[is.na(hh_surveys$`11i_income_tourism`)] <- 0
+         hh_surveys$`11j_months_other_wage`[is.na(hh_surveys$`11j_months_other_wage`)] <- 0
+         hh_surveys$`11j_income_other_wage`[is.na(hh_surveys$`11j_income_other_wage`)] <- 0
+         hh_surveys$`11k_months_other`[is.na(hh_surveys$`11k_months_other`)] <- 0
+         hh_surveys$`11k_income_other`[is.na(hh_surveys$`11k_income_other`)] <- 0
          
-         downloaded_data[downloaded_data == ""] <- NA
+         hh_surveys[hh_surveys == ""] <- NA
+         
+         #Q7 multichoice to string
+         hhs_q07_c <- selectedData_Q07() %>%
+            group_by(submissionid) %>%
+               summarise(`7_gender` = toString(`7_gender`),
+                         `7_age` = toString(`7_age`),
+                         `7_relationship` = toString(`7_relationship`),
+                         `7_education` = toString(`7_education`)) 
         
-      write_csv(downloaded_data, file)
+         #Q14 multichoice to string
+         hhs_q14_c <- selectedData_Q14() %>%
+            group_by(submissionid) %>%
+               summarise(`14_responsibility` = toString(`14_responsibility`))
          
-      }
-   )
+         #Q15 multichoice to string
+         hhs_q15_c <- selectedData_Q15() %>%
+            group_by(submissionid) %>%
+               summarise(`15_activity` = toString(`15_activity`),
+                         `15_hours` = toString(`15_hours`)) 
+                  
+         #Q44 multichoice to string
+         hhs_q44_c <- selectedData_Q44() %>%
+            group_by(submissionid) %>%
+               summarise(`44_meeting_attendance` = toString(`44_meeting_attendance`)) 
+          
+         #Q45 multichoice to string
+         hhs_q45_c <- selectedData_Q45() %>%
+            group_by(submissionid) %>%
+               summarise(`45_leadership_position` = toString(`45_leadership_position`)) 
+         
+         #Q48 multichoice to string
+         hhs_q48_c <- hhs_q48 %>%
+            group_by(submissionid) %>%
+               summarise(`48_enforcement_participation` = toString(`48_enforcement_participation`))
+         
+         #Q69 multichoice to string
+         hhs_q69_c <- hhs_q69 %>%
+            group_by(submissionid) %>%
+            summarise(`69_fish_type` = toString(`69_fish_type`),
+                      `69_street` = toString(`69_street`),
+                      `69_customer_home` = toString(`69_customer_home`),
+                      `69_market` = toString(`69_market`),
+                      `69_shop` = toString(`69_shop`),
+                      `69_fishing_company` = toString(`69_fishing_company`),
+                      `69_restaurant`= toString(`69_restaurant`),
+                      `69_own_home` = toString(`69_own_home`),
+                      `69_other` = toString(`69_other`))
+         
+      #combine all data
+         hhs_data <- plyr::join_all(list(hh_surveys, 
+                                    hhs_q07_c,
+                                    hhs_q14_c,
+                                    hhs_q15_c,
+                                    hhs_q44_c,
+                                    hhs_q45_c,
+                                    hhs_q48_c,
+                                    hhs_q69_c),
+                                    by = "submissionid",
+                                    type = "left",
+                                    match = "first")
+         write_csv(hhs_data, file)
+       }
+    )
+   
+   #Download Raw Data
    output$downloadRawData2 <- downloadHandler(
       filename = function() {
          paste0(
-            "HHS_Raw_Data_",
+            "HHS_data_",
             input$Country,
             ".csv",
             sep = ""
          )
       },
       content = function(file) {
-         downloaded_data <- dplyr::select(selectedData(), 
-                                          -c("level4_id",
-                                            "1_interviewer",
-                                            "80_full_name",
-                                            "81_name_other",                 
-                                            "81_telephone_other",
-                                            "82_comments_interviewee",       
-                                            "83_comments_interviewer",
-                                            "username_2")
-                                          )
-          downloaded_data$`11a_months_farming`[is.na(downloaded_data$`11a_months_farming`)] <- 0
-         downloaded_data$`11a_income_farming`[is.na(downloaded_data$`11a_income_farming`)] <- 0
-         downloaded_data$`11b_months_harvesting`[is.na(downloaded_data$`11b_months_harvesting`)] <- 0
-         downloaded_data$`11b_income_harvesting`[is.na(downloaded_data$`11b_income_harvesting`)] <- 0
-         downloaded_data$`11c_months_fishing_artisanal`[is.na(downloaded_data$`11c_months_fishing_artisanal`)] <-0
-         downloaded_data$`11c_income_fishing_artisanal`[is.na(downloaded_data$`11c_income_fishing_artisanal`)] <- 0
-         downloaded_data$`11d_months_fishing_industrial`[is.na(downloaded_data$`11d_months_fishing_industrial`)] <- 0
-         downloaded_data$`11d_income_fishing_industrial`[is.na(downloaded_data$`11d_income_fishing_industrial`)] <- 0
-         downloaded_data$`11e_months_buying_trading`[is.na(downloaded_data$`11e_months_buying_trading`)] <- 0
-         downloaded_data$`11e_income_buying_trading`[is.na(downloaded_data$`11e_income_buying_trading`)] <- 0
-         downloaded_data$`11f_months_processing`[is.na(downloaded_data$`11f_months_processing`)] <- 0
-         downloaded_data$`11f_income_processing`[is.na(downloaded_data$`11f_income_processing`)] <- 0
-         downloaded_data$`11g_months_aquaculture`[is.na(downloaded_data$`11g_months_aquaculture`)] <- 0
-         downloaded_data$`11g_income_aquaculture`[is.na(downloaded_data$`11g_income_aquaculture`)] <- 0
-         downloaded_data$`11h_months_extraction`[is.na(downloaded_data$`11h_months_extraction`)] <- 0
-         downloaded_data$`11h_income_extraction`[is.na(downloaded_data$`11h_income_extraction`)] <- 0
-         downloaded_data$`11i_months_tourism`[is.na(downloaded_data$`11i_months_tourism`)] <- 0
-         downloaded_data$`11i_income_tourism`[is.na(downloaded_data$`11i_income_tourism`)] <- 0
-         downloaded_data$`11j_months_other_wage`[is.na(downloaded_data$`11j_months_other_wage`)] <- 0
-         downloaded_data$`11j_income_other_wage`[is.na(downloaded_data$`11j_income_other_wage`)] <- 0
-         downloaded_data$`11k_months_other`[is.na(downloaded_data$`11k_months_other`)] <- 0
-         downloaded_data$`11k_income_other`[is.na(downloaded_data$`11k_income_other`)] <- 0
+         #filter out variables of no interest
+         hh_surveys <- dplyr::select(selectedData(), 
+                                     -c("level4_id",
+                                        "1_interviewer",
+                                        "username_2",
+                                        "username",
+                                        "80_full_name",
+                                        "81_name_other",                 
+                                        "81_telephone_other",
+                                        "82_comments_interviewee",       
+                                        "83_comments_interviewer",
+                                     )
+         )
+         #add NA or 0 to blanks
+         hh_surveys$`11a_months_farming`[is.na(hh_surveys$`11a_months_farming`)] <- 0
+         hh_surveys$`11a_income_farming`[is.na(hh_surveys$`11a_income_farming`)] <- 0
+         hh_surveys$`11b_months_harvesting`[is.na(hh_surveys$`11b_months_harvesting`)] <- 0
+         hh_surveys$`11b_income_harvesting`[is.na(hh_surveys$`11b_income_harvesting`)] <- 0
+         hh_surveys$`11c_months_fishing_artisanal`[is.na(hh_surveys$`11c_months_fishing_artisanal`)] <-0
+         hh_surveys$`11c_income_fishing_artisanal`[is.na(hh_surveys$`11c_income_fishing_artisanal`)] <- 0
+         hh_surveys$`11d_months_fishing_industrial`[is.na(hh_surveys$`11d_months_fishing_industrial`)] <- 0
+         hh_surveys$`11d_income_fishing_industrial`[is.na(hh_surveys$`11d_income_fishing_industrial`)] <- 0
+         hh_surveys$`11e_months_buying_trading`[is.na(hh_surveys$`11e_months_buying_trading`)] <- 0
+         hh_surveys$`11e_income_buying_trading`[is.na(hh_surveys$`11e_income_buying_trading`)] <- 0
+         hh_surveys$`11f_months_processing`[is.na(hh_surveys$`11f_months_processing`)] <- 0
+         hh_surveys$`11f_income_processing`[is.na(hh_surveys$`11f_income_processing`)] <- 0
+         hh_surveys$`11g_months_aquaculture`[is.na(hh_surveys$`11g_months_aquaculture`)] <- 0
+         hh_surveys$`11g_income_aquaculture`[is.na(hh_surveys$`11g_income_aquaculture`)] <- 0
+         hh_surveys$`11h_months_extraction`[is.na(hh_surveys$`11h_months_extraction`)] <- 0
+         hh_surveys$`11h_income_extraction`[is.na(hh_surveys$`11h_income_extraction`)] <- 0
+         hh_surveys$`11i_months_tourism`[is.na(hh_surveys$`11i_months_tourism`)] <- 0
+         hh_surveys$`11i_income_tourism`[is.na(hh_surveys$`11i_income_tourism`)] <- 0
+         hh_surveys$`11j_months_other_wage`[is.na(hh_surveys$`11j_months_other_wage`)] <- 0
+         hh_surveys$`11j_income_other_wage`[is.na(hh_surveys$`11j_income_other_wage`)] <- 0
+         hh_surveys$`11k_months_other`[is.na(hh_surveys$`11k_months_other`)] <- 0
+         hh_surveys$`11k_income_other`[is.na(hh_surveys$`11k_income_other`)] <- 0
          
-         downloaded_data[downloaded_data == ""] <- NA
+         hh_surveys[hh_surveys == ""] <- NA
          
-       write_csv(downloaded_data, file)
+         #Q7 multichoice to string
+         hhs_q07_c <- selectedData_Q07() %>%
+            group_by(submissionid) %>%
+            summarise(`7_gender` = toString(`7_gender`),
+                      `7_age` = toString(`7_age`),
+                      `7_relationship` = toString(`7_relationship`),
+                      `7_education` = toString(`7_education`)) 
+         
+         #Q14 multichoice to string
+         hhs_q14_c <- selectedData_Q14() %>%
+            group_by(submissionid) %>%
+            summarise(`14_responsibility` = toString(`14_responsibility`))
+         
+         #Q15 multichoice to string
+         hhs_q15_c <- selectedData_Q15() %>%
+            group_by(submissionid) %>%
+            summarise(`15_activity` = toString(`15_activity`),
+                      `15_hours` = toString(`15_hours`)) 
+         
+         #Q44 multichoice to string
+         hhs_q44_c <- selectedData_Q44() %>%
+            group_by(submissionid) %>%
+            summarise(`44_meeting_attendance` = toString(`44_meeting_attendance`)) 
+         
+         #Q45 multichoice to string
+         hhs_q45_c <- selectedData_Q45() %>%
+            group_by(submissionid) %>%
+            summarise(`45_leadership_position` = toString(`45_leadership_position`)) 
+         
+         #Q48 multichoice to string
+         hhs_q48_c <- hhs_q48 %>%
+            group_by(submissionid) %>%
+            summarise(`48_enforcement_participation` = toString(`48_enforcement_participation`))
+         
+         #Q69 multichoice to string
+         hhs_q69_c <- hhs_q69 %>%
+            group_by(submissionid) %>%
+            summarise(`69_fish_type` = toString(`69_fish_type`),
+                      `69_street` = toString(`69_street`),
+                      `69_customer_home` = toString(`69_customer_home`),
+                      `69_market` = toString(`69_market`),
+                      `69_shop` = toString(`69_shop`),
+                      `69_fishing_company` = toString(`69_fishing_company`),
+                      `69_restaurant`= toString(`69_restaurant`),
+                      `69_own_home` = toString(`69_own_home`),
+                      `69_other` = toString(`69_other`))
+         
+         #combine all data
+         hhs_data <- plyr::join_all(list(hh_surveys, 
+                                         hhs_q07_c,
+                                         hhs_q14_c,
+                                         hhs_q15_c,
+                                         hhs_q44_c,
+                                         hhs_q45_c,
+                                         hhs_q48_c,
+                                         hhs_q69_c),
+                                    by = "submissionid",
+                                    type = "left",
+                                    match = "first")
+         write_csv(hhs_data, file)
       }
    )
    

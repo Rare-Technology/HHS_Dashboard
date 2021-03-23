@@ -290,6 +290,17 @@ fillPage(fluidPage(
                 tags$style(
                   ".butt1{background-color:#378249;} .butt1{color: white;} .butt1{font-family: Arial}"
                 )
+              ),
+              
+              downloadButton(
+                outputId = 'downloadMedata1',
+                label = 'Download Metadata',
+                class = 'butt2'
+              ),
+              tags$head(
+                tags$style(
+                  ".butt2{background-color:#d3d3d3;} .butt2{color: white;} .butt2{font-family: Arial}"
+                )
               )
               
             )
@@ -337,6 +348,16 @@ fillPage(fluidPage(
               tags$head(
                 tags$style(
                   ".butt1{background-color:#378249;} .butt1{color: white;} .butt1{font-family: Arial}"
+                )
+              ),
+              downloadButton(
+                outputId = 'downloadMedata2',
+                label = 'Download Metadata',
+                class = 'butt2'
+              ),
+              tags$head(
+                tags$style(
+                  ".butt2{background-color:#d3d3d3;} .butt2{color: white;} .butt2{font-family: Arial}"
                 )
               )
             )

@@ -1,4 +1,4 @@
-
+##hh_surveys #####
 #Load Brazil from data world
 BRA_hhs <- data.table::fread(#"data-raw/hh_surveys_bra.csv", 
                              "https://query.data.world/s/rkr2loid2uqt63l2zjuqofpc2wkxes", 
@@ -35,20 +35,30 @@ PLW_hhs$level2_name <- PLW_hhs$level1_name
 PLW_hhs$ma_name <- PLW_hhs$level1_name
 
 #Combine all countries
-ALL_hhs <- data.table::rbindlist(list(IDN_hhs, PHL_hhs, HND_hhs, BRA_hhs, MOZ_hhs, FSM_hhs, PLW_hhs), 
-                                 use.names=TRUE, fill = TRUE, idcol=NULL)
+ALL_hhs <- data.table::rbindlist(list(IDN_hhs, 
+                                      PHL_hhs, 
+                                      HND_hhs, 
+                                      BRA_hhs, 
+                                      MOZ_hhs, 
+                                      FSM_hhs, 
+                                      PLW_hhs), 
+                                 use.names=TRUE, 
+                                 fill = TRUE, 
+                                 idcol = NULL)
 
 ## Run for specific countries
 #ALL_hhs <- ALL_hhs
 #rename
 hhs <- droplevels(subset(ALL_hhs, ma_name != ""))
 
+#write_csv(hhs, "hhs.csv")
 
-#HHS Q07
-all_hhs_Q07 <- data.table::fread("https://query.data.world/s/kw5t42zthtskhvq6fbntufdpexbdql",
+#hhs_Q07 people ####
+q07 <- data.table::fread("https://query.data.world/s/kw5t42zthtskhvq6fbntufdpexbdql",
                                  stringsAsFactors = TRUE)
 
-### Q14 What activities are the responsibility of the women in the household in a typical week?
+#hhs_Q14 responsibilities ####
+
 IDN_hhs_Q14 <- data.table::fread("https://query.data.world/s/bwn7y6xnmeefrsndef4irtxq3iwchq",
                                  stringsAsFactors = TRUE)
 PHL_hhs_Q14 <- data.table::fread("https://query.data.world/s/g7bo2jmfzbpoibilz77l5ggwqzwxjg",
@@ -69,8 +79,11 @@ q14 <- dplyr::tibble(data.table::rbindlist(list(IDN_hhs_Q14,
                                                 BRA_hhs_Q14,
                                                 FSM_hhs_Q14), use.names = TRUE))    
 
+### hhs_Q15 activities ####
+q15 <- data.table::fread("https://query.data.world/s/7evrcpuh3r3rnxqqneihmagbitunhi",
+                          stringsAsFactors = TRUE)
 
-### Q44 Proportion of community members who attend management body meetings regularly #####
+### hhs_Q44 #####
 #Indonesia
 IDN_hhs_Q44 <- data.table::fread(#"data-raw/hh_meeting_idn.csv",
                                  "https://query.data.world/s/6zxawinuzovshonppsshree44inpgj",
@@ -104,8 +117,8 @@ q44 <- dplyr::tibble(data.table::rbindlist(list(IDN_hhs_Q44,
                                                 BRA_hhs_Q44,
                                                 FSM_hhs_Q44), use.names = TRUE))
 
-### Q45 Proportion of communitity members that hold leadership positions in the fisheries management body #####
-#Indonesi
+### hhs_qQ5 #####
+#Indonesia
 IDN_hhs_Q45 <- data.table::fread(#"data-raw/hh_leadership_idn.csv",
                                 "https://query.data.world/s/mukyw6tqkokgh53b5asjkrobikwmsh",
                                  stringsAsFactors = TRUE)
@@ -139,6 +152,14 @@ q45 <- dplyr::tibble(data.table::rbindlist(list(IDN_hhs_Q45,
                                                 FSM_hhs_Q45
                                                 ), use.names = TRUE))
 
+### hhs_Q48 enforcement ####
+q48 <- data.table::fread("https://query.data.world/s/ce5gcgn3mfzck4azwq7jd47rvvkbz4",
+                         stringsAsFactors = TRUE)
+
+### hhs_Q48 enforcement ####
+q69 <- data.table::fread("https://query.data.world/s/ag4porxxcq7ji5x2m6lmhkhmivog6h",
+                         stringsAsFactors = TRUE)
+
 
 ##Load HHS quusestions
 hhs_questions <- data.table::fread("data-raw/hhs_questions.csv", stringsAsFactors = TRUE)
@@ -159,15 +180,10 @@ initial_table <- hhs %>%
 
 readr::write_rds(tibble(hhs), "data/hhs.rds")
 readr::write_rds(tibble(hhs_questions), "data/hhs_questions.rds")
-#readr::write_rds(tibble(q07), "data/hhs_q07.rds") ### <- ###
+readr::write_rds(tibble(q07), "data/hhs_q07.rds") 
 readr::write_rds(tibble(q14), "data/hhs_q14.rds")
-readr::write_rds(tibble(q14), "data/hhs_q15.rds") ### <- ###
+readr::write_rds(tibble(q15), "data/hhs_q15.rds") 
 readr::write_rds(tibble(q44), "data/hhs_q44.rds")
 readr::write_rds(tibble(q45), "data/hhs_q45.rds")
-#readr::write_rds(tibble(q48), "data/hhs_q48.rds") ### <- ###
-#readr::write_rds(tibble(q69), "data/hhs_q69.rds") ### <- ###
-
-
-
-
-
+readr::write_rds(tibble(q48), "data/hhs_q48.rds") 
+readr::write_rds(tibble(q69), "data/hhs_q69.rds")
