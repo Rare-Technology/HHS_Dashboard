@@ -621,92 +621,20 @@ shinyServer(function(input, output, session) {
       ### Q14 What activities are the responsibility of the women in the household in a typical week? ####
       else if (input$hhs_question == "14. What activities are the responsibility of the women in the household in a typical week?") {
          
-         hhs_Q14 <- selectedData_Q14()[,c("submissionid", "ma_name", "14_responsibility")] 
+         hhs_Q14 <- selectedData_Q14 [,c("submissionid", "ma_name", "14_responsibility")] 
          
-         length.unique <- function(x) { length(unique(x)) }
+         hhs_Q14 <-  hhs_q14 %>% filter (country == "FSM")
          
-         proportion_Q14 <- function(submissionid, question, grouping, rounding, type)
-         {
-            Q_length_N <- as.vector(tapply(submissionid, grouping, length.unique))
-            Q_length <- as.vector(tapply(question, grouping, length))
-            Q_length[is.na(Q_length)] <- 0
-            Q_count <- tapply(question, list(grouping, question), length)
-            Q_count[is.na(Q_count)] <- 0
-            summary_bind <- data.frame(N = Q_length_N, 
-                                       round(Q_count / Q_length, rounding) * 100)
-            if(type == "5"){
-               result <-
-                  rbind(
-                     summary_bind,
-                     "Mean ± SE" = c(
-                        sum(summary_bind[[1]]),
-                        mean_sem(summary_bind[[2]], 1),
-                        mean_sem(summary_bind[[3]], 1),
-                        mean_sem(summary_bind[[4]], 1),
-                        mean_sem(summary_bind[[5]], 1),
-                        mean_sem(summary_bind[[6]], 1)
-                     )
-                  )
-            }
-            
-            if(type == "6"){
-               result <-
-                  rbind(
-                     summary_bind,
-                     "Mean ± SE" = c(
-                        sum(summary_bind[[1]]),
-                        mean_sem(summary_bind[[2]], 1),
-                        mean_sem(summary_bind[[3]], 1),
-                        mean_sem(summary_bind[[4]], 1),
-                        mean_sem(summary_bind[[5]], 1),
-                        mean_sem(summary_bind[[6]], 1),
-                        mean_sem(summary_bind[[7]], 1)
-                     )
-                  )
-            }
-            
-            if(type == "7"){
-               result <-
-                  rbind(
-                     summary_bind,
-                     "Mean ± SE" = c(
-                        sum(summary_bind[[1]]),
-                        mean_sem(summary_bind[[2]], 1),
-                        mean_sem(summary_bind[[3]], 1),
-                        mean_sem(summary_bind[[4]], 1),
-                        mean_sem(summary_bind[[5]], 1),
-                        mean_sem(summary_bind[[6]], 1),
-                        mean_sem(summary_bind[[7]], 1),
-                        mean_sem(summary_bind[[8]], 1)
-                     )
-                  )
-            }
-            
-            if(type == "8"){
-               result <-
-                  rbind(
-                     summary_bind,
-                     "Mean ± SE" = c(
-                        sum(summary_bind[[1]]),
-                        mean_sem(summary_bind[[2]], 1),
-                        mean_sem(summary_bind[[3]], 1),
-                        mean_sem(summary_bind[[4]], 1),
-                        mean_sem(summary_bind[[5]], 1),
-                        mean_sem(summary_bind[[6]], 1),
-                        mean_sem(summary_bind[[7]], 1),
-                        mean_sem(summary_bind[[8]], 1),
-                        mean_sem(summary_bind[[9]], 1)
-                     )
-                  )
-            }
-            rownames_to_column( result, "MA name")
-         }
-            
-         Q14_summary <- proportion_Q14(hhs_Q14[[1]], 
-                                       hhs_Q14[[3]],
-                                       hhs_Q14[[2]],
+         hhs_Q14$`14_responsibility` <- 
+            recode_factor(hhs_Q14$`14_responsibility`,
+                          "Prepare fishing gear" = 'Preparing gear for fishing',
+                          "caring for house" = 'Keeping the house')
+         
+         Q14_summary <- proportion_Q14(hhs_Q14$submissionid, 
+                                       hhs_Q14$`14_responsibility`,
+                                       hhs_Q14$ma_name,
                                    rounding = 3, 
-                                   type = length(unique(hhs_Q14[[3]])))
+                                   type = length(unique(hhs_Q14$`14_responsibility`)))
           
          Q14_summary_long <-
             Q14_summary %>% pivot_longer(
@@ -5106,13 +5034,13 @@ shinyServer(function(input, output, session) {
                summarise(`14_responsibility` = toString(`14_responsibility`))
          
          #Q15 multichoice to string
-         hhs_q15_c <- selectedData_Q15() %>%
+         hhs_q15_c <- selectedData_Q15()  %>%
             group_by(submissionid) %>%
                summarise(`15_activity` = toString(`15_activity`),
                          `15_hours` = toString(`15_hours`)) 
                   
          #Q44 multichoice to string
-         hhs_q44_c <- selectedData_Q44() %>%
+         hhs_q44_c <- selectedData_Q44()  %>%
             group_by(submissionid) %>%
                summarise(`44_meeting_attendance` = toString(`44_meeting_attendance`)) 
           
@@ -5122,12 +5050,12 @@ shinyServer(function(input, output, session) {
                summarise(`45_leadership_position` = toString(`45_leadership_position`)) 
          
          #Q48 multichoice to string
-         hhs_q48_c <- hhs_q48 %>%
+         hhs_q48_c <- selectedData_Q48() %>%
             group_by(submissionid) %>%
                summarise(`48_enforcement_participation` = toString(`48_enforcement_participation`))
          
          #Q69 multichoice to string
-         hhs_q69_c <- hhs_q69 %>%
+         hhs_q69_c <- selectedData_Q69()%>%
             group_by(submissionid) %>%
             summarise(`69_fish_type` = toString(`69_fish_type`),
                       `69_street` = toString(`69_street`),
@@ -5152,8 +5080,7 @@ shinyServer(function(input, output, session) {
                                     type = "left",
                                     match = "first")
         
-          hhs_data[hhs_data == ""] <- NA
-          write_csv(hhs_data, file)
+           write_csv(hhs_data, file)
        }
     )
    
@@ -5219,13 +5146,13 @@ shinyServer(function(input, output, session) {
             summarise(`14_responsibility` = toString(`14_responsibility`))
          
          #Q15 multichoice to string
-         hhs_q15_c <- selectedData_Q15() %>%
+         hhs_q15_c <- selectedData_Q15()  %>%
             group_by(submissionid) %>%
             summarise(`15_activity` = toString(`15_activity`),
                       `15_hours` = toString(`15_hours`)) 
          
          #Q44 multichoice to string
-         hhs_q44_c <- selectedData_Q44() %>%
+         hhs_q44_c <- selectedData_Q44()  %>%
             group_by(submissionid) %>%
             summarise(`44_meeting_attendance` = toString(`44_meeting_attendance`)) 
          
@@ -5235,12 +5162,12 @@ shinyServer(function(input, output, session) {
             summarise(`45_leadership_position` = toString(`45_leadership_position`)) 
          
          #Q48 multichoice to string
-         hhs_q48_c <- hhs_q48 %>%
+         hhs_q48_c <- selectedData_Q48() %>%
             group_by(submissionid) %>%
             summarise(`48_enforcement_participation` = toString(`48_enforcement_participation`))
          
          #Q69 multichoice to string
-         hhs_q69_c <- hhs_q69 %>%
+         hhs_q69_c <- selectedData_Q69()%>%
             group_by(submissionid) %>%
             summarise(`69_fish_type` = toString(`69_fish_type`),
                       `69_street` = toString(`69_street`),
@@ -5264,7 +5191,6 @@ shinyServer(function(input, output, session) {
                                     by = "submissionid",
                                     type = "left",
                                     match = "first")
-         hhs_data[hhs_data == ""] <- NA
          
          write_csv(hhs_data, file)
       }
