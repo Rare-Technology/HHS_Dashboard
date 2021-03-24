@@ -4988,10 +4988,6 @@ shinyServer(function(input, output, session) {
             ),
             options = layersControlOptions(collapsed = TRUE)
          )
-      
-      ## Add graticule and add measure and add mouse coordinates
-      #addGraticule(interval = 1) %>%  addMeasure() %>% leafem::addMouseCoordinates() %>%
-      
    }
    
    
@@ -5096,8 +5092,6 @@ shinyServer(function(input, output, session) {
          hh_surveys$`11k_months_other`[is.na(hh_surveys$`11k_months_other`)] <- 0
          hh_surveys$`11k_income_other`[is.na(hh_surveys$`11k_income_other`)] <- 0
          
-         hh_surveys[hh_surveys == ""] <- NA
-         
          #Q7 multichoice to string
          hhs_q07_c <- selectedData_Q07() %>%
             group_by(submissionid) %>%
@@ -5157,7 +5151,9 @@ shinyServer(function(input, output, session) {
                                     by = "submissionid",
                                     type = "left",
                                     match = "first")
-         write_csv(hhs_data, file)
+        
+          hhs_data[hhs_data == ""] <- NA
+          write_csv(hhs_data, file)
        }
     )
    
@@ -5208,8 +5204,6 @@ shinyServer(function(input, output, session) {
          hh_surveys$`11j_income_other_wage`[is.na(hh_surveys$`11j_income_other_wage`)] <- 0
          hh_surveys$`11k_months_other`[is.na(hh_surveys$`11k_months_other`)] <- 0
          hh_surveys$`11k_income_other`[is.na(hh_surveys$`11k_income_other`)] <- 0
-         
-         hh_surveys[hh_surveys == ""] <- NA
          
          #Q7 multichoice to string
          hhs_q07_c <- selectedData_Q07() %>%
@@ -5270,9 +5264,41 @@ shinyServer(function(input, output, session) {
                                     by = "submissionid",
                                     type = "left",
                                     match = "first")
+         hhs_data[hhs_data == ""] <- NA
+         
          write_csv(hhs_data, file)
       }
    )
+   
+   #Download Metadata
+   output$downloadMetadata1 <- downloadHandler(
+      filename = function() {
+         paste0(
+            "HHS_metadata_",
+            input$Country,
+            ".html", sep = ""
+         )
+      },
+      content = function(file) {
+         file.copy("./data/metadata.html", file, overwrite = TRUE)
+          }
+    )
+   
+   #Download Metadata
+   output$downloadMetadata2 <- downloadHandler(
+      filename = function() {
+         paste0(
+            "HHS_metadata_",
+            input$Country,
+            ".html", sep = ""
+         )
+      },
+      content = function(file) {
+         file.copy("./data/metadata.html", file, overwrite = TRUE)
+      }
+   )
+   
+   
    
    ### HTML Report
    

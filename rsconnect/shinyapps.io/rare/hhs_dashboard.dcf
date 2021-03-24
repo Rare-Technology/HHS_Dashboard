@@ -5,8 +5,8 @@ account: rare
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1582021
-bundleId: 4364304
+bundleId: 4389147
 url: https://rare.shinyapps.io/hhs_dashboard/
-when: 1616082224.95274
+when: 1616588139.81825
 asMultiple: FALSE
 asStatic: FALSE

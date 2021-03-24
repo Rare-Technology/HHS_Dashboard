@@ -1,5 +1,9 @@
-
-## RARE HHS Dashboard for Socioeconomic Data Visualization
+---
+title: "RARE HHS Dashboard Metadata"
+author: "FISH FOREVER - SCIENCE & TECHNOLOGY TEAM"
+date: "3/24/2021"
+output: html_document
+---
 
 ### Tool Objective
 This tool summarizes information collected through the Fish Forever Household Survey (HHS). The HHS contains defined-answer questions assessing respondents’ livelihoods, engagement with the local fishery, resilience to economic shocks, social capital, knowledge of fishing regulations, attitudes towards and participation in fisheries management, and perceptions of current management approaches.
@@ -270,4 +274,5 @@ The following is the list of unique column names for the entire HHS data and ass
 **81_telephone_other**: Phone number of interviewee (CONFIDENTIAL, not shown)      
 **82_comments_interviewee**: Text, open answer          
 **83_comments_interviewer**: Text, open answer
+
 

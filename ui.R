@@ -271,13 +271,17 @@ fillPage(fluidPage(
               br(),
               downloadButton(
                 outputId = 'downloadReport1',
-                label = 'Generate Report',
+                label = 'Generate O&I Household Survey Report',
                 class = 'butt',
-                style = "right"
+                style = "right",
+                icon = NULL
               ),
               tags$head(
                 tags$style(
-                  ".butt{background-color:#005BBB;} .butt{color: white;} .butt{font-family: Arial}"
+                  ".butt{background-color:#005BBB;
+                        color: white;
+                        font-family: Arial;
+                        font-size: 10pt}"
                 )
               ),
               
@@ -288,18 +292,23 @@ fillPage(fluidPage(
               ),
               tags$head(
                 tags$style(
-                  ".butt1{background-color:#378249;} .butt1{color: white;} .butt1{font-family: Arial}"
+                  ".butt1{background-color:#5E6A71;
+                          color: white;
+                          font-family: Arial}"
                 )
               ),
               
               downloadButton(
-                outputId = 'downloadMedata1',
+                outputId = 'downloadMetadata1',
                 label = 'Download Metadata',
-                class = 'butt2'
+                class = 'butt2',
+                icon = icon('tasks')
               ),
               tags$head(
                 tags$style(
-                  ".butt2{background-color:#d3d3d3;} .butt2{color: white;} .butt2{font-family: Arial}"
+                  ".butt2{background-color:#5E6A71; 
+                    color: white;
+                    font-family: Arial}"
                 )
               )
               
@@ -331,12 +340,16 @@ fillPage(fluidPage(
               br(),
               downloadButton(
                 outputId = 'downloadReport2',
-                label = 'Generate Report',
-                class = 'butt'
+                label = '  Generate Full Household Survey Report  ',
+                class = 'butt',
+                icon = NULL
               ),
               tags$head(
                 tags$style(
-                  ".butt{background-color:#005BBB;} .butt{color: white;} .butt{font-family: Arial}"
+                  ".butt{background-color:#005BBB; 
+                        color: white; 
+                        font-family: Arial; 
+                        font-size: 10pt}"
                 )
               ),
               
@@ -347,30 +360,29 @@ fillPage(fluidPage(
               ),
               tags$head(
                 tags$style(
-                  ".butt1{background-color:#378249;} .butt1{color: white;} .butt1{font-family: Arial}"
+                  ".butt1{background-color:#5E6A71; 
+                  color: white; 
+                  font-family: Arial}"
                 )
               ),
               downloadButton(
-                outputId = 'downloadMedata2',
+                outputId = 'downloadMetadata2',
                 label = 'Download Metadata',
-                class = 'butt2'
+                class = 'butt2',
+                icon = icon('tasks')
               ),
               tags$head(
                 tags$style(
-                  ".butt2{background-color:#d3d3d3;} .butt2{color: white;} .butt2{font-family: Arial}"
+                  ".butt2{background-color:#5E6A71; color: white; font-family: Arial}"
                 )
               )
             )
           )
-        )#,
-        
-        #tabPanel(style = "overflow-y:scroll; max-height: 600px",
-        #        "Household Survey Summary", 
-        #         br(),
-         #       htmlOutput("renderedReport")
-        #)
+        )
       )
     )
-  ))
-))
+  )
+  )
+)
+)
 

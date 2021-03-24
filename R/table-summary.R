@@ -68,13 +68,11 @@ table_summary <- function(.data, hhs_question){
       dplyr::filter(`6_gender` == "F") %>% 
       dplyr::pull(percent)
     
-    
-    #Extract ma_names and district levels
+    #Extract ma_names  levels
     district_names <- hhs_stats %>% 
       dplyr::group_by(level1_name, level2_name, ma_name) %>% 
       dplyr::summarise(lat = mean(lat, na.rm = TRUE)) %>% 
       dplyr::ungroup()
-    
     
     hhs_fisherhh <- .data %>% 
       dplyr::filter(
@@ -98,10 +96,9 @@ table_summary <- function(.data, hhs_question){
     
     menhhs <- get_ma_percent(hhs_stats, hhs_menhh, "men_pct")
     
-    
     ## TABLE 3 Combine number of surveys, number of MA, number of villages, prop of fisher households ###
     table_summary <- district_names %>% 
-      dplyr::select(level2_name, ma_name) %>% 
+      dplyr::select(ma_name) %>% 
       left_join(hhs_dates, by = "ma_name") %>%
       left_join(surveys_per_ma, by = "ma_name") %>% 
       left_join(villages_per_ma, by = "ma_name") %>% 
@@ -111,10 +108,9 @@ table_summary <- function(.data, hhs_question){
     
     table_summary <- table_summary %>% 
       dplyr::rename(
-        "District" = "level2_name",
         "MA name" = "ma_name",
-        "Date surveys started" = "datestarted",
-        "Date surveys ended" = "dateended",
+        "Surveys started" = "datestarted",
+        "Surveys ended" = "dateended",
         "Households surveyed" = "surveys.per.ma",
         "No. communities" = "villages.per.ma",
         "Fisher households (%)" = "fisher_pct",
@@ -126,7 +122,6 @@ table_summary <- function(.data, hhs_question){
    rbind(
      table_summary,
      c(
-       "District" = "",
        "MA name" = "",
        "Date surveys started" = NA,
        "Date surveys ended" = NA,
@@ -137,7 +132,6 @@ table_summary <- function(.data, hhs_question){
        "Men interviewed (%)" = mean_sem(table_summary$`Men interviewed (%)`, 1)
      ),
      c(
-       "District"="",
        "MA name"="",
        "Date surveys started" = NA,
        "Date surveys ended" = NA,
