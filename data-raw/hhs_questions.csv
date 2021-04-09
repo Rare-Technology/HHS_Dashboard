@@ -82,7 +82,8 @@
 11,Attitudes,63,"63. Some people fish in the reserve and some people do not. In the past month, have you fished in the reserve?",,fishing_in_reserve
 11,Attitudes,64,64. How wrong would it be for someone to fish in the reserve?,,wrong_fishing_in_reserve
 11,Attitudes,65,"65. Out of ten members of your community, how many would you guess believe it is wrong to fish in the reserve?",,no_wrong_fishing_in_reserve
-11,Attitudes,66,,"66. If people in the community found out that a fisher was fishing in the reserve, would they say or do anything in response?",response_to_fishing_in_reserve
+11,Attitudes,66,"66. If people in the community found out that a fisher was fishing in the reserve, would they say or do anything in response?",,response_to_fishing_in_reserve
+12,Attitudes,66,66. If yes to previous question. What would people say or do if they found out that a fisher was fishing in the reserve?,,reaction_fishing_reserve
 11,Attitudes,67,67. Do you know where the boundary of the reserve is?,,reserve_boundry
 12,Expenditures and Income,68,"68. Based on your recollection, enter total number of kilograms of fish sold and eaten (consumed) in your household per week in the last 6 months...",,textlabel_27
 12,Expenditures and Income,69,,"69. Please list the three types of fish that you catch most commonly, in decreasing order.  For each fish type, please provide the customer to whom you sell the fish and the unit price paid for the fish",textlabel_18

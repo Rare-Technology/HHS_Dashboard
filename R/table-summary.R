@@ -1,9 +1,7 @@
 
-table_summary <- function(.data, hhs_question){
+table_summary <- function(.data) { 
   
-  if (hhs_question == "Household Survey Summary") {
-  
-    hhs_stats <- .data %>% 
+     hhs_stats <- .data %>% 
       dplyr::filter(ma_name != '') %>% 
       droplevels %>% 
       mutate(
@@ -49,10 +47,10 @@ table_summary <- function(.data, hhs_question){
       dplyr::count(ma_name, name = "villages.per.ma")
     
     ## Name of provinces/regions of study
-    province_name <-unique(.data$level1_name)
+    province_name <- unique(.data$level1_name)
     
     ## Name of country of study
-    country_name <-  unique(.data$country)
+    country_name <- unique(.data$country)
     
     ## Proportion of male and female respondants
     gender_count <- .data %>% 
@@ -70,7 +68,7 @@ table_summary <- function(.data, hhs_question){
     
     #Extract ma_names  levels
     district_names <- hhs_stats %>% 
-      dplyr::group_by(level1_name, level2_name, ma_name) %>% 
+      dplyr::group_by(ma_name) %>% 
       dplyr::summarise(lat = mean(lat, na.rm = TRUE)) %>% 
       dplyr::ungroup()
     
@@ -122,7 +120,7 @@ table_summary <- function(.data, hhs_question){
    rbind(
      table_summary,
      c(
-       "MA name" = "",
+       "MA name" = NA,
        "Date surveys started" = NA,
        "Date surveys ended" = NA,
        "Households surveyed" = sum(table_summary$`Households surveyed`),
@@ -132,7 +130,7 @@ table_summary <- function(.data, hhs_question){
        "Men interviewed (%)" = mean_sem(table_summary$`Men interviewed (%)`, 1)
      ),
      c(
-       "MA name"="",
+       "MA name"= NA,
        "Date surveys started" = NA,
        "Date surveys ended" = NA,
        "Households surveyed"= "Total",
@@ -143,9 +141,5 @@ table_summary <- function(.data, hhs_question){
      )
    )
   }
-  
-  else if (hhs_question != "1. Household Survey Summary") {
-    NULL
-  }
-}
+
 

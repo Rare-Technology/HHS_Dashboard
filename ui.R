@@ -194,12 +194,17 @@ fillPage(fluidPage(
           downloadLink("downloadData0", "download data |", 
                         style = "float:right"),
           br(),
-          tableOutput("table_summary"),
+          conditionalPanel(
+            condition = "input$hhs_question == 'Household Survey Summary'",
+          tableOutput("table_summary")),
+          conditionalPanel(
+            condition = "input$hhs_question != 'Household Survey Summary'",
           plotlyOutput(
             outputId = "plot_hhs_question",
             height = "750px",
             width = 'auto'
             )
+          )
         ),
         
         #Create Map Tab

@@ -2,7 +2,6 @@
 #Load Brazil from data world
 BRA_hhs <- data.table::fread("https://query.data.world/s/rkr2loid2uqt63l2zjuqofpc2wkxes", 
                              stringsAsFactors=TRUE, encoding = "UTF-8") %>% subset(ma_name !='')
-
 #Load IDN data from data world
 IDN_hhs <- data.table::fread("https://query.data.world/s/x7rxtrqu7apiwyx7vu7gigx34w276e",
                              stringsAsFactors = TRUE, encoding = "UTF-8") %>% subset(ma_name !='')
@@ -38,13 +37,16 @@ ALL_hhs <- data.table::rbindlist(list(IDN_hhs,
 
 #rename and remove duplicates that where submitted on different times
 hhs <- ALL_hhs %>%
-        select(-c(updatedat, endformtimestamp)) %>%
+        select(-c(updatedat, endformtimestamp, startformtimestamp)) %>%
            unique() %>% 
-              left_join (ALL_hhs[,c("submissionid", "updatedat", "endformtimestamp")] %>%
+              left_join (ALL_hhs[,c("submissionid", 
+                                    "updatedat", 
+                                    "startformtimestamp", 
+                                    "endformtimestamp")] %>%
                                    group_by (submissionid) %>%
                                       summarise (updatedat = max(as.Date(updatedat))),
                          by = "submissionid")
-
+dim(hhs)
 #write_csv(hhs, "hhs.csv")
 
 #hhs_Q07 people for all countries ####
@@ -104,9 +106,10 @@ BRA_hhs_Q44 <- data.table::fread("https://query.data.world/s/pyjvy2negkytei3thn6
 FSM_hhs_Q44 <- data.table::fread("https://query.data.world/s/llwakyuv4nmgy4xcynquwjfmailsse",
                                  stringsAsFactors = TRUE)#[,-c("level3_name", "level4_name")]
 #FSM
-PLW_hhs_Q44 <- data.table::fread("https://query.data.world/s/llwakyuv4nmgy4xcynquwjfmailsse",
+PLW_hhs_Q44 <- data.table::fread("https://query.data.world/s/b2vh7rljp5gtleu2lpaifrwoou34uo",
                                  stringsAsFactors = TRUE)[,-c("level3_name", "level4_name")]
-
+PLW_hhs_Q44$level2_name <- PLW_hhs_Q44$level1_name
+PLW_hhs_Q44$ma_name <- PLW_hhs_Q44$level1_name
 
 q44 <- dplyr::tibble(data.table::rbindlist(list(IDN_hhs_Q44, 
                                                 HND_hhs_Q44, 
@@ -119,29 +122,29 @@ q44 <- dplyr::tibble(data.table::rbindlist(list(IDN_hhs_Q44,
 
 ### hhs_qQ5 #####
 #Indonesia
-IDN_hhs_Q45 <- data.table::fread(#"data-raw/hh_leadership_idn.csv",
-                                "https://query.data.world/s/mukyw6tqkokgh53b5asjkrobikwmsh",
+IDN_hhs_Q45 <- data.table::fread("https://query.data.world/s/mukyw6tqkokgh53b5asjkrobikwmsh",
                                  stringsAsFactors = TRUE)
 #Philippines
-PHL_hhs_Q45 <- data.table::fread(#"data-raw/hh_leadership_phl.csv", 
-                                "https://query.data.world/s/igcsgxctlcd73yyrtdw7nmar2hmnwo",
+PHL_hhs_Q45 <- data.table::fread("https://query.data.world/s/igcsgxctlcd73yyrtdw7nmar2hmnwo",
                                  stringsAsFactors = TRUE)
 #Honduras
-HND_hhs_Q45 <- data.table::fread(#"data-raw/hh_leadership_hnd.csv",
-                                "https://query.data.world/s/t553cxqfnfvuuv7sfqqfk4lakbmax7",
+HND_hhs_Q45 <- data.table::fread("https://query.data.world/s/t553cxqfnfvuuv7sfqqfk4lakbmax7",
                                  stringsAsFactors = TRUE)
 #Mozambique
-MOZ_hhs_Q45 <- data.table::fread(#"data-raw/hh_leadership_moz.csv", 
-                                "https://query.data.world/s/ki5xc2vyoh2kfj6yky6llssbzcjnfi",
+MOZ_hhs_Q45 <- data.table::fread("https://query.data.world/s/ki5xc2vyoh2kfj6yky6llssbzcjnfi",
                                  stringsAsFactors = TRUE) 
 #Brazil
-BRA_hhs_Q45 <- data.table::fread(#"data-raw/hh_leadership_bra.csv",
-                                "https://query.data.world/s/qnmhegzd6xeniopglyj4x32njzfmdw",
+BRA_hhs_Q45 <- data.table::fread("https://query.data.world/s/qnmhegzd6xeniopglyj4x32njzfmdw",
                                  stringsAsFactors = TRUE)
 #FSM
-FSM_hhs_Q45 <- data.table::fread(#"data-raw/hh_leadership_fsm.csv", 
-                                "https://query.data.world/s/fiedfeqol3iph5uiosdjhwqz6yqh4o",
+FSM_hhs_Q45 <- data.table::fread("https://query.data.world/s/fiedfeqol3iph5uiosdjhwqz6yqh4o",
                                  stringsAsFactors = TRUE)
+#PWL
+PLW_hhs_Q45 <- data.table::fread("https://query.data.world/s/v7lil4yoaxmoqebvxtut2zghg7more",
+                                 stringsAsFactors = TRUE)
+
+PLW_hhs_Q45$level2_name <- PLW_hhs_Q45$level1_name
+PLW_hhs_Q45$ma_name <- PLW_hhs_Q45$level1_name
 
 
 q45 <- dplyr::tibble(data.table::rbindlist(list(IDN_hhs_Q45, 
@@ -149,7 +152,8 @@ q45 <- dplyr::tibble(data.table::rbindlist(list(IDN_hhs_Q45,
                                                 PHL_hhs_Q45, 
                                                 MOZ_hhs_Q45, 
                                                 BRA_hhs_Q45,
-                                                FSM_hhs_Q45
+                                                FSM_hhs_Q45,
+                                                PLW_hhs_Q45
                                                 ), use.names = TRUE))
 
 ### hhs_Q48 enforcement ####
@@ -159,7 +163,6 @@ q48 <- data.table::fread("https://query.data.world/s/ce5gcgn3mfzck4azwq7jd47rvvk
 ### hhs_Q48 enforcement ####
 q69 <- data.table::fread("https://query.data.world/s/ag4porxxcq7ji5x2m6lmhkhmivog6h",
                          stringsAsFactors = TRUE)
-
 
 ##Load HHS quusestions
 hhs_questions <- data.table::fread("data-raw/hhs_questions.csv", stringsAsFactors = TRUE)

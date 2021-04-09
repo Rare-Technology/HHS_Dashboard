@@ -180,18 +180,24 @@ shinyServer(function(input, output, session) {
    })
    ## ------------------------ HHS SUMMARY ------------------------------------------- #####
    
-   output$table_summary <- renderTable({
-      
-      print("in table")
-      req(nrow(selectedData()) > 0 && !input$hhs_question == "")
-      table_summary(selectedData(), input$hhs_question)
-   }, 
+      output$table_summary <- renderTable({
+            req(nrow(selectedData()) > 0 && !input$hhs_question == "")
+               print("in table1")
+            table_hhs_summary()
+          },
       striped = TRUE, hover = TRUE, bordered = FALSE, spacing = 'xs',
       align = c('?', 'l', 'l', 'c', 'c', 'c', 'c', 'c', 'c'), 
       na ='', 
       rownames = FALSE)
- 
    
+      table_hhs_summary <- reactive ({
+          if (input$hhs_question == "Household Survey Summary") {
+               print("in table2")
+            table_summary(selectedData())
+         } 
+      else NULL
+       })
+ 
    ## --------------------------HHS QUESTIONS -----------------------------------####
    # suppress warnings for plots
    
@@ -621,10 +627,8 @@ shinyServer(function(input, output, session) {
       ### Q14 What activities are the responsibility of the women in the household in a typical week? ####
       else if (input$hhs_question == "14. What activities are the responsibility of the women in the household in a typical week?") {
          
-         hhs_Q14 <- selectedData_Q14 [,c("submissionid", "ma_name", "14_responsibility")] 
-         
-         hhs_Q14 <-  hhs_q14 %>% filter (country == "FSM")
-         
+         hhs_Q14 <- selectedData_Q14() [,c("submissionid", "ma_name", "14_responsibility")] 
+   
          hhs_Q14$`14_responsibility` <- 
             recode_factor(hhs_Q14$`14_responsibility`,
                           "Prepare fishing gear" = 'Preparing gear for fishing',
@@ -3990,6 +3994,106 @@ shinyServer(function(input, output, session) {
          ggplotly(plot_Q65, height = 750)
       }
       
+      #### Q66 If people in the community found out that a fisher was fishing in the reserve, would they say or do anything in response? #####
+      else if (input$hhs_question == "66. If people in the community found out that a fisher was fishing in the reserve, would they say or do anything in response?") {
+         
+         hhs_Q66 <- selectedData()[,c("ma_name", "66_response_fishing_reserve")] %>%
+            filter(`66_response_fishing_reserve` %in% c(0,1)) %>%
+               droplevels()
+         
+         Q66_summary <- proportion(hhs_Q66$`66_response_fishing_reserve`,
+                                    hhs_Q66$ma_name,
+                                    3,
+                                   length(unique(hhs_Q66$`66_response_fishing_reserve`))
+                                   )[,-3]
+         
+        Q66_summary[Q66_summary == "NaN"] <- 0
+        Q66_summary[Q66_summary == ""] <- 0
+         
+         colnames(Q66_summary) <- c("MA name", "N", "Proportion (%)")
+         
+         Q66 <- data_4plot(Q66_summary)
+         
+         #plot
+         plot_Q66 <-
+            ggplot(Q66, aes(`MA name`, `Proportion (%)`, N = N)) +
+            theme_rare + geom_col(fill = "#005BBB", alpha = 0.8) +
+            
+            scale_y_continuous(limits = c(0, 110),
+                               breaks = seq(0, 100, 20)) +
+            ggtitle("Proportion of households believing that if a fisher was fishing \nin the reserve, they would say or do anything in response") +
+            xlab (NULL) + ylab ("Proportion (%)") + 
+            coord_flip(clip = "on")
+         
+         ggplotly(plot_Q66, height = 750)
+      }
+      
+      #### Q66. If yes to previous question. What would people say or do if they found out that a fisher was fishing in the reserve? #####
+      
+      else if (input$hhs_question == "66. If yes to previous question. What would people say or do if they found out that a fisher was fishing in the reserve?") {
+         
+         hhs_Q66 <- selectedData()[,c("ma_name", "66_reaction_fishing_reserve")] %>%
+            filter(`66_reaction_fishing_reserve` != "" ) %>%
+               droplevels()
+         
+         hhs_Q66$`66_reaction_fishing_reserve` <- 
+            recode_factor (hhs_Q66$`66_reaction_fishing_reserve`,
+                           "1. Non-sanction" = "Non-sanction",
+                           "2. Negative informal sanction" = "Negative informal sanction",
+                           "2. Aplicaría una sanción negativa informal" = "Negative informal sanction",
+                           "3. Aplicaría una sanción negativa formal" = "Negative formal sanction",
+                           "negative informal sanction" = "Negative informal sanction",
+                           "negative formal sanction" = "Negative informal sanction",
+                           "1. No aplicaría ninguna sanción" = "Non-sanction",
+                           "non-sanction" =  "Non-sanction",
+                           "Non-saction" = "Non-sanction")
+                           
+         Q66_summary <- proportion(hhs_Q66$`66_reaction_fishing_reserve`,
+                                   hhs_Q66$ma_name,
+                                   3,
+                                   length(unique(hhs_Q66$`66_reaction_fishing_reserve`))
+         )
+         
+         Q66_summary_long <-
+            tibble(
+               Q66_summary %>% 
+                  pivot_longer(
+                     cols = c(
+                        "Non.sanction",
+                        "Negative.informal.sanction",
+                        "Negative.formal.sanction"),
+                     names_to = "key",
+                     values_to = "Proportion (%)"
+                  )
+            )
+         
+         Q66_summary_long$key <- 
+            recode_factor (Q66_summary_long$key,
+                           "Non.sanction" =  "No sanction", 
+                           "Negative.informal.sanction" = "Informal sanction",
+                           "Negative.formal.sanction" =  "Formal sanction")
+         
+         Q66 <- data_4plot(Q66_summary_long)
+         
+         #plot
+         plot_Q66 <-
+            ggplot(Q66, aes(`MA name`, `Proportion (%)`, N = N)) +
+            facet_wrap(
+               ~ key,
+               labeller = label_wrap_gen(20),
+               ncol = 5
+            ) +
+            theme_rare + 
+            geom_col(fill = "#005BBB", alpha = 0.8) +
+            scale_y_continuous(limits = c(0, 110),
+                               breaks = seq(0, 100, 20)) +
+            ggtitle("Proportion of households that anwsered yes to the previous question \nand would sanction fishers fishing in the reserve") +
+            xlab (NULL) + ylab ("") + 
+            coord_flip(clip = "on")
+         
+         ggplotly(plot_Q66, height = 750)
+      }
+      
       ### Q67 Do you know where the boundary if the reserve is? #####
       
       else if (input$hhs_question == "67. Do you know where the boundary of the reserve is?") {
@@ -4084,13 +4188,20 @@ shinyServer(function(input, output, session) {
          else if (input$Country == "BRA") {
             conversion <- quantmod::getQuote("BRLUSD=X")$Last
          }
+         else if (input$Country == "FSM") {
+            conversion <- getQuote("USDUSD=X")$Last
+         }
+         else if (input$Country == "PLW") {
+            conversion <- getQuote("USDUSD=X")$Last
+         }
          
          ### Q70 What is your households' average monthly income from all activities, including salaried and non-salaried labor? ####
          
          hhs_Q70 <- selectedData() %>%
-                        filter (between(
-                           as.numeric(`70_hh_average_income`), 10, 1.00e+09)) %>%
-                              droplevels()
+                     filter (between(
+                              as.numeric(as.character(`70_hh_average_income`)), 
+                              10, 1.00e+9)) %>%
+                                 droplevels()
          Q70_lenght <-
             tapply(hhs_Q70$`70_hh_average_income`,
                    hhs_Q70$ma_name,
@@ -4114,8 +4225,11 @@ shinyServer(function(input, output, session) {
             )]
          
          income_source[is.na(income_source)] <- 0
+         income_source$`70_hh_average_income` <- 
+            as.numeric(as.character(income_source$`70_hh_average_income`))
          income_source <- data.frame(income_source)
-         ## Agregate income
+         
+          ## Agregate income
          income_summary <-
             aggregate(. ~ ma_name,
                       FUN = mean,
@@ -4124,7 +4238,7 @@ shinyServer(function(input, output, session) {
          
          HH_avg_income <- data.frame (
             N = Q70_lenght,
-            Total_Income_USD = round(income_summary$X70_hh_average_income, 1),
+            Total_Income = round(income_summary$X70_hh_average_income, 1),
             Farming = round(income_summary$X11a_income_farming, 1) /
                rowSums(income_summary[, c(2:11)], na.rm = TRUE) * 100,
             Harvesting = round(income_summary$X11b_income_harvesting, 1) /
@@ -4152,7 +4266,7 @@ shinyServer(function(input, output, session) {
                HH_avg_income,
                "Mean ± SE" = c(
                   sum(HH_avg_income$N),
-                  mean_sem(HH_avg_income$Total_Income_USD, 1),
+                  mean_sem(HH_avg_income$Total_Income, 1),
                   mean_sem(HH_avg_income$Farming, 1),
                   mean_sem(HH_avg_income$Harvesting, 1),
                   mean_sem(HH_avg_income$Artisinal_Fishing, 1),
@@ -4178,8 +4292,8 @@ shinyServer(function(input, output, session) {
          #Plot
          plot_Q70 <-
             ggplot(Q70, aes(`MA name`, Average, N = N)) +
-            theme_rare + geom_col(alpha = 0.8, fill = "#005BBB") +
-            
+            theme_rare + 
+            geom_col(alpha = 0.8, fill = "#005BBB") +
             ggtitle("Average household income in USD ") +
             xlab (NULL) + ylab ("Average income in USD") +
             coord_flip(clip = "on")
@@ -4192,28 +4306,29 @@ shinyServer(function(input, output, session) {
       
       else if (input$hhs_question == "70b. What is your households’ average monthly income from all fishing related activities?") {
          ### Currency conversions (USD)
-         library(quantmod)
          if (input$Country == "IDN") {
-            conversion <- getQuote("IDRUSD=X")$Last
+            conversion <- quantmod::getQuote("IDRUSD=X")$Last
          }
          else if (input$Country == "HND") {
-            conversion <- getQuote("HNLUSD=X")$Last
+            conversion <- quantmod::getQuote("HNLUSD=X")$Last
          }
          else if (input$Country == "PHL") {
-            conversion <- getQuote("PHPUSD=X")$Last
+            conversion <- quantmod::getQuote("PHPUSD=X")$Last
          }
          else if (input$Country == "MOZ") {
-            conversion <- getQuote("MZNUSD=X")$Last
+            conversion <- quantmod::getQuote("MZNUSD=X")$Last
          }
          else if (input$Country == "BRA") {
-            conversion <- getQuote("BRLUSD=X")$Last
+            conversion <- quantmod::getQuote("BRLUSD=X")$Last
          }
          else if (input$Country == "FSM") {
-            conversion <- getQuote("USDUSD=X")$Last
+            conversion <- quantmod::getQuote("USDUSD=X")$Last
+         }
+         else if (input$Country == "PLW") {
+            conversion <- quantmod::getQuote("USDUSD=X")$Last
          }
          
-         
-         hhs_Q70 <- hhs_moz %>%
+         hhs_Q70 <- selectedData() %>%
             filter (between(
                as.numeric(`70_hh_average_income`), 10, 1.00e+09)) %>%
                   droplevels()
@@ -4241,7 +4356,10 @@ shinyServer(function(input, output, session) {
             )]
          
          income_source[is.na(income_source)] <- 0
+         income_source$`70_hh_average_income` <-
+            as.numeric(as.character(income_source$`70_hh_average_income`))
          income_source <- data.frame(income_source)
+          
          ## Agregate income
          income_summary <-
             aggregate(. ~ ma_name,
@@ -4307,7 +4425,7 @@ shinyServer(function(input, output, session) {
          Q70b <-
             cbind (Q70_summary[, c(1:2)],
                    "Proportion (%)" = round(
-                      as.numeric(Q70_summary$`Proportion (%)`) * as.numeric(Q70_summary$Fishing_related) * conversion /
+                      as.numeric(Q70_summary$`Proportion (%)`) * as.numeric(as.character(Q70_summary$Fishing_related)) * conversion /
                          100,
                       1
                    ))
@@ -4320,7 +4438,7 @@ shinyServer(function(input, output, session) {
             ggplot(Q70b, aes(`MA name`, Average, N = N)) +
             theme_rare + 
             geom_col(alpha = 0.8, fill = "#005BBB") +
-            ggtitle("Average household income from fishing in USD") +
+            ggtitle("Average household income from fishing-related activities in USD") +
             xlab (NULL) + ylab ("Average income in USD") +
             coord_flip(clip = "on")
          
@@ -4634,7 +4752,7 @@ shinyServer(function(input, output, session) {
          if (length(last_plot()$x$data) %in% c(2:6)) {
             var_name <- NULL
             for(i in c(1:length(last_plot()$x$data))) {
-               var_name[i] <- last_plot()$x$layout$annotations[[i]]$text
+               var_name[i] <- last_plot()$x$layout$annotations[[i+1]]$text
                   ma_name <- cbind(ma_name,
                              as.vector(last_plot()$x$data[[i]]$x)
                               )
