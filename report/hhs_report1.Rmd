@@ -69,7 +69,7 @@ For detailed information about the methodology used in conducting household surv
 
 ```{r table_3, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
 
-knitr::kable(table_summary(selectedData(), "Household Survey Summary"), 
+knitr::kable(table_summary(selectedData()), 
              align = 'r')
         
 ```
@@ -1271,28 +1271,18 @@ Food security is related to the ability of community members to continuously hav
 
    hhs_Q59 <- selectedData()[,c("ma_name","59_food_procurement")] %>%
                         filter(`59_food_procurement` != "") %>%
-                           rbind(c(NA, "Confident not"), 
-                                 c(NA, "Uncertain"),
-                                 c(NA, "High chance"),
-                                 c(NA, "Very confident not"),
-                                 c(NA, "not Certain")) %>%
                            droplevels()
         
          Q59_summary <- proportion (hhs_Q59$`59_food_procurement`,
                                      hhs_Q59$ma_name,
-                                     3,5)
+                                     3,
+                                    length(unique(hhs_Q59$`59_food_procurement`)))
          
-         colnames(Q59_summary) <- c("MA name", "N", 
-                                    "Certain",
-                                    "High chance",
-                                    "Uncertain",
-                                    "Not confident", 
-                                    "Not very confident")
          Q59_summary <- Q59_summary %>%
                             filter (`MA name` != "Mean ± SE")
          
          Q59_summary$`Food secured` <- as.numeric(Q59_summary$`Not confident`) +
-                                      as.numeric(Q59_summary$`Not very confident`)
+                                        as.numeric(Q59_summary$`Not very confident`)
          
          Q59_summary <- Q59_summary[,c("MA name", "Food secured")]
          
@@ -1594,14 +1584,14 @@ Baseline impact indicators for financial capacity, value retention, assets, and 
 
      hhs_Q70 <- selectedData()[c("ma_name", "70_hh_average_income")] %>%
                     filter (between(
-                            as.numeric(`70_hh_average_income`), 10, 1.00e+09)) %>%
+                            as.numeric((`70_hh_average_income`)), 10, 1.00e+09)) %>%
                                 droplevels()
 
     Q70_summary <- hhs_Q70 %>%
                        dplyr::group_by(ma_name) %>%
                           summarise (N = n(), 
                               "Avg Income"  = round(
-                                              mean(`70_hh_average_income`, 
+                                              mean(as.numeric(as.character(`70_hh_average_income`)), 
                                                    na.rm = TRUE) * conversion,
                                               1)
                                     )
@@ -1611,7 +1601,7 @@ Baseline impact indicators for financial capacity, value retention, assets, and 
     
 #Q70 fp
     
-    Q70_lenght <- tapply(hhs_Q70$`70_hh_average_income`,
+    Q70_lenght <- tapply(as.numeric(as.character(hhs_Q70$`70_hh_average_income`)),
                         hhs_Q70$ma_name,
                           length)
     
@@ -1631,7 +1621,7 @@ Baseline impact indicators for financial capacity, value retention, assets, and 
                "70_hh_average_income"
             )] %>%
            filter (between(
-                           as.numeric(`70_hh_average_income`), 10, 1.00e+09)) %>%
+                           as.numeric((`70_hh_average_income`)), 10, 1.00e+09)) %>%
                               droplevels()
          
          income_source[is.na(income_source)] <- 0

@@ -203,7 +203,12 @@ fillPage(fluidPage(
             outputId = "plot_hhs_question",
             height = "750px",
             width = 'auto'
-            )
+            ),
+          periscope::downloadablePlotUI("plot_hhs_question", 
+                             downloadtypes = c("png", "csv"), 
+                             download_hovertext = "Download the plot and data here!",
+                             height = "500px",
+                             btn_halign = "left")
           )
         ),
         

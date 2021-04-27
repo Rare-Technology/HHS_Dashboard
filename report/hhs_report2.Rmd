@@ -65,7 +65,7 @@ For detailed information about the methodology used in conducting household surv
 
 ```{r table_1, echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE, error = TRUE}
 
-knitr::kable(table_summary(selectedData(), "Household Survey Summary"), 
+knitr::kable(table_summary(selectedData()), 
              align = 'r')
         
 ```
@@ -90,7 +90,7 @@ hhs_Q10 <- selectedData()[ ,c("ma_name", "10_mpa_important")] %>%
                        type=3)
          colnames(Q10_summary) <- c("MA name", "N", "Neutral (%)", "No (%)", "Yes (%)")
          
-knitr::kable(Q10_summary, align = 'r') 
+knitr::kable(Q10_summary, align = 'r')
 ```
 
 \newpage
@@ -1362,29 +1362,18 @@ knitr::kable(Q55_summary, align = 'r')
 ```
 
 **Q59**. Are you confident that you will be able to procure enough food for you and your family for the next 12 months?
-```{r Q59, echo=FALSE, message=FALSE, include=TRUE, error = TRUE}
+```{r Q59, echo=FALSE, message=FALSE, include=TRUE, error = TRUE, warning=FALSE}
 
    hhs_Q59 <- selectedData()[,c("ma_name","59_food_procurement")] %>%
                         filter(`59_food_procurement` != "") %>%
-                           rbind(c(NA, "Confident not"), 
-                                 c(NA, "Uncertain"),
-                                 c(NA, "High chance"),
-                                 c(NA, "Very confident not"),
-                                 c(NA, "not Certain")) %>%
                            droplevels()
         
          Q59_summary <- proportion (hhs_Q59$`59_food_procurement`,
                                      hhs_Q59$ma_name,
-                                     3,5)
-         
-         colnames(Q59_summary) <- c("MA name", "N", 
-                                    "Not very confident",
-                                    "Not confident",
-                                    "Uncertain",
-                                    "Confident", 
-                                    "Very confident")
-         
-  knitr::kable(Q59_summary, align = 'r') 
+                                     3,
+                                    length(unique(hhs_Q59$`59_food_procurement`)))
+  
+    knitr::kable(Q59_summary, align = 'r') 
 ```
         
 **Q60**. In the last 12 months, how often did your household eat fish? 
@@ -1667,14 +1656,14 @@ knitr::kable(Q55_summary, align = 'r')
 
      hhs_Q70 <- selectedData()[c("ma_name", "70_hh_average_income")] %>%
                     filter (between(
-                            as.numeric(`70_hh_average_income`), 10, 1.00e+09)) %>%
+                            as.numeric((`70_hh_average_income`)), 10, 1.00e+09)) %>%
                                 droplevels()
 
     Q70_summary <- hhs_Q70 %>%
                        dplyr::group_by(ma_name) %>%
                           summarise (N = n(), 
                                     "Avg Income"  = round(
-                                                  mean(`70_hh_average_income`, 
+                                                  mean(as.numeric(as.character(`70_hh_average_income`)), 
                                                    na.rm = TRUE) * conversion,
                                               1)
                                     )
@@ -1683,7 +1672,7 @@ knitr::kable(Q55_summary, align = 'r')
     Q70_summary <- Q70_summary[,c("MA name", "Houseld income USD")]
 
     
-    Q70_lenght <- tapply(hhs_Q70$`70_hh_average_income`,
+    Q70_lenght <- tapply(as.numeric(as.character(hhs_Q70$`70_hh_average_income`)),
                         hhs_Q70$ma_name,
                           length)
     
@@ -1703,7 +1692,7 @@ knitr::kable(Q55_summary, align = 'r')
                "70_hh_average_income"
             )] %>%
            filter (between(
-                           as.numeric(`70_hh_average_income`), 10, 1.00e+09)) %>%
+                           as.numeric((`70_hh_average_income`)), 10, 1.00e+09)) %>%
                               droplevels()
          
          income_source[is.na(income_source)] <- 0
@@ -1850,12 +1839,12 @@ knitr::kable(Q73_summary, align = 'r')
          
          Q77_summary <- Q77[,c("MA name", "HH make ends meet")]
          
-knitr::kable(Q77_summary, align = 'r')
+  kable(Q77_summary, align = 'r') 
 
 ```
 
 **Q78**. Proportion of women in community who make financial decisions for the household. 
-```{r Q78, echo= FALSE, message=FALSE,include= TRUE, error = TRUE}
+```{r Q78, echo= FALSE, message=FALSE,include=TRUE, error=TRUE, warning=FALSE}
 
     hhs_Q78 <- selectedData()[,c("6_gender", "ma_name", "78_financial_decisions")] %>%
                               filter(`78_financial_decisions` != "") %>%

@@ -7,7 +7,7 @@ IDN_hhs <- data.table::fread("https://query.data.world/s/x7rxtrqu7apiwyx7vu7gigx
                              stringsAsFactors = TRUE, encoding = "UTF-8") %>% subset(ma_name !='')
 #Load HND data from data world
 HND_hhs <- data.table::fread("https://query.data.world/s/r5wsp73r66p7yqvohq4dhjnfi7wohj",
-                             stringsAsFactors = TRUE, encoding = "UTF-8") %>% subset(ma_name !='')
+                             stringsAsFactors = TRUE, encoding = "UTF-8") %>% subset(ma_name !='') 
 #Load PHL data from data world
 PHL_hhs <- data.table::fread("https://query.data.world/s/bmzps4cygrenel36t2kbj6rbndrejr",
                              stringsAsFactors = TRUE, encoding = "UTF-8") %>% subset(ma_name !='')
@@ -18,8 +18,8 @@ MOZ_hhs <- data.table::fread("https://query.data.world/s/3wu6qfkst77upiqryvvyymk
 FSM_hhs <- data.table::fread("https://query.data.world/s/4jdlxkngaawjug5vxvcyxpqrccjbyf",
                              stringsAsFactors = TRUE, encoding = "UTF-8") %>% subset(ma_name !='')
 
-PLW_hhs <- data.table::fread("https://query.data.world/s/r577gevshvjb74ilkdia5ugl43desr",
-                            stringsAsFactors = TRUE, encoding = "UTF-8") %>% subset(ma_name !='')
+PLW_hhs <- data.table::fread("https://query.data.world/s/bhjcssdyltbtbrcdkhk2dmcr4gvmiq",
+                            stringsAsFactors = TRUE, encoding = "UTF-8")
 PLW_hhs$level2_name <- PLW_hhs$level1_name
 PLW_hhs$ma_name <- PLW_hhs$level1_name
 
@@ -174,7 +174,7 @@ source("R/table-summary.R")
 initial_table <- hhs %>% 
   dplyr::filter(country == "IDN", level1_name == "South East Sulawesi") %>% 
           droplevels() %>% 
-              table_summary(hhs_question = "Household Survey Summary")
+              table_summary()
 
 
 #************************************************
@@ -190,3 +190,4 @@ readr::write_rds(tibble(q44), "data/hhs_q44.rds")
 readr::write_rds(tibble(q45), "data/hhs_q45.rds")
 readr::write_rds(tibble(q48), "data/hhs_q48.rds") 
 readr::write_rds(tibble(q69), "data/hhs_q69.rds")
+

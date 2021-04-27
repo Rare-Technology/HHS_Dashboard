@@ -4,8 +4,8 @@
 
 shinyServer(function(input, output, session) {
    ### Create nested selection based on inputs
-
-   # filter the data first and then use the filtered data
+ 
+     # filter the data first and then use the filtered data
    cur_hhs <- reactive({filter(hhs, country == input$Country)})
    ## Region/Province
    output$Subnational_Government <- renderUI ({
@@ -490,7 +490,8 @@ shinyServer(function(input, output, session) {
                stat = "identity",
                alpha = 0.8
             ) +
-            scale_fill_brewer(palette = "Spectral", direction = -1) +
+            scale_fill_brewer(palette = "Spectral", 
+                              direction = -1) +
             guides(fill = guide_legend(reverse = FALSE)) +
             ggtitle("Household source inconme and \nproportional income contribution") +
             xlab (NULL) + ylab ("Proportion (%)") +
@@ -652,25 +653,32 @@ shinyServer(function(input, output, session) {
          
        
          plot_Q14 <-
-            ggplot(Q14, aes(`MA name`, `Proportion (%)`, N = N)) +
-            geom_bar(aes(fill = Activity),
+            ggplot(Q14, aes(x =`MA name`, 
+                            y = `Proportion (%)`, 
+                            N = N,
+                            fill = Activity)) +
+            geom_bar(
                position = position_stack(reverse = TRUE),
                stat = "identity",
                alpha = 0.8 ) +
             theme_rare +
-            scale_fill_brewer(palette = "Blues", direction = -1)+
+            scale_fill_brewer(palette = "Blues", 
+                              direction = -1)+
             ggtitle(
                "Proportion of activities that are the responsibility \nof the women in the household in a typical week"
             ) +
             scale_y_continuous(limits = c(0, 105),
                                breaks = seq(0, 100, 25)) +
-            
-            xlab (NULL) + ylab ("Proportion (%)") + coord_flip(clip = "on") +
-            theme(legend.position = "right") +
+            xlab (NULL) + 
+            ylab ("Proportion (%)") + 
+            coord_flip(clip = "on") +
+            theme(legend.position = "right",
+                  legend.text = element_text(size = 10))+
             guides(fill = guide_legend(reverse = TRUE)) 
          ggplotly(plot_Q14, height = 750)
       }
-         
+      
+     
       ### Q16 Consider the main fisher in the household. Does this person fish? #####
       else if (input$hhs_question == "16. Consider the main fisher in the household. Does this person fish?") {
          
@@ -986,13 +994,15 @@ shinyServer(function(input, output, session) {
       else if (input$hhs_question == "23. Do you believe that the job of a fisher is secure in the future?") {
           
          ## Exclude NAs from answers
-         hhs_Q23 <- selectedData()[,c("ma_name", "23_job_secure")] %>%
+         hhs_Q23 <- hhs[,c("ma_name", "23_job_secure")] %>%
                      filter(`23_job_secure` %in% c(0,1)) %>%
                       rbind(c(NA,0), c(NA,1)) %>%
                         droplevels()
          #proportion
          Q23_summary <- proportion(hhs_Q23[[2]], 
-                           hhs_Q23[[1]], rounding = 3, type = 2)[, -3]
+                           hhs_Q23[[1]], 
+                           rounding = 3, 
+                           type = 2)#[, -3]
          #rename columns
          colnames(Q23_summary) <- c("MA name", "N", "Proportion (%)")
          ## add total and mean
@@ -4197,15 +4207,19 @@ shinyServer(function(input, output, session) {
          
          ### Q70 What is your households' average monthly income from all activities, including salaried and non-salaried labor? ####
          
-         hhs_Q70 <- selectedData() %>%
-                     filter (between(
-                              as.numeric(as.character(`70_hh_average_income`)), 
-                              10, 1.00e+9)) %>%
-                                 droplevels()
+         hhs_Q70 <- HND_hhs #%>%
+                    # filter (between(
+                     #        as.numeric(as.character(`70_hh_average_income`)), 
+                    #          10, 1.00e+20)) %>%
+                      #           droplevels()
          Q70_lenght <-
             tapply(hhs_Q70$`70_hh_average_income`,
                    hhs_Q70$ma_name,
                    length)
+         
+         tapply(as.numeric(hhs_Q70$`70_hh_average_income`),
+                hhs_Q70$ma_name,
+                mean)
          
          #Proportion of income and Average income per MA
          income_source <-
@@ -5374,6 +5388,5 @@ shinyServer(function(input, output, session) {
       renderText("REPORT BY HH SURVEY QUESTIONS")
    output$generatingmap <-
       renderText("Generating map, please wait ...")
-   
-   
+ 
 })
