@@ -1,6 +1,6 @@
-# Fisheries Management Assessment (FMA) Dashboard
+# Household Survey (HHS) Dashboard
 
-The FMA Dashboard is an R package called `{ rarefma }`
+The HHS Dashboard is an R package called `{ rarehhs }`
 
 ### To install for development
 
@@ -14,4 +14,4 @@ The FMA Dashboard is an R package called `{ rarefma }`
 
 Since this is a private repository, the user will need an auth_token from https://github.com/settings/tokens.
 
-remotes::install_github("Rare-Technology/FMA_Dashboard", auth_token = '')
+remotes::install_github("Rare-Technology/HHS_Dashboard", auth_token = '')
