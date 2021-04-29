@@ -24,21 +24,14 @@ dataServer <- function(id, state){
   moduleServer(
     id,
     function(input, output, server){
-      observeEvent(state$data_summary_filtered , {
-        table_data <- state$data_summary_filtered %>%
-          dplyr::rename(
-            Country = country,
-            Subnational = subnational,
-            Local = local,
-            `MA Name` = maa,
-            Family = family,
-            Species = species
-          )
+      observeEvent(state$data_filtered , {
+
+        data_summary <- state$data_filtered %>% 
+          hhs_table_summary()
         
-      
         
         tbl <- DT::datatable(
-          data = iris,
+          data = data_summary,
           class = "display nowrap",
           rownames = FALSE,
           # container = tags$table(
