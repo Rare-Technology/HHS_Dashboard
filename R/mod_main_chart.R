@@ -22,6 +22,7 @@ chartUI <- function(id) {
       isolate(state$question$choices),
       isolate(state$question$selected)
     ),
+    uiOutput(ns("chart_ui"))
   )
 }
 
@@ -48,5 +49,21 @@ chartServer <- function(id, state) {
       },
       ignoreInit = TRUE
     )
+    
+    observeEvent(input$question, {
+      
+
+      output$chart_ui <- renderUI({
+        
+        output$chart <- renderPlot(plot(1:10))
+        
+        list(
+          p("This is a warning"),
+          plotOutput(ns("chart"))
+        )
+      })
+      
+    })
+    
   })
 }
