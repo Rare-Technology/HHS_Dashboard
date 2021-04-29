@@ -10,8 +10,44 @@
 sidebarSurveyUI <- function(id) {
   ns <- NS(id)
   tagList(
-    #uiOutput(ns("survey_details"))
-    div('Sidebar survey')
+    collapse_wrapper(
+      div(
+        radioButtons(
+          "a",
+          "",
+          choices = c(
+            "Household survey summary",
+            "8. What is the religion of the head of household?",
+            "9. Do you identify yourself as a member...?"
+          )
+        )
+      ),
+      open       = 'false',
+      collapseid = 'collapse2',
+      title      = "Basic information"
+    ),
+    collapse_wrapper(
+      div(
+        radioButtons(
+          'b',
+          '',
+          choices = c(
+            "11. Sources of household income this year...",
+            "12. Pretend question for example"
+          )
+        )
+      ),
+      open       = 'false',
+      collapseid = 'collapse3',
+      title      = "Livelihood"
+    )
+    # radioButtons(
+    #   inputId = 'hhs_section',
+    #   label = "Select survey section",
+    #   choices =  unique(hhs_questions$section),
+    #   selected =  "Basic Information",
+    #   inline = FALSE
+    # )
   )
 }
 

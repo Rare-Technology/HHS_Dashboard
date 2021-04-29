@@ -135,3 +135,35 @@ a {
   table.dataTable thead th {
     padding: 10px 10px;
   }
+  
+  
+  /* Collapse in sidebar */
+  
+.panel-title {
+  font-size: 1.3em;
+  line-height: 1.2;
+  color: #048852;
+}
+
+.panel-heading {
+  padding: 10px 0;
+}
+
+
+.panel-title > a[aria-expanded="true"] > i,
+.panel-title > a[class=""] > i {
+  transform: rotate(90deg);
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+.panel-title > a[aria-expanded="false"] > i,
+.panel-title > .collapse > i {
+  transform: rotate(0deg);
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+}

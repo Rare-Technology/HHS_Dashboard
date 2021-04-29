@@ -14,11 +14,9 @@ mainUI <- function(id){
                 sidebarUI("sidebarUI"),
                 mainPanel(
                   tabsetPanel(id = ns("tabs"),
-                    tabPanel("Data", dataUI("dataUI"))
-                    #tabPanel("Select", selectUI("selectUI")),
-                    #tabPanel("Visualize", visualizeUI("visualizeUI")),
-                    #tabPanel("Interpret", interpretUI("interpretUI")),
-                    #tabPanel("Plan", managementUI("managementUI"))
+                    tabPanel("Household survey questions", dataUI("dataUI")),
+                    tabPanel("View map", "View map"),
+                    tabPanel("Generate report", "Generate report")
                   )
                 )
               )
