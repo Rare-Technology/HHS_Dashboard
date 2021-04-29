@@ -20,6 +20,7 @@ app_server <- function( input, output, session ) {
   
   # Main panel
   dataServer("dataUI", state)
+  chartServer("chartUI", state)
   #selectServer("selectUI")
   #visualizeServer("visualizeUI")
   #interpretServer("interpretUI")

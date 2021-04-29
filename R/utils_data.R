@@ -34,10 +34,10 @@ get_ma_percent <- function(.fulldata, .partdata, newname = "percent"){
     dplyr::count(maa)
   
   result <- dplyr::full_join(ma_count, ma_count_hhs, by = "maa", suffix = c("_full", "_part")) %>% 
-    mutate(
+    dplyr::mutate(
       percent = round(100* n_part/n_full, 1)
     ) %>% 
-    select(-n_part, -n_full)
+    dplyr::select(-n_part, -n_full)
   
   names(result)[names(result) == "percent"] <- newname
   result
@@ -47,8 +47,8 @@ hhs_table_summary <- function(.data) {
   
   hhs_stats <- .data %>% 
     #dplyr::filter(ma_name != '') %>% should already be done
-    droplevels %>% 
-    mutate(
+    #droplevels %>% 
+    dplyr::mutate(
       updatedat = as.Date(updatedat)
     )
   
@@ -59,7 +59,7 @@ hhs_table_summary <- function(.data) {
                                                        "%m/%d/%y")),
                      dateended = as.character(format(max(as.Date(updatedat), na.rm = TRUE),
                                                      "%m/%d/%y"))) %>%
-    ungroup()
+    dplyr::ungroup()
   
   surveys_date_max <- max(hhs_stats$updatedat) %>% 
     format(format = "%B %d, %Y") 
@@ -126,27 +126,27 @@ hhs_table_summary <- function(.data) {
   
   #Calculate proportion of women interviewed
   hhs_womenhh <- .data %>% 
-    dplyr::filter(`6_gender` == "F") %>% 
-    droplevels()
+    dplyr::filter(`6_gender` == "F") #%>% 
+    #droplevels()
   
   womenhhs <- get_ma_percent(hhs_stats, hhs_womenhh, "women_pct")
   
   #Calculate proportion of men interviewed
   hhs_menhh <- .data %>% 
-    dplyr::filter(`6_gender` == "M") %>% 
-    droplevels()
+    dplyr::filter(`6_gender` == "M") #%>% 
+    #droplevels()
   
   menhhs <- get_ma_percent(hhs_stats, hhs_menhh, "men_pct")
   
   ## TABLE 3 Combine number of surveys, number of MA, number of villages, prop of fisher households ###
   table_summary <- district_names %>% 
     dplyr::select(maa) %>% 
-    left_join(hhs_dates, by = "maa") %>%
-    left_join(surveys_per_ma, by = "maa") %>% 
-    left_join(villages_per_ma, by = "maa") %>% 
-    left_join(fisherhhs, by = "maa") %>% 
-    left_join(womenhhs, by = "maa") %>% 
-    left_join(menhhs, by = "maa")
+    dplyr::left_join(hhs_dates, by = "maa") %>%
+    dplyr::left_join(surveys_per_ma, by = "maa") %>% 
+    dplyr::left_join(villages_per_ma, by = "maa") %>% 
+    dplyr::left_join(fisherhhs, by = "maa") %>% 
+    dplyr::left_join(womenhhs, by = "maa") %>% 
+    dplyr::left_join(menhhs, by = "maa")
   
   table_summary <- table_summary %>% 
     dplyr::rename(

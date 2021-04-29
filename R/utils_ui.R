@@ -19,3 +19,11 @@ collapse_wrapper <- function(internal_html, open, collapseid, title) {
         internal_html
       ))
 }
+
+inline_select <- function(id, label, choices, selected){
+  div(class = 'select-holder',
+      div(class ="select-label", label),
+      selectInput(id, "", choices = choices, selected = selected
+      )
+  )
+}

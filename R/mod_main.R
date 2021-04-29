@@ -15,14 +15,7 @@ mainUI <- function(id){
                 mainPanel(
                   tabsetPanel(id = ns("tabs"),
                     tabPanel("Summary data", dataUI("dataUI")),
-                    tabPanel("Survey charts", div(style="display:flex;",
-                      selectInput("state", "Survey section",
-                                  choices = unique(hhs_questions$section)
-                      ),
-                      selectInput("state", "Survey question",
-                                  choices = unique(hhs_questions$question[c(3, 4, 5)])
-                      ),
-                    )),
+                    tabPanel("Survey charts", chartUI("chartUI")),
                     tabPanel("View map", "View map"),
                     tabPanel("Generate report", "Generate report")
                   )

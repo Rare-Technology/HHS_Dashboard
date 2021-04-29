@@ -167,3 +167,15 @@ a {
   -o-transition: all 0.5s;
   transition: all 0.5s;
 }
+
+.wide-select, .wide-select>.shiny-input-container{
+  width: 100% !important;
+}
+
+.select-holder{
+
+}
+
+.select-label{
+  
+}

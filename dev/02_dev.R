@@ -26,7 +26,7 @@ golem::add_module( name = "fisheries_assessment" ) # Name of the module
 golem::add_module( name = "side" )
 golem::add_module( name = "side_geography" )
 golem::add_module( name = "side_assessment" )
-golem::add_module( name = "main_data" )
+golem::add_module( name = "main_zyx" )
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
 golem::add_fct( "helpers" ) 

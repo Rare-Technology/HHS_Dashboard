@@ -4,35 +4,49 @@
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
-#' @noRd 
+#' @noRd
 #'
-#' @importFrom shiny NS tagList 
-chartUI <- function(id){
+#' @importFrom shiny NS tagList
+chartUI <- function(id) {
   ns <- NS(id)
   tagList(
-
+    inline_select(
+      ns("section"),
+      "Section",
+      isolate(state$section$choices),
+      isolate(state$section$selected)
+    ),
+    inline_select(
+      ns("question"),
+      "Question",
+      isolate(state$question$choices),
+      isolate(state$question$selected)
+    ),
   )
 }
-    
-#' main_data Server Function
-#'
-#' @noRd 
-chartServer <- function(id, state){
-  moduleServer(
-    id,
-    function(input, output, server){
- 
-    }
-  )
-  
 
-  
 
+chartServer <- function(id, state) {
+  moduleServer(id, function(input, output, session) {
+    ns <- session$ns
+    observeEvent(input$section,
+      {
+        questions <- hhs_questions[input$section] %>%
+          unlist() %>%
+          unname()
+        state$question <- list(
+          choices = questions,
+          selected = questions[1]
+        )
+
+        updateSelectInput(
+          session,
+          "question",
+          choices = questions,
+          selected = questions[1]
+        )
+      },
+      ignoreInit = TRUE
+    )
+  })
 }
-    
-## To be copied in the UI
-# mod_main_data_ui("main_data_ui_1")
-    
-## To be copied in the server
-# callModule(mod_main_data_server, "main_data_ui_1")
- 
