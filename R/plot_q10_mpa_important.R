@@ -28,9 +28,11 @@ prep_q10_mpa_important <- function(.data){
 plot_q10_mpa_important <- function(.data, use_plotly = TRUE){
 
          .data_plot <- prep_q10_mpa_important(.data)
+         
          p <- plot_horiz_bar(
            .data_plot,
-           title = "Proportion of households that believe is important \nthat the region is managed and protected",
+           title = glue::glue("Proportion of households that believe is important",
+           "\nthat the region is managed and protected"),
            facet_var = key
          )
 

@@ -1,4 +1,4 @@
-plot_stacked_horiz_bar <- function(
+plot_horiz_bar_stacked <- function(
   .data,
   xvar = `MA name`,
   yvar = `Proportion (%)`,
@@ -9,13 +9,16 @@ plot_stacked_horiz_bar <- function(
   palette = "Blues",
   palette_direction = -1,
   breaks = seq(0, 100, 20),
-  limits = c(0, 105)
+  limits = c(0, 105),
+  stack_var = `key`,
+  guide_reverse = TRUE
   ){
+
 
   p <- .data %>% 
     ggplot(aes({{ xvar }}, {{ yvar }}, N = {{ N }})) +
-    geom_bar(aes(fill = key),
-             position = position_stack(reverse = TRUE),
+    geom_bar(aes(fill = {{stack_var}}),
+             position = position_stack(reverse = guide_reverse),
              stat = "identity",
              alpha = 0.8
     ) +

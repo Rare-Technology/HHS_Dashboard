@@ -7,11 +7,14 @@ plot_horiz_bar <- function(
   x_title = NULL,
   y_title = "Proportion (%)",
   fill_col = "#005BBB",
-  facet_var = NULL
+  facet_var = ` `
   
 ){
   
-  browser()
+
+  # TODO: must be a better way!
+  facet_var_str <- quo_name(enquo(facet_var))
+  
   p <- .data %>% 
     ggplot(aes({{ x_var }}, {{ y_var }}, N = {{ n_var }})) +
     geom_col(fill = fill_col, alpha = 0.8) +
@@ -28,7 +31,7 @@ plot_horiz_bar <- function(
     theme_rare() +
     theme(legend.position = "right") 
   
-  if(!is.null(facet_var))
+  if(facet_var_str != " ")
     p <- p + facet_wrap( vars({{ facet_var }}))
   
   p

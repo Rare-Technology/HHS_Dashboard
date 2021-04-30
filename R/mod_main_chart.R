@@ -56,8 +56,8 @@ chartServer <- function(id, state) {
         # Basic Information Plots
         "q8" = plot_q08_religion,
         "q9" = plot_q09_region_member,
-        "q10" = plot_q10_mpa_important
-        
+        "q10" = plot_q10_mpa_important,
+        "q11" = plot_q11_income
       )
       
       

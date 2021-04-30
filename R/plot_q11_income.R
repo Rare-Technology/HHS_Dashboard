@@ -1,4 +1,5 @@
 prep_q11_income <- function(.data){
+
   hhs_Q11 <- .data %>% 
     dplyr::select(
       maa, 
@@ -104,7 +105,7 @@ prep_q11_income <- function(.data){
   )
   
   Q11_summary_long <-
-    HH_avg_income_mean %>% dplyr::pivot_longer(
+    HH_avg_income_mean %>% tidyr::pivot_longer(
       cols = c(
         "Farming",
         "Harvesting",
@@ -139,44 +140,54 @@ prep_q11_income <- function(.data){
   colnames(Q11_summary_long) <-
     c("MA name", "N", "Source", "Proportion (%)")
   
-  Q11 <- Q11_summary_long %>% 
-    filter(`MA name` != "") %>%
+  Q11_summary_long %>% 
+    dplyr::filter(`MA name` != "") %>%
     dplyr::mutate(`Proportion (%)` = as.numeric(`Proportion (%)`)) 
+  
+
 }
 
 plot_q11_income <- function(.data, use_plotly = TRUE){
 
          .data_plot <- prep_q11_income(.data)
-           
+          
+      
+         p <- plot_horiz_bar_stacked(
+           .data_plot,
+           title = "Household source inconme and \nproportional income contribution",
+           palette = "Spectral",
+           stack_var = `Source`,
+           guide_reverse = FALSE
+         )
          #Plot
-         p <- .data_plot %>% 
-            ggplot(aes(
-               x = `MA name`,
-               y = `Proportion (%)`,
-               fill = Source,
-               N = N
-            )) +
-             +
-            geom_bar(
-               position = position_stack(reverse = TRUE),
-               stat = "identity",
-               alpha = 0.8
-            ) +
-           labs(
-             title = "Household source inconme and \nproportional income contribution",
-             x = NULL,
-             ylab = "Proportion (%)"
-           )
-            scale_fill_brewer(palette = "Spectral", 
-                              direction = -1) +
-            guides(fill = guide_legend(reverse = FALSE)) +
-
-            coord_flip(clip = "on") + 
-            theme_rare() + 
-           theme(
-             legend.position = "right",
-             legend.text = element_text(size = 10)
-             )
+         # p <- .data_plot %>% 
+         #    ggplot(aes(
+         #       x = `MA name`,
+         #       y = `Proportion (%)`,
+         #       fill = Source,
+         #       N = N
+         #    )) +
+         #     +
+         #    geom_bar(
+         #       position = position_stack(reverse = TRUE),
+         #       stat = "identity",
+         #       alpha = 0.8
+         #    ) +
+         #   labs(
+         #     title = "Household source inconme and \nproportional income contribution",
+         #     x = NULL,
+         #     ylab = "Proportion (%)"
+         #   )
+         #    scale_fill_brewer(palette = "Spectral", 
+         #                      direction = -1) +
+         #    guides(fill = guide_legend(reverse = FALSE)) +
+         # 
+         #    coord_flip(clip = "on") + 
+         #    theme_rare() + 
+         #   theme(
+         #     legend.position = "right",
+         #     legend.text = element_text(size = 10)
+         #     )
          
          if(use_plotly)
            ggplotly(p)

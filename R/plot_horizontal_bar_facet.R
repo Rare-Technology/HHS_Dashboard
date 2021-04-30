@@ -10,7 +10,7 @@ plot_horiz_bar_facetted <- function(
   
 ){
   
-  browser()
+
   p <- .data %>% 
     ggplot(aes({{ xvar }}, {{ yvar }}, N = {{ N }})) +
     #facet_wrap (~ key) + 

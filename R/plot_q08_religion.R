@@ -28,7 +28,7 @@ plot_q08_religion <- function(.data, use_plotly = TRUE) {
   .data_plot <- prep_q08_religion(.data)
 
   
-  p <- plot_stacked_horiz_bar(
+  p <- plot_horiz_bar_stacked(
     .data_plot,
     title = "Religion of the head of the Household"
   )
