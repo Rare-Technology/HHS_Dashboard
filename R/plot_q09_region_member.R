@@ -35,5 +35,8 @@ plot_q09_region_member <- function(.data, use_plotly = TRUE){
             theme_rare() +
             theme(legend.position = "right") 
             
-         ggplotly(plot_Q9, height = 750)
+         if(use_plotly) 
+           ggplotly(p)
+         
+         p
 }

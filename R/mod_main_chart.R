@@ -54,7 +54,8 @@ chartServer <- function(id, state) {
       
       plot_hhs <- switch (input$question,
         "q8" = plot_q08_religion,
-        "q9" = plot_q09_region_member
+        "q9" = plot_q09_region_member,
+        "q10" = plot_q10_mpa_important
       )
       
       
@@ -68,7 +69,7 @@ chartServer <- function(id, state) {
         
         list(
           p("This is a warning"),
-          plotlyOutput(ns("chart"))
+          plotlyOutput(ns("chart"), height = '750px')
         )
       })
       

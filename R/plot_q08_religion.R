@@ -24,7 +24,7 @@ prep_q08_religion <- function(.data) {
 
 plot_q08_religion <- function(.data, use_plotly = TRUE) {
 
-  .data_plot <- prep_q8_religion(.data)
+  .data_plot <- prep_q08_religion(.data)
 
   p <- .data_plot %>%
     ggplot(aes(`MA name`, `Proportion (%)`, N = N)) +
@@ -48,9 +48,9 @@ plot_q08_religion <- function(.data, use_plotly = TRUE) {
     theme_rare() +
     theme(legend.position = "right")
 
-  if (use_plotly) {
-    return(ggplotly(p, height = 750))
-  }
+  if (use_plotly)
+    ggplotly(p)
+
 
   p
 }
