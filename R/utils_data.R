@@ -186,3 +186,10 @@ hhs_table_summary <- function(.data) {
   )
 }
 
+
+
+clean_plot_data <- function (.data_summary) {
+  .data_summary %>% 
+    dplyr::filter (`MA name` !=  "Mean ± SE") %>%
+    dplyr::mutate(`Proportion (%)` = as.numeric(`Proportion (%)`)) 
+}

@@ -53,7 +53,8 @@ chartServer <- function(id, state) {
     observeEvent(input$question, {
       
       plot_hhs <- switch (input$question,
-        "q8" = plot_q8_religion
+        "q8" = plot_q08_religion,
+        "q9" = plot_q09_region_member
       )
       
       
