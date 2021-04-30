@@ -52,14 +52,22 @@ chartServer <- function(id, state) {
     
     observeEvent(input$question, {
       
+      plot_hhs <- switch (input$question,
+        "q8" = plot_q8_religion
+      )
+      
+      
 
       output$chart_ui <- renderUI({
         
-        output$chart <- renderPlot(plot(1:10))
+
+        output$chart <- renderPlotly({
+          plot_hhs(state$data_filtered, use_plotly = TRUE)
+        })
         
         list(
           p("This is a warning"),
-          plotOutput(ns("chart"))
+          plotlyOutput(ns("chart"))
         )
       })
       

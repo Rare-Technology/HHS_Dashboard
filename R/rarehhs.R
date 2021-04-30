@@ -4,4 +4,5 @@
 #' @importFrom hrbrthemes theme_ipsum
 #' @importFrom shinycssloaders withSpinner
 #' @importFrom tippy tippy_class
+#' @importFrom plotly renderPlotly plotlyOutput ggplotly
 "_PACKAGE"
