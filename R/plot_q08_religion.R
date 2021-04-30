@@ -24,33 +24,20 @@ prep_q08_religion <- function(.data) {
 
 plot_q08_religion <- function(.data, use_plotly = TRUE) {
 
+
   .data_plot <- prep_q08_religion(.data)
 
-  p <- .data_plot %>%
-    ggplot(aes(`MA name`, `Proportion (%)`, N = N)) +
-    geom_bar(aes(fill = key),
-      position = position_stack(reverse = TRUE),
-      stat = "identity",
-      alpha = 0.8
-    ) +
-    labs(
-      title = "Religion of the head of the Household",
-      x = NULL,
-      y = "Proportion (%)"
-    ) +
-    scale_fill_brewer(palette = "Blues", direction = -1) +
-    scale_y_continuous(
-      limits = c(0, 105),
-      breaks = seq(0, 100, 20)
-    ) +
-    coord_flip(clip = "on") +
-    guides(fill = guide_legend(reverse = TRUE)) +
-    theme_rare() +
-    theme(legend.position = "right")
+  
+  p <- plot_stacked_horiz_bar(
+    .data_plot,
+    title = "Religion of the head of the Household"
+  )
+  
+  
 
-  if (use_plotly)
+  if(use_plotly)
     ggplotly(p)
-
-
+  
   p
+  
 }

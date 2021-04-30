@@ -28,20 +28,12 @@ prep_q10_mpa_important <- function(.data){
 plot_q10_mpa_important <- function(.data, use_plotly = TRUE){
 
          .data_plot <- prep_q10_mpa_important(.data)
-         
-         p <- .data_plot %>% 
-            ggplot(aes(`MA name`, `Proportion (%)`, N = N)) +
-            facet_wrap (~ key) + 
-            geom_col(fill = "#005BBB", alpha = 0.8) +  
-            labs(
-              title = "Proportion of households that believe is important \nthat the region is managed and protected",
-              x = NULL,
-              y = "Proportion (%)"
-            ) +
-            scale_y_continuous(limits = c(0, 110),
-                               breaks = seq(0, 100, 20)) +
-            coord_flip(clip = "on") + 
-           theme_rare()
+         p <- plot_horiz_bar(
+           .data_plot,
+           title = "Proportion of households that believe is important \nthat the region is managed and protected",
+           facet_var = key
+         )
+
          
          if(use_plotly)
            ggplotly(p)

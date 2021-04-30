@@ -21,19 +21,24 @@ plot_q09_region_member <- function(.data, use_plotly = TRUE){
 
          .data_plot <- prep_q09_region_member(.data)
          
-         p <-.data_plot %>% 
-            ggplot(aes(`MA name`, `Proportion (%)`, N = N)) +
-            geom_col(fill = "#005BBB", alpha = 0.8) +
-            labs(
-              title = "Proportion of households that identify themselves \nas member of a specific region",
-              x = NULL,
-              y = "Proportion (%)"
-            ) +
-            scale_y_continuous(limits = c(0, 110),
-                               breaks = seq(0, 100, 20)) +
-            coord_flip(clip = "on") +
-            theme_rare() +
-            theme(legend.position = "right") 
+         p <- plot_horiz_bar(
+           .data_plot,
+           title = "Proportion of households that identify themselves \nas member of a specific region"
+           )
+         
+         # p <-.data_plot %>% 
+         #    ggplot(aes(`MA name`, `Proportion (%)`, N = N)) +
+         #    geom_col(fill = "#005BBB", alpha = 0.8) +
+         #    labs(
+         #      title = "Proportion of households that identify themselves \nas member of a specific region",
+         #      x = NULL,
+         #      y = "Proportion (%)"
+         #    ) +
+         #    scale_y_continuous(limits = c(0, 110),
+         #                       breaks = seq(0, 100, 20)) +
+         #    coord_flip(clip = "on") +
+         #    theme_rare() +
+         #    theme(legend.position = "right") 
             
          if(use_plotly) 
            ggplotly(p)

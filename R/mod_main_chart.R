@@ -53,9 +53,11 @@ chartServer <- function(id, state) {
     observeEvent(input$question, {
       
       plot_hhs <- switch (input$question,
+        # Basic Information Plots
         "q8" = plot_q08_religion,
         "q9" = plot_q09_region_member,
         "q10" = plot_q10_mpa_important
+        
       )
       
       
