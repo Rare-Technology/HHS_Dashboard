@@ -179,6 +179,11 @@ a {
   width: 100% !important;
 }
 
+.select-holder {
+  display: flex;
+  flex-direction: row;
+}
+
 .select-holder>.shiny-input-container>div>.selectize-control>.selectize-input {
   padding: 10px 12px;
   background-color:#efefef;
@@ -194,9 +199,8 @@ display: none;
 }
 
 .select-label{
-  margin: 0px 0px 5px 10px;
+  margin: 10px 10px 0px 0px;
 }
 
 .control-label {
-  margin-left: 12px;
 }
