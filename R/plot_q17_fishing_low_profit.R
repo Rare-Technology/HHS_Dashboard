@@ -1,8 +1,4 @@
 
-prep_q17_fishing_low_profit <- function(.data){
-
-}
-
 plot_q17_fishing_low_profit <- function(.data, use_plotly = TRUE){
 
 
@@ -36,8 +32,7 @@ plot_q17_fishing_low_profit <- function(.data, use_plotly = TRUE){
     .data_plot,
     title = "Frequency that the main fisher go fishing \nduring less profitable fishing season",
     type = "stacked",
-    stack_var = Frequency,
-    guide_reverse = TRUE
+    stack_var = Frequency
   )
   
   
