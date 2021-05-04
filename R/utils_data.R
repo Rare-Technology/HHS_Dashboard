@@ -188,6 +188,185 @@ hhs_table_summary <- function(.data) {
 
 
 
+#' Title
+#'
+#' @param .data 
+#' @param focus_var 
+#' @param key_name 
+#' @param values_name 
+#' @param rounding 
+#' @param include_summary_line 
+#' @param recoding 
+#' @param type 
+#' @param bar_column 
+#' @param key_order 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+prep_data_for_plot <- function(
+  .data, 
+  focus_var, 
+  key_name = "key", 
+  values_name = "Proportion (%)", 
+  rounding = 3,
+  include_summary_line = FALSE,
+  recoding = NULL, # new value on right
+  type = "bar", # stacked or facet
+  bar_column = `1`,
+  key_order = NULL) {
+
+  #`8_religion`
+
+  dat <- .data %>%
+    dplyr::filter({{ focus_var }} != "") %>%
+    dplyr::select(maa, {{ focus_var }})
+  
+  if(!is.null(recoding)){
+    vals <- unique(dat[[rlang::as_name(enquo(focus_var))]])
+    recoding <- recoding[recoding %in% vals]
+    dat <- dat %>% 
+      dplyr::mutate(
+        {{ focus_var }} := forcats::fct_recode(factor({{ focus_var }}), !!!recoding)
+      )
+  }
+  
+  
+  
+  tot <- dat %>% 
+    dplyr::group_by(maa) %>% 
+    dplyr::mutate(
+      N = dplyr::n()
+    ) %>% 
+    dplyr::ungroup() %>% 
+    dplyr::group_by(maa, {{ focus_var }}) %>% 
+    dplyr::mutate(
+      N_question = dplyr::n(),
+      pct = 100 * round(N_question/N, rounding)
+    ) %>% 
+    dplyr::distinct() %>% 
+    dplyr::ungroup() %>% 
+    dplyr::select(-N_question)
+  
+  tot <- tot %>% 
+    tidyr::pivot_wider(
+      id_cols = c(maa, N),
+      values_from = pct,
+      names_from = {{ focus_var }},
+      values_fill = 0
+    ) %>% 
+    dplyr::rename(
+      `MA name` = maa
+    )
+  
+  
+  if(include_summary_line){
+    summary_stats <- tot %>% 
+      dplyr::select(-`MA name`, -N) %>% 
+      purrr::map_chr(~compute_summary_line(.))
+    
+    summary_line <- c("Mean ± SE", sum(tot$N), summary_stats)
+    
+    tot <- rbind(
+      tot,
+      summary_line
+    ) 
+  }
+  
+  if(type == "bar"){
+    tot <- tot %>% 
+      dplyr::select(`MA name`, N, {{values_name }} := {{ bar_column }} )
+    return(tot)
+  }
+  
+  
+  tot <- tot %>% 
+    tidyr::pivot_longer(
+      cols = c(-`MA name`, -N),
+      names_to = key_name,
+      values_to = values_name
+    ) %>% 
+    dplyr::filter (`MA name` !=  "Mean ± SE") %>%
+    dplyr::mutate(
+      !!values_name := as.numeric( !!!sym(values_name) ),
+      !!key_name := gsub("[.]", " ", !!!sym(key_name))
+    )
+  
+  if(!is.null(key_order)){
+    
+    key_order <- key_order[key_order%in%unique(tot[[key_name]])]
+    tot <- tot %>% 
+      dplyr::mutate(
+        !!key_name := forcats::fct_relevel(!!!sym(key_name), key_order)
+      )
+  }
+  
+  
+  tot
+  
+}
+
+prep_facet <- function(
+  .data, 
+  select_vars, 
+  group_by_var = maa, 
+  var_names, 
+  key_name = "key", 
+  values_name = "Proportion (%)",
+  my_func = function(x){round(mean(x, na.rm = TRUE), 1)}
+){
+  
+  
+  group_by_str <- rlang::as_name(enquo(group_by_var))
+  
+  dat <- .data %>% 
+    dplyr::select(maa, {{ select_vars }}) %>% 
+    dplyr::group_by( {{ group_by_var }})
+  
+  
+  dat_n <- dat %>% 
+    dplyr::summarise(N = dplyr::n())
+  
+  dat_f <- dat %>% 
+    dplyr::summarise_at(vars({{select_vars}} ), my_func)
+  
+  
+  dat_summary <- dplyr::full_join(dat_n, dat_f, by = group_by_str )
+  names(dat_summary) <- c("maa", "N", var_names)
+  
+  summary_row <- c(
+    NA,
+    sum(dat_summary$N),
+    purrr::map_chr(var_names, ~mean_sem(dat_summary[[.]], 1))
+  )
+  
+  dat_summary <- rbind(dat_summary, summary_row)
+  
+  dat_summary_long <- dat_summary %>% 
+    tidyr::pivot_longer(
+      cols = var_names,
+      names_to = key_name,
+      values_to = values_name
+    )
+  
+  dat_summary_long[[key_name]] <- 
+    factor(dat_summary_long[[key_name]], levels = var_names)
+  
+  
+  
+  final_dat <- dat_summary_long %>% 
+    dplyr::filter (maa !=  "Mean ± SE") %>%
+    dplyr::mutate(!!sym(values_name) := as.numeric(!!sym(values_name))) %>% 
+    dplyr::rename(
+      `MA name` = maa
+    )
+  
+  final_dat
+}
+
+
+
 clean_plot_data <- function (.data_summary) {
   .data_summary %>% 
     dplyr::filter (`MA name` !=  "Mean ± SE") %>%

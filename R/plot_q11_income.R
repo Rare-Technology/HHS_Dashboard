@@ -152,45 +152,13 @@ plot_q11_income <- function(.data, use_plotly = TRUE){
          .data_plot <- prep_q11_income(.data)
           
       
-         p <- plot_horiz_bar_stacked(
+         plot_horiz_bar(
            .data_plot,
            title = "Household source inconme and \nproportional income contribution",
            palette = "Spectral",
+           type = "stacked",
            stack_var = `Source`,
            guide_reverse = FALSE
          )
-         #Plot
-         # p <- .data_plot %>% 
-         #    ggplot(aes(
-         #       x = `MA name`,
-         #       y = `Proportion (%)`,
-         #       fill = Source,
-         #       N = N
-         #    )) +
-         #     +
-         #    geom_bar(
-         #       position = position_stack(reverse = TRUE),
-         #       stat = "identity",
-         #       alpha = 0.8
-         #    ) +
-         #   labs(
-         #     title = "Household source inconme and \nproportional income contribution",
-         #     x = NULL,
-         #     ylab = "Proportion (%)"
-         #   )
-         #    scale_fill_brewer(palette = "Spectral", 
-         #                      direction = -1) +
-         #    guides(fill = guide_legend(reverse = FALSE)) +
-         # 
-         #    coord_flip(clip = "on") + 
-         #    theme_rare() + 
-         #   theme(
-         #     legend.position = "right",
-         #     legend.text = element_text(size = 10)
-         #     )
-         
-         if(use_plotly)
-           ggplotly(p)
-         
-         p
+
 }
