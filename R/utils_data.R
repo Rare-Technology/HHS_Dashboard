@@ -289,8 +289,8 @@ prep_data_for_plot <- function(
     ) %>% 
     dplyr::filter (`MA name` !=  "Mean ± SE") %>%
     dplyr::mutate(
-      !!values_name := as.numeric( !!!sym(values_name) ),
-      !!key_name := gsub("[.]", " ", !!!sym(key_name))
+      !!values_name := as.numeric( !!sym(values_name) ),
+      !!key_name := gsub("[.]", " ", !!sym(key_name))
     )
   
   if(!is.null(key_order)){
@@ -298,7 +298,7 @@ prep_data_for_plot <- function(
     key_order <- key_order[key_order%in%unique(tot[[key_name]])]
     tot <- tot %>% 
       dplyr::mutate(
-        !!key_name := forcats::fct_relevel(!!!sym(key_name), key_order)
+        !!key_name := forcats::fct_relevel(!!sym(key_name), key_order)
       )
   }
   

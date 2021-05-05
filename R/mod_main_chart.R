@@ -13,14 +13,14 @@ chartUI <- function(id) {
     inline_select(
       ns("section"),
       "Section",
-      isolate(state$section$choices),
-      isolate(state$section$selected)
+      NULL, #isolate(state$section$choices),
+      NULL #isolate(state$section$selected)
     ),
     inline_select(
       ns("question"),
       "Question",
-      isolate(state$question$choices),
-      isolate(state$question$selected)
+      NULL, #isolate(state$question$choices),
+      NULL #isolate(state$question$selected)
     ),
     uiOutput(ns("chart_ui"))
   )
@@ -30,11 +30,21 @@ chartUI <- function(id) {
 chartServer <- function(id, state, HHS_PLOT_FUNS) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
+    
+    observeEvent(input$section, {
+      updateSelectInput(
+        session,
+        "section",
+        choices = state$section$choices,
+        selected = state$section$selected
+      )
+    }, once = TRUE)
+    
+    
+    
     observeEvent(input$section,
       {
-        questions <- hhs_questions[input$section] #%>%
-         # unlist() %>%
-          #unname()
+        questions <- hhs_questions[input$section] 
         state$question <- list(
           choices = questions,
           selected = questions[1]
@@ -51,7 +61,8 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
     )
     
     observeEvent(input$question, {
-  
+      req(input$question, input$question!="")
+   
       plot_hhs <- base::get(HHS_PLOT_FUNS[grepl(input$question, HHS_PLOT_FUNS)])
       p <- plot_hhs(state$hhs_data_filtered)
       
