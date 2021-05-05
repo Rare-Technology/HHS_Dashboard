@@ -4,8 +4,8 @@ prep_q29_family_income <- function(.data){
 }
 
 plot_q29_family_income <- function(.data, use_plotly = TRUE){
-hhs_Q29 <- selectedData()[,c("ma_name", "29_family_income")] %>%
-                        filter(`29_family_income` %in% c("Sufficient",
+hhs_Q29 <- .data[,c("maa", "29_family_income")] %>%
+                        dplyr::filter(`29_family_income` %in% c("Sufficient",
                                                          "Insufficient",
                                                          "Tight")) %>%
                            rbind(c(NA, "Sufficient"), 
@@ -34,7 +34,7 @@ hhs_Q29 <- selectedData()[,c("ma_name", "29_family_income")] %>%
             factor(Q29_longer$key,
                    levels = c("Insufficient (%)", "Tight (%)", "Sufficient (%)"))
          
-         Q29 <- data_4plot(Q29_longer)
+         Q29 <- clean_plot_data(Q29_longer)
 
          #Plot
          plot_Q29 <-

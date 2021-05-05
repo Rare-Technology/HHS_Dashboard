@@ -4,13 +4,13 @@ prep_q55_worry_food <- function(.data){
 }
 
 plot_q55_worry_food <- function(.data, use_plotly = TRUE){
-hhs_Q55 <- selectedData()[,c("ma_name", "55_worry_food")] %>%
-                        filter(`55_worry_food` != "") %>% 
+hhs_Q55 <- .data[,c("maa", "55_worry_food")] %>%
+                        dplyr::filter(`55_worry_food` != "") %>% 
                            droplevels()
          
          Q55_summary <- 
             proportion(hhs_Q55$`55_worry_food`,
-                        hhs_Q55$ma_name,
+                        hhs_Q55$maa,
                         3,3
             )
          
@@ -26,7 +26,7 @@ hhs_Q55 <- selectedData()[,c("ma_name", "55_worry_food")] %>%
                    levels = c("Never", "Sometimes", "Often")
             )
          
-         Q55 <- data_4plot(Q55_summary_long)
+         Q55 <- clean_plot_data(Q55_summary_long)
          
          #Plot
          plot_Q55 <-

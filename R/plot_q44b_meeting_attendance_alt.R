@@ -3,10 +3,10 @@ prep_q44b_meeting_attendance_alt <- function(.data){
 }
 
 plot_q44b_meeting_attendance_alt <- function(.data, use_plotly = TRUE){
-hhs_fishers <- selectedData()[,c("submissionid","ma_name", 
+hhs_fishers <- .data[,c("submissionid","maa", 
                                           "12a_fishing_men", "12b_fishing_women",
                                           "12c_fishing_children")] %>%
-                              filter(`12a_fishing_men` > 0 |
+                              dplyr::filter(`12a_fishing_men` > 0 |
                                      `12b_fishing_women` > 0 | 
                                      `12c_fishing_children` > 0) %>%
                                  droplevels()
@@ -14,11 +14,11 @@ hhs_fishers <- selectedData()[,c("submissionid","ma_name",
             left_join(
                hhs_fishers[, c("submissionid")],
                selectedData_Q44()[,c("submissionid",
-                                     "ma_name", 
+                                     "maa", 
                                      "44_meeting_attendance")],
                by = "submissionid") %>%
-           filter(`44_meeting_attendance` != "") %>% 
-            filter(`44_meeting_attendance` != "na") %>%
+           dplyr::filter(`44_meeting_attendance` != "") %>% 
+            dplyr::filter(`44_meeting_attendance` != "na") %>%
                droplevels()
          
         # replace no respond and no management with NO
@@ -37,7 +37,7 @@ hhs_fishers <- selectedData()[,c("submissionid","ma_name",
                values_to = "Proportion (%)"
             )
          Q44f_summary_long$key <- str_replace (Q44f_summary_long$key, "[.]", " ")
-         Q44f <- data_4plot(Q44f_summary_long)
+         Q44f <- clean_plot_data(Q44f_summary_long)
          
          #Plot
          plot_Q44f <-

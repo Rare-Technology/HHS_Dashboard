@@ -4,17 +4,17 @@ prep_q67_reserve_boundry <- function(.data){
 }
 
 plot_q67_reserve_boundry <- function(.data, use_plotly = TRUE){
-hhs_Q67 <- selectedData()[,c("ma_name", "67_reserve_boundry")] %>%
-                           filter(`67_reserve_boundry` != "")
+hhs_Q67 <- .data[,c("maa", "67_reserve_boundry")] %>%
+                           dplyr::filter(`67_reserve_boundry` != "")
           
           Q67_summary <- proportion( hhs_Q67$`67_reserve_boundry`,
-                                     hhs_Q67$ma_name,
+                                     hhs_Q67$maa,
                                      3,2)[,-3]
           
           Q67_summary[Q67_summary == "NaN"] <- 0
           colnames(Q67_summary) <- c("MA name", "N", "Proportion (%)")
           
-          Q67 <- data_4plot(Q67_summary)
+          Q67 <- clean_plot_data(Q67_summary)
          
                    #plot
          plot_Q67 <-

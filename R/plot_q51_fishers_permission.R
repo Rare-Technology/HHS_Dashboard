@@ -3,20 +3,20 @@ prep_q51_fishers_permission <- function(.data){
 }
 
 plot_q51_fishers_permission <- function(.data, use_plotly = TRUE){
-hhs_Q51a <- selectedData()[,c("ma_name", "51a_fishers_gear_not_permitted")] %>%
-                        filter(`51a_fishers_gear_not_permitted` %in% c(0:10)) %>% 
+hhs_Q51a <- .data[,c("maa", "51a_fishers_gear_not_permitted")] %>%
+                        dplyr::filter(`51a_fishers_gear_not_permitted` %in% c(0:10)) %>% 
                            droplevels()
          ## Summary 
          Q51a_length <-
             tapply(hhs_Q51a$`51a_fishers_gear_not_permitted`,
-                   hhs_Q51a$ma_name,
+                   hhs_Q51a$maa,
                    length)
          Q51a_length <- as.vector(Q51a_length)
          Q51a_mean <-
             as.data.frame(
                tapply(
                   hhs_Q51a$`51a_fishers_gear_not_permitted`,
-                  hhs_Q51a$ma_name,
+                  hhs_Q51a$maa,
                   mean
                ) / 10
             )
@@ -26,23 +26,23 @@ hhs_Q51a <- selectedData()[,c("ma_name", "51a_fishers_gear_not_permitted")] %>%
          Q51a_summary <- rbind(Q51a_summary_bind,
                                "Mean ± SE" = c(
                                   sum(Q51a_summary_bind$N),
-                                  mean_sem(Q51a_summary_bind[[2]], 1)
+                                  compute_summary_line(Q51a_summary_bind[[2]], 1)
                                ))
-         Q51a_summary <- rownames_to_column(Q51a_summary, "MA name")
+         Q51a_summary <-tibble::rownames_to_column(Q51a_summary, "MA name")
          
          ### Q51b Frequency of observed fishing in reserve ####
-         hhs_Q51b <- selectedData()[,c("ma_name", "51b_fishers_reserves")] %>%
-                        filter(`51b_fishers_reserves` %in% c(0:10)) %>%
+         hhs_Q51b <- .data[,c("maa", "51b_fishers_reserves")] %>%
+                        dplyr::filter(`51b_fishers_reserves` %in% c(0:10)) %>%
                            droplevels()
          Q51b_length <-
             tapply(hhs_Q51b$`51b_fishers_reserves`,
-                   hhs_Q51b$ma_name,
+                   hhs_Q51b$maa,
                    length)
          Q51b_length <- as.vector(Q51b_length)
          Q51b_mean <-
             data.frame(avg = tapply(
                hhs_Q51b$`51b_fishers_reserves`,
-               hhs_Q51b$ma_name,
+               hhs_Q51b$maa,
                mean
             ) / 10)
          Q51b_summary_bind <-
@@ -50,24 +50,24 @@ hhs_Q51a <- selectedData()[,c("ma_name", "51a_fishers_gear_not_permitted")] %>%
          Q51b_summary <-
             rbind(Q51b_summary_bind, "Mean ± SE" = c(
                sum(Q51b_summary_bind$N),
-               mean_sem(Q51b_summary_bind$avg, 1)
+               compute_summary_line(Q51b_summary_bind$avg, 1)
             ))
          colnames(Q51b_summary) <- c("N", "Fishing in reserve")
-         Q51b_summary <- rownames_to_column(Q51b_summary, "MA name")
+         Q51b_summary <-tibble::rownames_to_column(Q51b_summary, "MA name")
          
          ### Q51c Frequency of observed unpermitted fishing in MA ####
-         hhs_Q51c <- selectedData()[,c("ma_name", "51c_fishers_ma_area")] %>%
-                        filter(`51c_fishers_ma_area` %in% c(0:10)) %>%
+         hhs_Q51c <- .data[,c("maa", "51c_fishers_ma_area")] %>%
+                        dplyr::filter(`51c_fishers_ma_area` %in% c(0:10)) %>%
                            droplevels()
           Q51c_length <-
             tapply(hhs_Q51c$`51c_fishers_ma_area`,
-                   hhs_Q51c$ma_name,
+                   hhs_Q51c$maa,
                    length)
          Q51c_length <- as.vector(Q51c_length)
          Q51c_mean <-
             data.frame(avg = tapply(
                hhs_Q51c$`51c_fishers_ma_area`,
-               hhs_Q51c$ma_name,
+               hhs_Q51c$maa,
                mean
             ) / 10)
          Q51c_summary_bind <-
@@ -77,9 +77,9 @@ hhs_Q51a <- selectedData()[,c("ma_name", "51a_fishers_gear_not_permitted")] %>%
          Q51c_summary <-
             rbind(Q51c_summary_bind, "Mean ± SE" = c(
                sum(Q51c_summary_bind$N),
-               mean_sem(Q51c_summary_bind[[2]], 1)
+               compute_summary_line(Q51c_summary_bind[[2]], 1)
             ))
-         Q51c_summary <- rownames_to_column(Q51c_summary, "MA name")
+         Q51c_summary <-tibble::rownames_to_column(Q51c_summary, "MA name")
          
          ### Combine Q51a, Q51b and Q51c ####
          Q51a_c_summary <-
@@ -114,7 +114,7 @@ hhs_Q51a <- selectedData()[,c("ma_name", "51a_fishers_gear_not_permitted")] %>%
                )
             )$N
          
-         Q51a_c <- data_4plot(Q51a_c_summary_long)
+         Q51a_c <- clean_plot_data(Q51a_c_summary_long)
          
          #Plot
          plot_Q51a_c <-

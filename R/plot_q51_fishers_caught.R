@@ -3,19 +3,19 @@ prep_q51_fishers_caught <- function(.data){
 }
 
 prep_q51_fishers_caught <- function(.data, use_plotly = TRUE){
-hhs_Q51d <- selectedData()[,c("ma_name", "51d_fishers_violate_fish_size")] %>%
-                        filter(`51d_fishers_violate_fish_size` %in% c(0:10)) %>%
+hhs_Q51d <- .data[,c("maa", "51d_fishers_violate_fish_size")] %>%
+                        dplyr::filter(`51d_fishers_violate_fish_size` %in% c(0:10)) %>%
                            droplevels()
          Q51d_length <-
             tapply(hhs_Q51d$`51d_fishers_violate_fish_size`,
-                   hhs_Q51d$ma_name,
+                   hhs_Q51d$maa,
                    length)
          Q51d_length <- as.vector(Q51d_length)
          Q51d_mean <-
             data.frame(
                freq = tapply(
                   hhs_Q51d$`51d_fishers_violate_fish_size`,
-                  hhs_Q51d$ma_name,
+                  hhs_Q51d$maa,
                   mean
                ) / 10
             )
@@ -25,24 +25,24 @@ hhs_Q51d <- selectedData()[,c("ma_name", "51d_fishers_violate_fish_size")] %>%
          Q51d_summary <-
             rbind(Q51d_summary_bind, "Mean ± SE" = c(
                sum(Q51d_summary_bind$N, na.rm = TRUE),
-               mean_sem(Q51d_summary_bind$freq, 1)
+               compute_summary_line(Q51d_summary_bind$freq, 1)
             ))
          colnames(Q51d_summary) <- c("N", "Fish Size Violations (%)")
-         Q51d_summary <- rownames_to_column(Q51d_summary, "MA name")
+         Q51d_summary <-tibble::rownames_to_column(Q51d_summary, "MA name")
          
-         hhs_Q51e <- selectedData()[,c("ma_name", "51e_fishers_caught")] %>%
-                        filter (`51e_fishers_caught` != "") %>%
+         hhs_Q51e <- .data[,c("maa", "51e_fishers_caught")] %>%
+                        dplyr::filter (`51e_fishers_caught` != "") %>%
                            droplevels()
             
          Q51e_length <-
             tapply(hhs_Q51e$`51e_fishers_caught`,
-                   hhs_Q51e$ma_name,
+                   hhs_Q51e$maa,
                    length)
          Q51e_length <- as.vector(Q51e_length)
          Q51e_mean <-
             data.frame(freq = tapply(
                hhs_Q51e$`51e_fishers_caught`,
-               hhs_Q51e$ma_name,
+               hhs_Q51e$maa,
                mean
             ) / 10)
          Q51e_summary_bind <-
@@ -50,10 +50,10 @@ hhs_Q51d <- selectedData()[,c("ma_name", "51d_fishers_violate_fish_size")] %>%
          Q51e_summary <-
             rbind(Q51e_summary_bind, "Mean ± SE" = c(
                sum(Q51e_summary_bind$N, na.rm = TRUE),
-               mean_sem(Q51e_summary_bind$freq, 1)
+               compute_summary_line(Q51e_summary_bind$freq, 1)
             ))
          ##rownames to column
-         Q51e_summary <- rownames_to_column(Q51e_summary, "MA name")
+         Q51e_summary <-tibble::rownames_to_column(Q51e_summary, "MA name")
          colnames(Q51e_summary) <-
             c("MA name", "N", "Seasonal Closures Violations (%)")
          
@@ -86,7 +86,7 @@ hhs_Q51d <- selectedData()[,c("ma_name", "51d_fishers_violate_fish_size")] %>%
                )
             )$N
          
-         Q51d_e <- data_4plot(Q51d_e_summary_long)
+         Q51d_e <- clean_plot_data(Q51d_e_summary_long)
          
          #Plot
          plot_Q51d_e <-

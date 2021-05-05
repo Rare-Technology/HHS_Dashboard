@@ -4,8 +4,8 @@ prep_q42c_problem_undersize <- function(.data){
 }
 
 plot_q42c_problem_undersize <- function(.data, use_plotly = TRUE){
-hhs_Q42 <- selectedData()[,c("ma_name", "42c_problem_undersize")] %>%
-                           filter (`42c_problem_undersize` %in% c(0,1)) %>%
+hhs_Q42 <- .data[,c("maa", "42c_problem_undersize")] %>%
+                           dplyr::filter (`42c_problem_undersize` %in% c(0,1)) %>%
                               rbind(c(NA,0), c(NA,1))
                                  
          Q42c_summary <- proportion(hhs_Q42[[2]],
@@ -14,7 +14,7 @@ hhs_Q42 <- selectedData()[,c("ma_name", "42c_problem_undersize")] %>%
          
          colnames(Q42c_summary) <- c("MA name", "N", "Proportion (%)")
          
-         Q42c <- data_4plot(Q42c_summary)
+         Q42c <- clean_plot_data(Q42c_summary)
          
          #Plot
          plot_Q42c <-

@@ -4,12 +4,12 @@ prep_q66_response_fishing_reserve <- function(.data){
 }
 
 plot_q66_response_fishing_reserve <- function(.data, use_plotly = TRUE){
-hhs_Q66 <- selectedData()[,c("ma_name", "66_response_fishing_reserve")] %>%
-            filter(`66_response_fishing_reserve` %in% c(0,1)) %>%
+hhs_Q66 <- .data[,c("maa", "66_response_fishing_reserve")] %>%
+            dplyr::filter(`66_response_fishing_reserve` %in% c(0,1)) %>%
                droplevels()
          
          Q66_summary <- proportion(hhs_Q66$`66_response_fishing_reserve`,
-                                    hhs_Q66$ma_name,
+                                    hhs_Q66$maa,
                                     3,
                                    length(unique(hhs_Q66$`66_response_fishing_reserve`))
                                    )[,-3]
@@ -19,7 +19,7 @@ hhs_Q66 <- selectedData()[,c("ma_name", "66_response_fishing_reserve")] %>%
          
          colnames(Q66_summary) <- c("MA name", "N", "Proportion (%)")
          
-         Q66 <- data_4plot(Q66_summary)
+         Q66 <- clean_plot_data(Q66_summary)
          
          #plot
          plot_Q66 <-

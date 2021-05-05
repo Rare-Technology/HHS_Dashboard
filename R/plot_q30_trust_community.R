@@ -5,8 +5,8 @@ prep_q30_trust_community <- function(.data){
 
 plot_q30_trust_community <- function(.data, use_plotly = TRUE){
 
-hhs_Q30c <- selectedData()[,c("ma_name", "30_trust_community")] %>%
-            filter(`30_trust_community` %in% c(1:5)) %>%
+hhs_Q30c <- .data[,c("maa", "30_trust_community")] %>%
+            dplyr::filter(`30_trust_community` %in% c(1:5)) %>%
                rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5)) %>%
                   droplevels()
          
@@ -24,7 +24,7 @@ hhs_Q30c <- selectedData()[,c("ma_name", "30_trust_community")] %>%
                                      "Strongly agree")
          
          Q30c <- Q30c_summary %>%
-            filter(`MA name` != "Mean ± SE")
+            dplyr::filter(`MA name` != "Mean ± SE")
          
          #sum agree and strongly agree
          Q30c$`Social Cohesion` <- as.numeric(Q30c$Agree) + as.numeric(Q30c$`Strongly agree`)
@@ -33,7 +33,7 @@ hhs_Q30c <- selectedData()[,c("ma_name", "30_trust_community")] %>%
          #rename columns for shiny app
          colnames(Q30c_summary) <- c("MA name", "N", "Proportion (%)")
          
-         Q30c <- data_4plot(Q30c_summary)
+         Q30c <- clean_plot_data(Q30c_summary)
          
          #Plot
          plot_Q30c <-

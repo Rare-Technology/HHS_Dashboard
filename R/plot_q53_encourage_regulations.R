@@ -4,13 +4,13 @@ prep_q53_encourage_regulations <- function(.data){
 }
 
 plot_q53_encourage_regulations <- function(.data, use_plotly = TRUE){
-hhs_Q53 <- selectedData()[,c("ma_name", "53_encourage_regulations")] %>%
-                        filter(`53_encourage_regulations` != "" &
+hhs_Q53 <- .data[,c("maa", "53_encourage_regulations")] %>%
+                        dplyr::filter(`53_encourage_regulations` != "" &
                                `53_encourage_regulations` != 'No regulations') %>%
                         droplevels()
          
          Q53_summary <- proportion(hhs_Q53$`53_encourage_regulations`,
-                                    hhs_Q53$ma_name,
+                                    hhs_Q53$maa,
                                     3,5)
          colnames(Q53_summary) <-
             c(
@@ -50,7 +50,7 @@ hhs_Q53 <- selectedData()[,c("ma_name", "53_encourage_regulations")] %>%
                )
             )
          
-         Q53 <-  data_4plot(Q53_summary_long) 
+         Q53 <-  clean_plot_data(Q53_summary_long) 
          #Plot
          plot_Q53 <-
             ggplot(Q53, aes(`MA name`, `Proportion (%)`, N = N)) +

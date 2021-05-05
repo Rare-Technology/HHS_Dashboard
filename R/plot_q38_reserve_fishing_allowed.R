@@ -4,8 +4,8 @@ prep_q38_reserve_fishing_allowed <- function(.data){
 }
 
 plot_q38_reserve_fishing_allowed <- function(.data, use_plotly = TRUE){
-hhs_Q38 <- selectedData()[,c("ma_name", "38_reserve_fishing_allowed")] %>%
-                     filter(`38_reserve_fishing_allowed` != "" &
+hhs_Q38 <- .data[,c("maa", "38_reserve_fishing_allowed")] %>%
+                     dplyr::filter(`38_reserve_fishing_allowed` != "" &
                            `38_reserve_fishing_allowed` != -1) %>%
                         rbind(c(NA,0), c(NA,1)) %>%
                            droplevels()
@@ -18,7 +18,7 @@ hhs_Q38 <- selectedData()[,c("ma_name", "38_reserve_fishing_allowed")] %>%
          colnames(Q38_summary) <-
             c("MA name", "N", "Proportion (%)")
          #data for plot
-         Q38 <- data_4plot (Q38_summary)
+         Q38 <- clean_plot_data (Q38_summary)
         
          #Plot
          plot_Q38 <-

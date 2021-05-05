@@ -4,8 +4,8 @@ prep_q33_ma_familiar <- function(.data){
 }
 
 plot_q33_ma_familiar <- function(.data, use_plotly = TRUE){
-hhs_Q33 <- selectedData()[,c("ma_name", "33_ma_familiar")] %>%
-            filter(`33_ma_familiar` %in% c(0,1)) %>%
+hhs_Q33 <- .data[,c("maa", "33_ma_familiar")] %>%
+            dplyr::filter(`33_ma_familiar` %in% c(0,1)) %>%
                rbind(c(NA,0), c(NA,1)) %>%
                   droplevels()
          
@@ -17,7 +17,7 @@ hhs_Q33 <- selectedData()[,c("ma_name", "33_ma_familiar")] %>%
          #rename
          colnames(Q33_summary) <- c("MA name", "N", "Proportion (%)")
          
-         Q33 <- data_4plot (Q33_summary)
+         Q33 <- clean_plot_data (Q33_summary)
          
          #Plot
          plot_Q33 <-

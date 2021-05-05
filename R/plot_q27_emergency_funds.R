@@ -5,8 +5,8 @@ prep_q27_emergency_funds <- function(.data){
 
 plot_q27_emergency_funds <- function(.data, use_plotly = TRUE){
 hhs_Q27 <-
-               selectedData()[, c(
-               "ma_name",
+               .data[, c(
+               "maa",
                "27a_emergency_personal",
                "27b_emergency_family",
                "27c_emergency_friend",
@@ -22,7 +22,7 @@ hhs_Q27 <-
                "27m_emergency_insurance",
                "27n_emergency_other"
             )] %>%
-            filter(ma_name != '')
+            dplyr::filter(maa != '')
          #sum in obe variable
          hhs_Q27$`27n_emergency_other` <- as.numeric(as.character(hhs_Q27$`27n_emergency_other`))
          hhs_Q27[is.na(hhs_Q27)] <- 0
@@ -52,11 +52,11 @@ hhs_Q27 <-
          #proportion
          Q27_summary <-
             proportion(hhs_Q27$X27_emergency_fund_0_1, 
-                       hhs_Q27$ma_name, 3, 2)[, -3]
+                       hhs_Q27$maa, 3, 2)[, -3]
          #col rename
          colnames(Q27_summary) <- c("MA name", "N", "Proportion (%)")
          #summary
-         Q27 <- data_4plot(Q27_summary)
+         Q27 <- clean_plot_data(Q27_summary)
            
          #plot
          plot_Q27 <-

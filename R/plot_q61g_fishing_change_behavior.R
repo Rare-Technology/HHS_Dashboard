@@ -4,12 +4,12 @@ prep_q61g_fishing_change_behavior <- function(.data){
 }
 
 plot_q61g_fishing_change_behavior <- function(.data, use_plotly = TRUE){
-hhs_Q61g <- selectedData()[,c("ma_name","61g_fishing_change_behavior")] %>%
-                           filter( `61g_fishing_change_behavior` %in% c(1:5)) %>%
+hhs_Q61g <- .data[,c("maa","61g_fishing_change_behavior")] %>%
+                           dplyr::filter( `61g_fishing_change_behavior` %in% c(1:5)) %>%
                               rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
          
          Q61g_summary <- proportion (hhs_Q61g$`61g_fishing_change_behavior`,
-                                      hhs_Q61g$ma_name,
+                                      hhs_Q61g$maa,
                                       3,5 )
          
          colnames(Q61g_summary) <-
@@ -23,7 +23,7 @@ hhs_Q61g <- selectedData()[,c("ma_name","61g_fishing_change_behavior")] %>%
             )
          
          Q61g_summary_grouped <- Q61g_summary %>% 
-            filter (`MA name` != "Mean ± SE")
+            dplyr::filter (`MA name` != "Mean ± SE")
          
          Q61g_summary_grouped$`Agree (%)` <- as.numeric(Q61g_summary_grouped$Agree) + 
             as.numeric(Q61g_summary_grouped$`Strongly agree`)
@@ -61,7 +61,7 @@ hhs_Q61g <- selectedData()[,c("ma_name","61g_fishing_change_behavior")] %>%
                )
             )
          
-         Q61g <- data_4plot(Q61g_summary_long)
+         Q61g <- clean_plot_data(Q61g_summary_long)
          
          #Plot
          plot_Q61g <-

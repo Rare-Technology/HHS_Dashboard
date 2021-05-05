@@ -5,8 +5,8 @@ prep_q42b_problem_restricted_gear <- function(.data){
 
 plot_q42b_problem_restricted_gear <- function(.data, use_plotly = TRUE){
 
-         hhs_Q42 <- selectedData()[,c("ma_name", "42b_problem_restricted_gear")] %>%
-                        filter(`42b_problem_restricted_gear` %in% c(0,1)) %>%
+         hhs_Q42 <- .data[,c("maa", "42b_problem_restricted_gear")] %>%
+                        dplyr::filter(`42b_problem_restricted_gear` %in% c(0,1)) %>%
                            rbind(c(NA,0), c(NA,1))
             
          Q42b_summary <- proportion( hhs_Q42[[2]],
@@ -15,7 +15,7 @@ plot_q42b_problem_restricted_gear <- function(.data, use_plotly = TRUE){
                                      
          colnames(Q42b_summary) <-  c("MA name", "N", "Proportion (%)")
          
-         Q42b <- data_4plot (Q42b_summary)
+         Q42b <- clean_plot_data (Q42b_summary)
          
             #Plot
          plot_Q42 <-

@@ -4,7 +4,7 @@ prep_q39_ma_boundaries_aware <- function(.data){
 }
 
 plot_q39_ma_boundaries_aware <- function(.data, use_plotly = TRUE){
-hhs_Q39 <- selectedData()[,c("ma_name", "39_ma_boundaries_aware")] %>%
+hhs_Q39 <- .data[,c("maa", "39_ma_boundaries_aware")] %>%
             subset(`39_ma_boundaries_aware` %in% c("Agree", "Neither", 
                                                    "Disagree",
                                                    "Strongly agree",
@@ -58,7 +58,7 @@ hhs_Q39 <- selectedData()[,c("ma_name", "39_ma_boundaries_aware")] %>%
                )
             )
          
-         Q39 <- data_4plot (Q39_summary_long)
+         Q39 <- clean_plot_data (Q39_summary_long)
          
          #Plot
          plot_Q39 <-

@@ -4,12 +4,12 @@ prep_q61h_individual_behavior <- function(.data){
 }
 
 plot_q61h_individual_behavior <- function(.data, use_plotly = TRUE){
-hhs_Q61h <- selectedData()[,c("ma_name","61h_individual_behavior")] %>%
-                           filter (`61h_individual_behavior` %in% c(1:5)) %>%
+hhs_Q61h <- .data[,c("maa","61h_individual_behavior")] %>%
+                           dplyr::filter (`61h_individual_behavior` %in% c(1:5)) %>%
                               rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
             
          Q61h_summary <- proportion(hhs_Q61h$`61h_individual_behavior`,
-                                     hhs_Q61h$ma_name,
+                                     hhs_Q61h$maa,
                                      rounding = 3,
                                      type = 5)
                                       
@@ -24,7 +24,7 @@ hhs_Q61h <- selectedData()[,c("ma_name","61h_individual_behavior")] %>%
             )
          
          Q61h_summary_grouped <- Q61h_summary %>% 
-            filter (`MA name` != "Mean ± SE")
+            dplyr::filter (`MA name` != "Mean ± SE")
          
          Q61h_summary_grouped$`Agree (%)` <- as.numeric(Q61h_summary_grouped$Agree) + 
             as.numeric(Q61h_summary_grouped$`Strongly agree`)
@@ -62,7 +62,7 @@ hhs_Q61h <- selectedData()[,c("ma_name","61h_individual_behavior")] %>%
                )
             )
          
-         Q61h <- data_4plot(Q61h_summary_long)
+         Q61h <- clean_plot_data(Q61h_summary_long)
          
          #Plot
          plot_Q61h <-

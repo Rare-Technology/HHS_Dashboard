@@ -4,9 +4,9 @@ prep_q46_represent_interests <- function(.data){
 }
 
 plot_q46_represent_interests <- function(.data, use_plotly = TRUE){
-hhs_Q46 <- selectedData()[,c("ma_name","46_represent_interests")] %>%
-                        filter (`46_represent_interests` != "") %>%
-                           filter (`46_represent_interests` != "na") %>%
+hhs_Q46 <- .data[,c("maa","46_represent_interests")] %>%
+                        dplyr::filter (`46_represent_interests` != "") %>%
+                           dplyr::filter (`46_represent_interests` != "na") %>%
                                 droplevels()
           #recode no managemnt answers 
          #hhs_Q46$`46_represent_interests`[hhs_Q46$`46_represent_interests` == ""] <- "Disagree"
@@ -29,7 +29,7 @@ hhs_Q46 <- selectedData()[,c("ma_name","46_represent_interests")] %>%
           #Q46_summary_long$key <- factor(Q46_summary_long$key,
           #         levels = c("Disagree", "Neither", "Agree"))
          Q46_summary_long$key <- str_replace (Q46_summary_long$key, "[.]", " ")
-         Q46 <- data_4plot(Q46_summary_long)
+         Q46 <- clean_plot_data(Q46_summary_long)
           
          #Plot
          plot_Q46 <-

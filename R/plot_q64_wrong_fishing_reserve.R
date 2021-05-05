@@ -4,8 +4,8 @@ prep_q64_wrong_fishing_reserve <- function(.data){
 }
 
 plot_q64_wrong_fishing_reserve <- function(.data, use_plotly = TRUE){
-hhs_Q64 <- selectedData()[,c("ma_name", "64_wrong_fishing_reserve")] %>%
-                        filter (`64_wrong_fishing_reserve` != "") %>%
+hhs_Q64 <- .data[,c("maa", "64_wrong_fishing_reserve")] %>%
+                        dplyr::filter (`64_wrong_fishing_reserve` != "") %>%
                            droplevels()
          
          hhs_Q64$`64_wrong_fishing_reserve` <- 
@@ -19,7 +19,7 @@ hhs_Q64 <- selectedData()[,c("ma_name", "64_wrong_fishing_reserve")] %>%
                   )
                                                                     
          Q64_summary <- proportion (hhs_Q64$`64_wrong_fishing_reserve`,
-                                    hhs_Q64$ma_name,
+                                    hhs_Q64$maa,
                                     3,5)
          colnames(Q64_summary) <-
             c("MA name",
@@ -59,7 +59,7 @@ hhs_Q64 <- selectedData()[,c("ma_name", "64_wrong_fishing_reserve")] %>%
                )
             )
          
-         Q64 <- data_4plot(Q64_summary_long)
+         Q64 <- clean_plot_data(Q64_summary_long)
          
          #plot
          plot_Q64 <-

@@ -4,8 +4,8 @@ prep_q28_buyer_loans <- function(.data){
 }
 
 plot_q28_buyer_loans <- function(.data, use_plotly = TRUE){
-hhs_Q28 <- selectedData()[,c("ma_name", "28_buyer_loans")] %>%
-            filter(`28_buyer_loans` != "") %>%
+hhs_Q28 <- .data[,c("maa", "28_buyer_loans")] %>%
+            dplyr::filter(`28_buyer_loans` != "") %>%
                rbind(c(NA,0), c(NA,1))
          #recode to 0 and 1
          hhs_Q28$`28_buyer_loans` <-
@@ -19,7 +19,7 @@ hhs_Q28 <- selectedData()[,c("ma_name", "28_buyer_loans")] %>%
          colnames(Q28_summary) <-
             c("MA name", "N", "Proportion (%)") #keep the yes
          #summary
-         Q28 <- data_4plot(Q28_summary)
+         Q28 <- clean_plot_data(Q28_summary)
          
          #Plot
          plot_Q28 <-

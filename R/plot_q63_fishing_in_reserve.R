@@ -4,11 +4,11 @@ prep_q63_fishing_in_reserve <- function(.data){
 }
 
 plot_q63_fishing_in_reserve <- function(.data, use_plotly = TRUE){
-hhs_Q63 <- selectedData()[,c("ma_name", "63_fishing_in_reserve")] %>%
-                        filter(`63_fishing_in_reserve` %in% c(0,1))
+hhs_Q63 <- .data[,c("maa", "63_fishing_in_reserve")] %>%
+                        dplyr::filter(`63_fishing_in_reserve` %in% c(0,1))
          
          Q63_summary <- proportion ( hhs_Q63$`63_fishing_in_reserve`,
-                                     hhs_Q63$ma_name,
+                                     hhs_Q63$maa,
                                      3,2)
          
          Q63_summary[Q63_summary == "NaN"] <- 0
@@ -16,11 +16,11 @@ hhs_Q63 <- selectedData()[,c("ma_name", "63_fishing_in_reserve")] %>%
          colnames(Q63_summary) <- c("MA name", "N", "No", "Yes")
          
          Q63 <- Q63_summary[,c("MA name", "N", "Yes")] %>% 
-                        filter(`MA name` != "Mean ± SE")
+                        dplyr::filter(`MA name` != "Mean ± SE")
          
          colnames(Q63) <- c("MA name", "N", "Proportion (%)")
          
-         Q63 <- data_4plot(Q63)
+         Q63 <- clean_plot_data(Q63)
          
         #plot
          plot_Q63 <-

@@ -4,16 +4,16 @@ prep_q61a_current_regulations <- function(.data){
 }
 
 plot_q61a_current_regulations <- function(.data, use_plotly = TRUE){
-hhs_Q61a <- selectedData()[,c("ma_name", "61a_current_regulations")] %>%
-                           filter(`61a_current_regulations` %in% c(1:5)) %>%
+hhs_Q61a <- .data[,c("maa", "61a_current_regulations")] %>%
+                           dplyr::filter(`61a_current_regulations` %in% c(1:5)) %>%
                               rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
         
          Q61a_summary <- proportion (hhs_Q61a$`61a_current_regulations`,
-                                      hhs_Q61a$ma_name,
+                                      hhs_Q61a$maa,
                                       3,5)
          
          Q61a_summary_grouped <- Q61a_summary %>%
-                                   filter (`MA name` != "Mean ± SE")
+                                   dplyr::filter (`MA name` != "Mean ± SE")
          #grouped
          Q61a_summary_grouped$Disagree <-  as.numeric(Q61a_summary_grouped$X1) +
                                            as.numeric(Q61a_summary_grouped$X2)
@@ -32,9 +32,9 @@ hhs_Q61a <- selectedData()[,c("ma_name", "61a_current_regulations")] %>%
                                        "Agree")],
                 c(NA,
                   sum(as.numeric(Q61a_summary_grouped$N)),
-                  mean_sem(Q61a_summary_grouped$Disagree, 1),
-                  mean_sem(Q61a_summary_grouped$Neither, 1),
-                  mean_sem(Q61a_summary_grouped$Agree, 1)
+                  compute_summary_line(Q61a_summary_grouped$Disagree, 1),
+                  compute_summary_line(Q61a_summary_grouped$Neither, 1),
+                  compute_summary_line(Q61a_summary_grouped$Agree, 1)
                )
             )
          
@@ -65,7 +65,7 @@ hhs_Q61a <- selectedData()[,c("ma_name", "61a_current_regulations")] %>%
                )
             )
          
-         Q61a <- data_4plot(Q61a_summary_long)
+         Q61a <- clean_plot_data(Q61a_summary_long)
             
          #Plot
          plot_Q61a <-

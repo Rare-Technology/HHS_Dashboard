@@ -4,8 +4,8 @@ prep_q59_food_procurement <- function(.data){
 }
 
 plot_q59_food_procurement <- function(.data, use_plotly = TRUE){
-hhs_Q59 <- selectedData()[,c("ma_name","59_food_procurement")] %>%
-                        filter(`59_food_procurement` != "") %>%
+hhs_Q59 <- .data[,c("maa","59_food_procurement")] %>%
+                        dplyr::filter(`59_food_procurement` != "") %>%
                            rbind(c(NA, "Confident not"), 
                                  c(NA, "Uncertain"),
                                  c(NA, "High chance"),
@@ -14,7 +14,7 @@ hhs_Q59 <- selectedData()[,c("ma_name","59_food_procurement")] %>%
                            droplevels()
         
          Q59_summary <- proportion (hhs_Q59$`59_food_procurement`,
-                                     hhs_Q59$ma_name,
+                                     hhs_Q59$maa,
                                      3,5)
          colnames(Q59_summary) <- c("MA name", "N", 
                                     "Not very confident",
@@ -42,7 +42,7 @@ hhs_Q59 <- selectedData()[,c("ma_name","59_food_procurement")] %>%
                               "Very confident")
             )
          
-         Q59 <- data_4plot(Q59_summary_long)
+         Q59 <- clean_plot_data(Q59_summary_long)
          
          #Plot
          plot_Q59 <-

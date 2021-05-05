@@ -91,16 +91,16 @@ prep_q11_income <- function(.data){
     "Mean ± SE" = c(
       NA,
       sum(HH_avg_income$N),
-      mean_sem(HH_avg_income$Farming, 1),
-      mean_sem(HH_avg_income$Harvesting, 1),
-      mean_sem(HH_avg_income$Artisinal_Fishing, 1),
-      mean_sem(HH_avg_income$Industrial_Fishing, 1),
-      mean_sem(HH_avg_income$Buying_Trading, 1),
-      mean_sem(HH_avg_income$Processing_Fish, 1),
-      mean_sem(HH_avg_income$Aquaculture, 1),
-      mean_sem(HH_avg_income$Extraction, 1),
-      mean_sem(HH_avg_income$Tourism, 1),
-      mean_sem(HH_avg_income$Other, 1)
+      compute_summary_line(HH_avg_income$Farming, 1),
+      compute_summary_line(HH_avg_income$Harvesting, 1),
+      compute_summary_line(HH_avg_income$Artisinal_Fishing, 1),
+      compute_summary_line(HH_avg_income$Industrial_Fishing, 1),
+      compute_summary_line(HH_avg_income$Buying_Trading, 1),
+      compute_summary_line(HH_avg_income$Processing_Fish, 1),
+      compute_summary_line(HH_avg_income$Aquaculture, 1),
+      compute_summary_line(HH_avg_income$Extraction, 1),
+      compute_summary_line(HH_avg_income$Tourism, 1),
+      compute_summary_line(HH_avg_income$Other, 1)
     )
   )
   

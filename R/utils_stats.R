@@ -4,7 +4,7 @@ compute_summary_line <-
                                                                        TRUE) / sqrt(length(x)), y))
   }
 
-mean_sem <-
+compute_summary_line <-
   function (x, y) {
     paste(round(mean(as.numeric(x), na.rm = TRUE), y), '±', round(sd(as.numeric(x), na.rm =
                                                                        TRUE) / sqrt(length(x)), y))
@@ -33,7 +33,7 @@ proportion <- function(question, grouping, rounding, type)
 
     result <-
       rbind(summary_bind, "Mean ± SE" = c(sum(summary_bind[[1]], 1),
-                                          mean_sem(summary_bind[[2]], 1)
+                                          compute_summary_line(summary_bind[[2]], 1)
       )
       )
   }
@@ -43,8 +43,8 @@ proportion <- function(question, grouping, rounding, type)
     result <-
       rbind(summary_bind, "Mean ± SE" = c(
         sum(summary_bind[[1]], 1),
-        mean_sem(summary_bind[[2]], 1),
-        mean_sem(summary_bind[[3]], 1)
+        compute_summary_line(summary_bind[[2]], 1),
+        compute_summary_line(summary_bind[[3]], 1)
       ))
   }
 
@@ -54,9 +54,9 @@ proportion <- function(question, grouping, rounding, type)
       rbind(summary_bind,
             "Mean ± SE" = c(
               sum(summary_bind[[1]], 1),
-              mean_sem(summary_bind[[2]], 1),
-              mean_sem(summary_bind[[3]], 1),
-              mean_sem(summary_bind[[4]], 1)
+              compute_summary_line(summary_bind[[2]], 1),
+              compute_summary_line(summary_bind[[3]], 1),
+              compute_summary_line(summary_bind[[4]], 1)
             ))
   }
 
@@ -66,10 +66,10 @@ proportion <- function(question, grouping, rounding, type)
       rbind(summary_bind,
             "Mean ± SE" = c(
               sum(summary_bind[[1]], 1),
-              mean_sem(summary_bind[[2]], 1),
-              mean_sem(summary_bind[[3]], 1),
-              mean_sem(summary_bind[[4]], 1),
-              mean_sem(summary_bind[[5]], 1)
+              compute_summary_line(summary_bind[[2]], 1),
+              compute_summary_line(summary_bind[[3]], 1),
+              compute_summary_line(summary_bind[[4]], 1),
+              compute_summary_line(summary_bind[[5]], 1)
             ))
   }
 
@@ -80,11 +80,11 @@ proportion <- function(question, grouping, rounding, type)
         summary_bind,
         "Mean ± SE" = c(
           sum(summary_bind[[1]]),
-          mean_sem(summary_bind[[2]], 1),
-          mean_sem(summary_bind[[3]], 1),
-          mean_sem(summary_bind[[4]], 1),
-          mean_sem(summary_bind[[5]], 1),
-          mean_sem(summary_bind[[6]], 1)
+          compute_summary_line(summary_bind[[2]], 1),
+          compute_summary_line(summary_bind[[3]], 1),
+          compute_summary_line(summary_bind[[4]], 1),
+          compute_summary_line(summary_bind[[5]], 1),
+          compute_summary_line(summary_bind[[6]], 1)
         )
       )
   }
@@ -96,12 +96,12 @@ proportion <- function(question, grouping, rounding, type)
         summary_bind,
         "Mean ± SE" = c(
           sum(summary_bind[[1]]),
-          mean_sem(summary_bind[[2]], 1),
-          mean_sem(summary_bind[[3]], 1),
-          mean_sem(summary_bind[[4]], 1),
-          mean_sem(summary_bind[[5]], 1),
-          mean_sem(summary_bind[[6]], 1),
-          mean_sem(summary_bind[[7]], 1)
+          compute_summary_line(summary_bind[[2]], 1),
+          compute_summary_line(summary_bind[[3]], 1),
+          compute_summary_line(summary_bind[[4]], 1),
+          compute_summary_line(summary_bind[[5]], 1),
+          compute_summary_line(summary_bind[[6]], 1),
+          compute_summary_line(summary_bind[[7]], 1)
         )
       )
   }
@@ -113,13 +113,13 @@ proportion <- function(question, grouping, rounding, type)
         summary_bind,
         "Mean ± SE" = c(
           sum(summary_bind[[1]]),
-          mean_sem(summary_bind[[2]], 1),
-          mean_sem(summary_bind[[3]], 1),
-          mean_sem(summary_bind[[4]], 1),
-          mean_sem(summary_bind[[5]], 1),
-          mean_sem(summary_bind[[6]], 1),
-          mean_sem(summary_bind[[7]], 1),
-          mean_sem(summary_bind[[8]], 1)
+          compute_summary_line(summary_bind[[2]], 1),
+          compute_summary_line(summary_bind[[3]], 1),
+          compute_summary_line(summary_bind[[4]], 1),
+          compute_summary_line(summary_bind[[5]], 1),
+          compute_summary_line(summary_bind[[6]], 1),
+          compute_summary_line(summary_bind[[7]], 1),
+          compute_summary_line(summary_bind[[8]], 1)
         )
       )
   }
@@ -131,14 +131,14 @@ proportion <- function(question, grouping, rounding, type)
         summary_bind,
         "Mean ± SE" = c(
           sum(summary_bind[[1]]),
-          mean_sem(summary_bind[[2]], 1),
-          mean_sem(summary_bind[[3]], 1),
-          mean_sem(summary_bind[[4]], 1),
-          mean_sem(summary_bind[[5]], 1),
-          mean_sem(summary_bind[[6]], 1),
-          mean_sem(summary_bind[[7]], 1),
-          mean_sem(summary_bind[[8]], 1),
-          mean_sem(summary_bind[[9]], 1)
+          compute_summary_line(summary_bind[[2]], 1),
+          compute_summary_line(summary_bind[[3]], 1),
+          compute_summary_line(summary_bind[[4]], 1),
+          compute_summary_line(summary_bind[[5]], 1),
+          compute_summary_line(summary_bind[[6]], 1),
+          compute_summary_line(summary_bind[[7]], 1),
+          compute_summary_line(summary_bind[[8]], 1),
+          compute_summary_line(summary_bind[[9]], 1)
         )
       )
   }
@@ -163,11 +163,11 @@ proportion_Q14 <- function(submissionid, question, grouping, rounding, type)
         summary_bind,
         "Mean ± SE" = c(
           sum(summary_bind[[1]]),
-          mean_sem(summary_bind[[2]], 1),
-          mean_sem(summary_bind[[3]], 1),
-          mean_sem(summary_bind[[4]], 1),
-          mean_sem(summary_bind[[5]], 1),
-          mean_sem(summary_bind[[6]], 1)
+          compute_summary_line(summary_bind[[2]], 1),
+          compute_summary_line(summary_bind[[3]], 1),
+          compute_summary_line(summary_bind[[4]], 1),
+          compute_summary_line(summary_bind[[5]], 1),
+          compute_summary_line(summary_bind[[6]], 1)
         )
       )
   }
@@ -178,12 +178,12 @@ proportion_Q14 <- function(submissionid, question, grouping, rounding, type)
         summary_bind,
         "Mean ± SE" = c(
           sum(summary_bind[[1]]),
-          mean_sem(summary_bind[[2]], 1),
-          mean_sem(summary_bind[[3]], 1),
-          mean_sem(summary_bind[[4]], 1),
-          mean_sem(summary_bind[[5]], 1),
-          mean_sem(summary_bind[[6]], 1),
-          mean_sem(summary_bind[[7]], 1)
+          compute_summary_line(summary_bind[[2]], 1),
+          compute_summary_line(summary_bind[[3]], 1),
+          compute_summary_line(summary_bind[[4]], 1),
+          compute_summary_line(summary_bind[[5]], 1),
+          compute_summary_line(summary_bind[[6]], 1),
+          compute_summary_line(summary_bind[[7]], 1)
         )
       )
   }
@@ -194,13 +194,13 @@ proportion_Q14 <- function(submissionid, question, grouping, rounding, type)
         summary_bind,
         "Mean ± SE" = c(
           sum(summary_bind[[1]]),
-          mean_sem(summary_bind[[2]], 1),
-          mean_sem(summary_bind[[3]], 1),
-          mean_sem(summary_bind[[4]], 1),
-          mean_sem(summary_bind[[5]], 1),
-          mean_sem(summary_bind[[6]], 1),
-          mean_sem(summary_bind[[7]], 1),
-          mean_sem(summary_bind[[8]], 1)
+          compute_summary_line(summary_bind[[2]], 1),
+          compute_summary_line(summary_bind[[3]], 1),
+          compute_summary_line(summary_bind[[4]], 1),
+          compute_summary_line(summary_bind[[5]], 1),
+          compute_summary_line(summary_bind[[6]], 1),
+          compute_summary_line(summary_bind[[7]], 1),
+          compute_summary_line(summary_bind[[8]], 1)
         )
       )
   }
@@ -211,14 +211,14 @@ proportion_Q14 <- function(submissionid, question, grouping, rounding, type)
         summary_bind,
         "Mean ± SE" = c(
           sum(summary_bind[[1]]),
-          mean_sem(summary_bind[[2]], 1),
-          mean_sem(summary_bind[[3]], 1),
-          mean_sem(summary_bind[[4]], 1),
-          mean_sem(summary_bind[[5]], 1),
-          mean_sem(summary_bind[[6]], 1),
-          mean_sem(summary_bind[[7]], 1),
-          mean_sem(summary_bind[[8]], 1),
-          mean_sem(summary_bind[[9]], 1)
+          compute_summary_line(summary_bind[[2]], 1),
+          compute_summary_line(summary_bind[[3]], 1),
+          compute_summary_line(summary_bind[[4]], 1),
+          compute_summary_line(summary_bind[[5]], 1),
+          compute_summary_line(summary_bind[[6]], 1),
+          compute_summary_line(summary_bind[[7]], 1),
+          compute_summary_line(summary_bind[[8]], 1),
+          compute_summary_line(summary_bind[[9]], 1)
         )
       )
   }

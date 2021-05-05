@@ -4,12 +4,12 @@ prep_q61f_rights_distribution_fair <- function(.data){
 }
 
 plot_q61f_rights_distribution_fair <- function(.data, use_plotly = TRUE){
-hhs_Q61f <- selectedData()[,c("ma_name", "61f_rights_distribution_fair")] %>%
-                           filter(`61f_rights_distribution_fair` %in% c(1:5)) %>%
+hhs_Q61f <- .data[,c("maa", "61f_rights_distribution_fair")] %>%
+                           dplyr::filter(`61f_rights_distribution_fair` %in% c(1:5)) %>%
                               rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
           
          Q61f_summary <- proportion ( hhs_Q61f$`61f_rights_distribution_fair`,
-                                      hhs_Q61f$ma_name,
+                                      hhs_Q61f$maa,
                                       3,5)
          
          colnames(Q61f_summary) <-
@@ -23,7 +23,7 @@ hhs_Q61f <- selectedData()[,c("ma_name", "61f_rights_distribution_fair")] %>%
             )
          
          Q61f_summary_grouped <- Q61f_summary %>% 
-                                          filter (`MA name` != "Mean ± SE")
+                                          dplyr::filter (`MA name` != "Mean ± SE")
             
          Q61f_summary_grouped$`Agree (%)` <- as.numeric(Q61f_summary_grouped$Agree) + 
             as.numeric(Q61f_summary_grouped$`Strongly agree`)
@@ -65,7 +65,7 @@ hhs_Q61f <- selectedData()[,c("ma_name", "61f_rights_distribution_fair")] %>%
                )
             )
          
-         Q61f <- data_4plot(Q61f_summary_long)
+         Q61f <- clean_plot_data(Q61f_summary_long)
          
          #Plot
          plot_Q61f <-

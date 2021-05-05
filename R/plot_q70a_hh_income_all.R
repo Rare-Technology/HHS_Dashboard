@@ -29,23 +29,23 @@ if (input$Country == "IDN") {
          ### Q70 What is your households' average monthly income from all activities, including salaried and non-salaried labor? ####
          
          hhs_Q70 <- HND_hhs #%>%
-                    # filter (between(
+                    # dplyr::filter (between(
                      #        as.numeric(as.character(`70_hh_average_income`)), 
                     #          10, 1.00e+20)) %>%
                       #           droplevels()
          Q70_lenght <-
             tapply(hhs_Q70$`70_hh_average_income`,
-                   hhs_Q70$ma_name,
+                   hhs_Q70$maa,
                    length)
          
          tapply(as.numeric(hhs_Q70$`70_hh_average_income`),
-                hhs_Q70$ma_name,
+                hhs_Q70$maa,
                 mean)
          
          #Proportion of income and Average income per MA
          income_source <-
             hhs_Q70[, c(
-               "ma_name",
+               "maa",
                "11a_income_farming",
                "11b_income_harvesting",
                "11c_income_fishing_artisanal",
@@ -66,7 +66,7 @@ if (input$Country == "IDN") {
          
           ## Agregate income
          income_summary <-
-            aggregate(. ~ ma_name,
+            aggregate(. ~ maa,
                       FUN = mean,
                       na.rm = TRUE,
                       data = income_source)
@@ -101,25 +101,25 @@ if (input$Country == "IDN") {
                HH_avg_income,
                "Mean ± SE" = c(
                   sum(HH_avg_income$N),
-                  mean_sem(HH_avg_income$Total_Income, 1),
-                  mean_sem(HH_avg_income$Farming, 1),
-                  mean_sem(HH_avg_income$Harvesting, 1),
-                  mean_sem(HH_avg_income$Artisinal_Fishing, 1),
-                  mean_sem(HH_avg_income$Industrial_Fishing, 1),
-                  mean_sem(HH_avg_income$Buying_Trading, 1),
-                  mean_sem(HH_avg_income$Processing_Fish, 1),
-                  mean_sem(HH_avg_income$Aquaculture, 1),
-                  mean_sem(HH_avg_income$Extraction, 1),
-                  mean_sem(HH_avg_income$Tourism, 1),
-                  mean_sem(HH_avg_income$Other, 1)
+                  compute_summary_line(HH_avg_income$Total_Income, 1),
+                  compute_summary_line(HH_avg_income$Farming, 1),
+                  compute_summary_line(HH_avg_income$Harvesting, 1),
+                  compute_summary_line(HH_avg_income$Artisinal_Fishing, 1),
+                  compute_summary_line(HH_avg_income$Industrial_Fishing, 1),
+                  compute_summary_line(HH_avg_income$Buying_Trading, 1),
+                  compute_summary_line(HH_avg_income$Processing_Fish, 1),
+                  compute_summary_line(HH_avg_income$Aquaculture, 1),
+                  compute_summary_line(HH_avg_income$Extraction, 1),
+                  compute_summary_line(HH_avg_income$Tourism, 1),
+                  compute_summary_line(HH_avg_income$Other, 1)
                )
             )
          
          Q70_summary <-
-            rownames_to_column(HH_avg_income_mean[, c(1:2)], "MA name")
+           tibble::rownames_to_column(HH_avg_income_mean[, c(1:2)], "MA name")
          colnames(Q70_summary) <- c("MA name", "N", "Proportion (%)")
          
-         Q70 <- data_4plot (Q70_summary)
+         Q70 <- clean_plot_data (Q70_summary)
          
          colnames(Q70) <- c("MA name", "N", "Average")
          Q70$Average <- round(Q70$Average * conversion, 1)

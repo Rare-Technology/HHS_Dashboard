@@ -7,8 +7,8 @@ plot_q40_reserve_boundaries_aware <- function(.data, use_plotly = TRUE){
 
          if (input$Country == "MOZ") {
             
-            hhs_Q40_moz <- selectedData()[,c("ma_name", "40_reserve_boundaries_aware")] %>%
-                              filter (`40_reserve_boundaries_aware` != "" &
+            hhs_Q40_moz <- .data[,c("maa", "40_reserve_boundaries_aware")] %>%
+                              dplyr::filter (`40_reserve_boundaries_aware` != "" &
                                       `40_reserve_boundaries_aware` != "No reserve") %>%
                                           droplevels()
           Q40_summary_moz <-
@@ -54,7 +54,7 @@ plot_q40_reserve_boundaries_aware <- function(.data, use_plotly = TRUE){
                )
             )
          
-         Q40_moz <- data_4plot(Q40_summary_moz_long) 
+         Q40_moz <- clean_plot_data(Q40_summary_moz_long) 
          
          #Plot
          plot_Q40_moz <-
@@ -79,8 +79,8 @@ plot_q40_reserve_boundaries_aware <- function(.data, use_plotly = TRUE){
       ### all countries except Moz
          else if (input$Country != "MOZ") {
             
-         hhs_Q40 <- selectedData()[,c("ma_name", "40_reserve_boundaries_aware")] %>% 
-                        filter(`40_reserve_boundaries_aware` %in% c(0:10)) %>%
+         hhs_Q40 <- .data[,c("maa", "40_reserve_boundaries_aware")] %>% 
+                        dplyr::filter(`40_reserve_boundaries_aware` %in% c(0:10)) %>%
                            droplevels()
          
          Q40_length <-
@@ -92,18 +92,18 @@ plot_q40_reserve_boundaries_aware <- function(.data, use_plotly = TRUE){
             data.frame(avg = tapply(as.numeric(
                as.character(hhs_Q40$`40_reserve_boundaries_aware`)
             ),
-            hhs_Q40$ma_name, mean) / 10)
+            hhs_Q40$maa, mean) / 10)
          Q40_summary_bind <-
             cbind(N = Q40_length, round(Q40_mean, 3) * 100)
          Q40_summary <-
             rbind(Q40_summary_bind, "Mean ± SE" = c(
                sum(Q40_summary_bind$N),
-               mean_sem(Q40_summary_bind$avg, 1)
+               compute_summary_line(Q40_summary_bind$avg, 1)
             ))
-         Q40_summary <- rownames_to_column(Q40_summary, "MA name")
+         Q40_summary <-tibble::rownames_to_column(Q40_summary, "MA name")
          colnames(Q40_summary) <- c("MA name", "N", "Proportion (%)")
          
-         Q40 <- data_4plot (Q40_summary)
+         Q40 <- clean_plot_data (Q40_summary)
          
          #Plot
          plot_Q40 <-

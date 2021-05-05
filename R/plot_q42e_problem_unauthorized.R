@@ -4,8 +4,8 @@ prep_q42e_problem_unauthorized <- function(.data){
 }
 
 plot_q42e_problem_unauthorized <- function(.data, use_plotly = TRUE){
-hhs_Q42 <- selectedData()[,c("ma_name","42e_problem_unauthorized")] %>%
-                        filter(`42e_problem_unauthorized` %in% c(0,1))
+hhs_Q42 <- .data[,c("maa","42e_problem_unauthorized")] %>%
+                        dplyr::filter(`42e_problem_unauthorized` %in% c(0,1))
              
          Q42e_summary <- proportion(hhs_Q42[[2]],
                                     hhs_Q42[[1]],
@@ -13,7 +13,7 @@ hhs_Q42 <- selectedData()[,c("ma_name","42e_problem_unauthorized")] %>%
          
          colnames(Q42e_summary) <- c("MA name", "N", "Proportion (%)")
 
-         Q42e <- data_4plot (Q42e_summary)
+         Q42e <- clean_plot_data (Q42e_summary)
          
          #Plot
          plot_Q42e <-

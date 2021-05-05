@@ -21,9 +21,9 @@ prep_q19_current_fish_catch <- function(.data){
                   "Improved")],
           `Mean ± SE` = c('',
                           sum(as.numeric(Q19$N)),
-                          mean_sem(Q19$Declined, 1),
-                          mean_sem(Q19$Stayed.the.same, 1),
-                          mean_sem(Q19$Improved, 1)
+                          compute_summary_line(Q19$Declined, 1),
+                          compute_summary_line(Q19$Stayed.the.same, 1),
+                          compute_summary_line(Q19$Improved, 1)
           ))
   colnames(Q19_summary) <-
     c("MA name",

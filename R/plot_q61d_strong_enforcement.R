@@ -4,12 +4,12 @@ prep_q61d_strong_enforcement <- function(.data){
 }
 
 plot_q61d_strong_enforcement <- function(.data, use_plotly = TRUE){
-hhs_Q61d <- selectedData()[,c("ma_name", "61d_strong_enforcement")] %>%
-                           filter (`61d_strong_enforcement` %in% c(1:5)) %>%
+hhs_Q61d <- .data[,c("maa", "61d_strong_enforcement")] %>%
+                           dplyr::filter (`61d_strong_enforcement` %in% c(1:5)) %>%
                               rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
           
           Q61d_summary <- proportion ( hhs_Q61d$`61d_strong_enforcement`,
-                                       hhs_Q61d$ma_name,
+                                       hhs_Q61d$maa,
                                        3,5)
          
            colnames(Q61d_summary) <- c("MA name",
@@ -21,7 +21,7 @@ hhs_Q61d <- selectedData()[,c("ma_name", "61d_strong_enforcement")] %>%
                                       "Strongly agree")
           
           Q61d_summary_grouped <- Q61d_summary %>%
-                                       filter(`MA name` != "Mean ± SE")
+                                       dplyr::filter(`MA name` != "Mean ± SE")
           
           Q61d_summary_grouped$`Agree (%)` <- as.numeric(Q61d_summary_grouped$Agree) + 
                                              as.numeric(Q61d_summary_grouped$`Strongly agree`)
@@ -58,7 +58,7 @@ hhs_Q61d <- selectedData()[,c("ma_name", "61d_strong_enforcement")] %>%
                   "Agree (%)"
                )
             )
-         Q61d <- data_4plot(Q61d_summary_long)
+         Q61d <- clean_plot_data(Q61d_summary_long)
          
          #Plot
          plot_Q61d <-

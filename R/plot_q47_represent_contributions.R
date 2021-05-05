@@ -4,12 +4,12 @@ prep_q47_represent_contributions <- function(.data){
 }
 
 plot_q47_represent_contributions <- function(.data, use_plotly = TRUE){
-hhs_Q47 <- selectedData()[,c("ma_name", "47_represent_contributions")] %>%
-                           rbind(tibble("ma_name" = c(NA,NA,NA),
+hhs_Q47 <- .data[,c("maa", "47_represent_contributions")] %>%
+                           rbind(tibble("maa" = c(NA,NA,NA),
                                         "47_represent_contributions"= c("Agree", 
                                                                         "Neither", 
                                                                         "Disagree"))) %>%
-            filter(`47_represent_contributions` %in% c("Agree",  "Neither",  "Disagree")) %>%
+            dplyr::filter(`47_represent_contributions` %in% c("Agree",  "Neither",  "Disagree")) %>%
                         droplevels()
          #proportion
          Q47_summary <- proportion(hhs_Q47[[2]],
@@ -26,7 +26,7 @@ hhs_Q47 <- selectedData()[,c("ma_name", "47_represent_contributions")] %>%
             factor(Q47_summary_long$key,
                    levels = c("Neither", "Disagree", "Agree"))
          
-         Q47 <- data_4plot(Q47_summary_long)
+         Q47 <- clean_plot_data(Q47_summary_long)
          
          #Plot
          plot_Q47 <-

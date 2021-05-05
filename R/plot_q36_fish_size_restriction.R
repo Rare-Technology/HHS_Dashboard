@@ -4,8 +4,8 @@ prep_q36_fish_size_restriction <- function(.data){
 }
 
 plot_q36_fish_size_restriction <- function(.data, use_plotly = TRUE){
-hhs_Q36 <- selectedData()[,c("ma_name", "36_fish_size_restriction")] %>%
-                        filter(`36_fish_size_restriction` != "") %>%
+hhs_Q36 <- .data[,c("maa", "36_fish_size_restriction")] %>%
+                        dplyr::filter(`36_fish_size_restriction` != "") %>%
                            rbind(c(NA,0), c(NA,1)) %>%
                               droplevels()
          #No MA as 0 answer
@@ -20,7 +20,7 @@ hhs_Q36 <- selectedData()[,c("ma_name", "36_fish_size_restriction")] %>%
          colnames(Q36_summary) <-
             c("MA name", "N", "Proportion (%)")
          
-         Q36 <- data_4plot (Q36_summary)
+         Q36 <- clean_plot_data (Q36_summary)
 
          #Plot
          plot_Q36 <-

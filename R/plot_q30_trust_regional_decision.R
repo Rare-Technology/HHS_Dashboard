@@ -4,8 +4,8 @@ prep_q30_trust_regional_decision <- function(.data){
 }
 
 plot_q30_trust_regional_decision <- function(.data, use_plotly = TRUE){
-hhs_Q30b <- selectedData()[,c("ma_name", "30_trust_regional_decision")] %>%
-            filter(`30_trust_regional_decision` %in% c(1:5)) %>%
+hhs_Q30b <- .data[,c("maa", "30_trust_regional_decision")] %>%
+            dplyr::filter(`30_trust_regional_decision` %in% c(1:5)) %>%
                rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5)) %>%
                   droplevels()
             
@@ -22,7 +22,7 @@ hhs_Q30b <- selectedData()[,c("ma_name", "30_trust_regional_decision")] %>%
                                      "Agree",
                                      "Strongly agree")
          Q30b <- Q30b_summary %>%
-            filter(`MA name` != "Mean ± SE")
+            dplyr::filter(`MA name` != "Mean ± SE")
          
          #sum agree and strongly agree
          Q30b$`Political Trust` <- as.numeric(Q30b$Agree) + as.numeric(Q30b$`Strongly agree`)
@@ -31,7 +31,7 @@ hhs_Q30b <- selectedData()[,c("ma_name", "30_trust_regional_decision")] %>%
          #rename columns for shiny app
          colnames(Q30b_summary) <- c("MA name", "N", "Proportion (%)")
          
-         Q30b <- data_4plot(Q30b_summary)
+         Q30b <- clean_plot_data(Q30b_summary)
          
          #Plot
          plot_Q30b <-

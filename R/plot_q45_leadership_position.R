@@ -4,9 +4,9 @@ prep_q45_leadership_position <- function(.data){
 }
 
 plot_q45_leadership_position <- function(.data, use_plotly = TRUE){
-hhs_Q45 <- selectedData_Q45()[,c("ma_name", "45_leadership_position")] %>%
-            filter(`45_leadership_position`!= "") %>%
-               filter(`45_leadership_position`!= "na") %>%
+hhs_Q45 <- selectedData_Q45()[,c("maa", "45_leadership_position")] %>%
+            dplyr::filter(`45_leadership_position`!= "") %>%
+               dplyr::filter(`45_leadership_position`!= "na") %>%
                   droplevels()
           
          #hhs_Q45$`45_leadership_position`[hhs_Q45$`45_leadership_position` == "No management"] <- "No"
@@ -27,7 +27,7 @@ hhs_Q45 <- selectedData_Q45()[,c("ma_name", "45_leadership_position")] %>%
                values_to = "Proportion (%)"
             )
          Q45_summary_long$key <- str_replace (Q45_summary_long$key, "[.]", " ")
-         Q45 <- data_4plot(Q45_summary_long)
+         Q45 <- clean_plot_data(Q45_summary_long)
          
          #Plot
          plot_Q45 <-

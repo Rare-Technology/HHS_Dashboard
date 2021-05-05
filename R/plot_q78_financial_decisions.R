@@ -5,8 +5,8 @@ prep_q78_financial_decisions <- function(.data){
 
 plot_q78_financial_decisions <- function(.data, use_plotly = TRUE){
 
-         hhs_Q78 <- selectedData()[,c("6_gender", "ma_name", "78_financial_decisions")] %>%
-                           filter(`78_financial_decisions` != "") %>%
+         hhs_Q78 <- .data[,c("6_gender", "maa", "78_financial_decisions")] %>%
+                           dplyr::filter(`78_financial_decisions` != "") %>%
                               droplevels()
             
          hhs_Q78_f <- (subset(hhs_Q78, `6_gender` == "F"))
@@ -14,14 +14,14 @@ plot_q78_financial_decisions <- function(.data, use_plotly = TRUE){
          
          Q78_length <-
             tapply(hhs_Q78$`78_financial_decisions`,
-                   hhs_Q78$ma_name,
+                   hhs_Q78$maa,
                    length)
          Q78_length <- as.vector(Q78_length)
          Q78_count_f <-
             as.data.frame(tapply(
                hhs_Q78_f$`78_financial_decisions`,
                list(
-                  hhs_Q78_f$ma_name,
+                  hhs_Q78_f$maa,
                   hhs_Q78_f$`78_financial_decisions`
                ),
                length
@@ -30,7 +30,7 @@ plot_q78_financial_decisions <- function(.data, use_plotly = TRUE){
             as.data.frame(tapply(
                hhs_Q78_m$`78_financial_decisions`,
                list(
-                  hhs_Q78_m$ma_name,
+                  hhs_Q78_m$maa,
                   hhs_Q78_m$`78_financial_decisions`
                ),
                length
@@ -46,7 +46,7 @@ plot_q78_financial_decisions <- function(.data, use_plotly = TRUE){
          ### Proportions
          Q78_summary_bind <-
             data.frame(
-               "MA name" = levels(hhs_Q78_f$ma_name),
+               "MA name" = levels(hhs_Q78_f$maa),
                N = as.numeric(Q78_length),
                Female = round(Q78_count_f_total / Q78_length, 3) *
                   100,
@@ -60,9 +60,9 @@ plot_q78_financial_decisions <- function(.data, use_plotly = TRUE){
                   c(
                      NA,
                      sum(Q78_summary_bind$N),
-                     mean_sem(Q78_summary_bind$Female, 1),
-                     mean_sem(Q78_summary_bind$Male, 1),
-                     mean_sem(Q78_summary_bind$Both, 1)
+                     compute_summary_line(Q78_summary_bind$Female, 1),
+                     compute_summary_line(Q78_summary_bind$Male, 1),
+                     compute_summary_line(Q78_summary_bind$Both, 1)
                   ))
          colnames(Q78_summary) <-
             c("MA name", "N", "Female (%)", "Male (%)", "Both (%)")
@@ -77,7 +77,7 @@ plot_q78_financial_decisions <- function(.data, use_plotly = TRUE){
                )
             )
          
-         Q78 <- data_4plot(Q78_summary_long)
+         Q78 <- clean_plot_data(Q78_summary_long)
          
          #Plot
          plot_Q78 <-

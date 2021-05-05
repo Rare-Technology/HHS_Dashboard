@@ -4,9 +4,9 @@ prep_q52_ma_benefit_5yrs <- function(.data){
 }
 
 plot_q52_ma_benefit_5yrs <- function(.data, use_plotly = TRUE){
-hhs_Q52 <- selectedData()[,c("ma_name", "52_ma_benefit_5yrs")] %>%
-                        filter(`52_ma_benefit_5yrs` %in% c("Yes", "Unsure", "No")) %>%
-                           rbind (tibble(ma_name = c(NA,NA,NA),
+hhs_Q52 <- .data[,c("maa", "52_ma_benefit_5yrs")] %>%
+                        dplyr::filter(`52_ma_benefit_5yrs` %in% c("Yes", "Unsure", "No")) %>%
+                           rbind (tibble(maa = c(NA,NA,NA),
                                          `52_ma_benefit_5yrs` = c("Yes", 
                                                                   "Unsure", 
                                                                   "No"))) %>%
@@ -22,7 +22,7 @@ hhs_Q52 <- selectedData()[,c("ma_name", "52_ma_benefit_5yrs")] %>%
                names_to = "key",
                values_to = "Proportion (%)"
             )
-         Q52 <- data_4plot(Q52_summary_long)
+         Q52 <- clean_plot_data(Q52_summary_long)
          
          #Plot
          plot_Q52 <-

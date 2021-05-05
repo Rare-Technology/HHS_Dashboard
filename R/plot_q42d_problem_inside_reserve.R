@@ -4,8 +4,8 @@ prep_q42d_problem_inside_reserve <- function(.data){
 }
 
 plot_q42d_problem_inside_reserve <- function(.data, use_plotly = TRUE){
-hhs_Q42 <- selectedData()[,c("ma_name", "42d_problem_inside_reserve")] %>%
-                        filter(`42d_problem_inside_reserve` %in% c(0,1)) %>%
+hhs_Q42 <- .data[,c("maa", "42d_problem_inside_reserve")] %>%
+                        dplyr::filter(`42d_problem_inside_reserve` %in% c(0,1)) %>%
                            rbind(c(NA,0), c(NA,1))
             
          Q42d_summary <- proportion(hhs_Q42[[2]],
@@ -14,7 +14,7 @@ hhs_Q42 <- selectedData()[,c("ma_name", "42d_problem_inside_reserve")] %>%
         
          colnames(Q42d_summary) <- c("MA name", "N", "Proportion (%)")
          
-         Q42d <- data_4plot(Q42d_summary)
+         Q42d <- clean_plot_data(Q42d_summary)
          
          #Plot
          plot_Q42d <-

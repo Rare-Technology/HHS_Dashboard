@@ -4,8 +4,8 @@ prep_q30_trust_village_alert <- function(.data){
 }
 
 plot_q30_trust_village_alert <- function(.data, use_plotly = TRUE){
-hhs_Q30d <- selectedData()[,c("ma_name", "30_trust_village_alert")] %>%
-            filter(`30_trust_village_alert` %in% c(1:5)) %>%
+hhs_Q30d <- .data[,c("maa", "30_trust_village_alert")] %>%
+            dplyr::filter(`30_trust_village_alert` %in% c(1:5)) %>%
                rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5)) %>%
                   droplevels()
          #proportion
@@ -22,7 +22,7 @@ hhs_Q30d <- selectedData()[,c("ma_name", "30_trust_village_alert")] %>%
                                      "Agree",
                                      "Strongly agree")
          Q30d <- Q30d_summary %>%
-            filter(`MA name` != "Mean ± SE")
+            dplyr::filter(`MA name` != "Mean ± SE")
          
          #sum agree and strongly agree
          Q30d$`Social Trust` <- as.numeric(Q30d$Agree) + as.numeric(Q30d$`Strongly agree`)
@@ -31,7 +31,7 @@ hhs_Q30d <- selectedData()[,c("ma_name", "30_trust_village_alert")] %>%
          #rename columns for shiny app
          colnames(Q30d_summary) <- c("MA name", "N", "Proportion (%)")
          
-         Q30d <- data_4plot(Q30d_summary)
+         Q30d <- clean_plot_data(Q30d_summary)
          
          #Plot
          plot_Q30d <-

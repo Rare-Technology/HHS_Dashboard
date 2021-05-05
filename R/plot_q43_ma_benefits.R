@@ -4,8 +4,8 @@ prep_q43_ma_benefits <- function(.data){
 }
 
 plot_q43_ma_benefits <- function(.data, use_plotly = TRUE){
-hhs_Q43 <- selectedData()[,c("ma_name", "43_ma_benefits")] %>%
-                        filter(`43_ma_benefits` %in% c(0,1)) %>%
+hhs_Q43 <- .data[,c("maa", "43_ma_benefits")] %>%
+                        dplyr::filter(`43_ma_benefits` %in% c(0,1)) %>%
                            rbind(c(NA,0), c(NA,1)) %>%
                               droplevels()
          
@@ -15,7 +15,7 @@ hhs_Q43 <- selectedData()[,c("ma_name", "43_ma_benefits")] %>%
          
          colnames(Q43_summary) <- c("MA name", "N", "Proportion (%)")
          
-         Q43 <- data_4plot(Q43_summary)
+         Q43 <- clean_plot_data(Q43_summary)
          
          #Plot
          plot_Q43 <-

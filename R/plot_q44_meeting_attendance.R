@@ -3,9 +3,9 @@ prep_meeting_attendance <- function(.data){
 }
 
 plot_q44_meeting_attendance <- function(.data, use_plotly = TRUE){
-hhs_Q44 <- selectedData_Q44()[,c("ma_name", "44_meeting_attendance")] %>%
-                        filter(`44_meeting_attendance` != '') %>%
-                           filter (`44_meeting_attendance` != "na") %>%
+hhs_Q44 <- selectedData_Q44()[,c("maa", "44_meeting_attendance")] %>%
+                        dplyr::filter(`44_meeting_attendance` != '') %>%
+                           dplyr::filter (`44_meeting_attendance` != "na") %>%
                               droplevels()
          
          Q44_summary <- proportion(hhs_Q44[[2]],
@@ -21,7 +21,7 @@ hhs_Q44 <- selectedData_Q44()[,c("ma_name", "44_meeting_attendance")] %>%
             )
          
          Q44_summary_long$key <- str_replace (Q44_summary_long$key, "[.]", " ")
-         Q44 <- data_4plot(Q44_summary_long)
+         Q44 <- clean_plot_data(Q44_summary_long)
          
          #Plot
          plot_Q44 <-

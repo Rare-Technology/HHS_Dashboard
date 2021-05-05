@@ -4,12 +4,12 @@ prep_q61c_community_participation <- function(.data){
 }
 
 plot_q61c_community_participation <- function(.data, use_plotly = TRUE){
-hhs_Q61c <- selectedData()[,c("ma_name", "61c_community_participation")] %>%
-                        filter (`61c_community_participation` %in% c(1:5)) %>%
+hhs_Q61c <- .data[,c("maa", "61c_community_participation")] %>%
+                        dplyr::filter (`61c_community_participation` %in% c(1:5)) %>%
                            rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
          
          Q61c_summary <- proportion (hhs_Q61c$`61c_community_participation`,
-                                     hhs_Q61c$ma_name,
+                                     hhs_Q61c$maa,
                                      3,5)
          
          colnames(Q61c_summary) <- c("MA name",
@@ -21,7 +21,7 @@ hhs_Q61c <- selectedData()[,c("ma_name", "61c_community_participation")] %>%
                                       "Strongly agree")
          
          Q61c_summary_grouped <- Q61c_summary %>%
-                                       filter (`MA name` != "Mean ± SE")
+                                       dplyr::filter (`MA name` != "Mean ± SE")
           
          Q61c_summary_grouped$`Agree (%)` <- as.numeric(Q61c_summary_grouped$Agree) + 
                                      as.numeric(Q61c_summary_grouped$`Strongly agree`)
@@ -54,7 +54,7 @@ hhs_Q61c <- selectedData()[,c("ma_name", "61c_community_participation")] %>%
                   "Agree (%)"
                )
             )
-         Q61c <- data_4plot(Q61c_summary_long)
+         Q61c <- clean_plot_data(Q61c_summary_long)
          #Plot
          plot_Q61c <-
             ggplot(Q61c, aes(`MA name`, `Proportion (%)`, N = N)) +

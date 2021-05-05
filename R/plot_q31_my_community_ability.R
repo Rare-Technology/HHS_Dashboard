@@ -4,9 +4,9 @@ prep_q31_my_community_ability <- function(.data){
 }
 
 plot_q31_my_community_ability <- function(.data, use_plotly = TRUE){
-hhs_Q31 <- selectedData()[,c("ma_name", "31_my_community_ability")] %>%
-            filter(`31_my_community_ability` != "") %>%
-            filter(`31_my_community_ability` != "No dependance") %>%
+hhs_Q31 <- .data[,c("maa", "31_my_community_ability")] %>%
+            dplyr::filter(`31_my_community_ability` != "") %>%
+            dplyr::filter(`31_my_community_ability` != "No dependance") %>%
                rbind(c(NA, "Agree"), 
                      c(NA, "Neither"), 
                      c(NA, "Strongly agree"),
@@ -20,7 +20,7 @@ hhs_Q31 <- selectedData()[,c("ma_name", "31_my_community_ability")] %>%
                        3, type=5)
          
          Q31 <- Q31_summary %>%
-            filter(`MA name` != "Mean ± SE")
+            dplyr::filter(`MA name` != "Mean ± SE")
          
          colnames(Q31) <- c("MA name", "N", 
                                     "Agree", 
@@ -37,7 +37,7 @@ hhs_Q31 <- selectedData()[,c("ma_name", "31_my_community_ability")] %>%
          
          colnames(Q31_summary) <- c("MA name", "N", "Proportion (%)")
          
-         Q31 <- data_4plot(Q31_summary)
+         Q31 <- clean_plot_data(Q31_summary)
             
          #Plot
          plot_Q31 <-

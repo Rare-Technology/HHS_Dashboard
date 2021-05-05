@@ -4,12 +4,12 @@ prep_q61i_help_neighbors <- function(.data){
 }
 
 plot_q61i_help_neighbors <- function(.data, use_plotly = TRUE){
-hhs_Q61i <- selectedData()[,c("ma_name", "61i_help_neighbors")] %>%
-                        filter(`61i_help_neighbors` %in% c(1:5)) %>%
+hhs_Q61i <- .data[,c("maa", "61i_help_neighbors")] %>%
+                        dplyr::filter(`61i_help_neighbors` %in% c(1:5)) %>%
                            rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
          
          Q61i_summary <- proportion(hhs_Q61i$`61i_help_neighbors`,
-                                    hhs_Q61i$ma_name,
+                                    hhs_Q61i$maa,
                                     rounding = 3,
                                     type = 5)
          
@@ -24,7 +24,7 @@ hhs_Q61i <- selectedData()[,c("ma_name", "61i_help_neighbors")] %>%
             )
          
          Q61i_summary_grouped <- Q61i_summary %>% 
-            filter (`MA name` != "Mean ± SE")
+            dplyr::filter (`MA name` != "Mean ± SE")
          
          Q61i_summary_grouped$`Agree (%)` <- as.numeric(Q61i_summary_grouped$Agree) + 
             as.numeric(Q61i_summary_grouped$`Strongly agree`)
@@ -62,7 +62,7 @@ hhs_Q61i <- selectedData()[,c("ma_name", "61i_help_neighbors")] %>%
                )
             )
          
-         Q61i <- data_4plot(Q61i_summary_long)
+         Q61i <- clean_plot_data(Q61i_summary_long)
          
          #Plot
          plot_Q61i <-

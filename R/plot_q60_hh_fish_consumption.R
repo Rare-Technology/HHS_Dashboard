@@ -4,12 +4,12 @@ prep_q60_hh_fish_consumption <- function(.data){
 }
 
 plot_q60_hh_fish_consumption <- function(.data, use_plotly = TRUE){
-hhs_Q60 <- selectedData()[,c("ma_name", "60_hh_fish_consumption")] %>%
-                        filter(`60_hh_fish_consumption` != "") %>%
+hhs_Q60 <- .data[,c("maa", "60_hh_fish_consumption")] %>%
+                        dplyr::filter(`60_hh_fish_consumption` != "") %>%
                            droplevels()
          
           Q60_summary <- proportion(hhs_Q60$`60_hh_fish_consumption`,
-                                    hhs_Q60$ma_name,
+                                    hhs_Q60$maa,
                                     rounding = 3, type = 5)
           
           colnames(Q60_summary) <- c("MA name", "N", "Few",
@@ -36,7 +36,7 @@ hhs_Q60 <- selectedData()[,c("ma_name", "60_hh_fish_consumption")] %>%
                                "More than few per week")
              )
           
-          Q60 <- data_4plot(Q60_summary_long)
+          Q60 <- clean_plot_data(Q60_summary_long)
           
          #plot
          plot_Q60 <-

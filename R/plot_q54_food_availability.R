@@ -4,12 +4,12 @@ prep_q54_food_availability <- function(.data){
 }
 
 plot_q54_food_availability <- function(.data, use_plotly = TRUE){
-hhs_Q54 <- selectedData()[,c("ma_name", "54_food_availability")] %>%
-                        filter(`54_food_availability` != "") %>%
+hhs_Q54 <- .data[,c("maa", "54_food_availability")] %>%
+                        dplyr::filter(`54_food_availability` != "") %>%
                            droplevels()
          
          Q54_summary_bind <- proportion (hhs_Q54$`54_food_availability` ,
-                                     hhs_Q54$ma_name,
+                                     hhs_Q54$maa,
                                      3,5)
          Q54_summary_bind <-
             Q54_summary_bind[-dim(Q54_summary_bind)[1], ]
@@ -33,7 +33,7 @@ hhs_Q54 <- selectedData()[,c("ma_name", "54_food_availability")] %>%
             factor(Q54_summary_long$key,
                    levels = c("Bad", "Normal", "Good"))
          
-         Q54 <- data_4plot(Q54_summary_long)
+         Q54 <- clean_plot_data(Q54_summary_long)
          #Plot
          plot_Q54 <-
             ggplot(Q54, aes(x = `MA name`, y = `Proportion (%)`, N = N)) +

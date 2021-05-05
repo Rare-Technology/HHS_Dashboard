@@ -20,7 +20,7 @@ apply_PLW_adjustment <- function(.data){
   .data %>% 
     dplyr::mutate(
       level2_name = ifelse(country == "PLW", level1_name, level2_name),
-      ma_name = ifelse(country == "PLW", level1_name, ma_name)
+      maa = ifelse(country == "PLW", level1_name, maa)
     )
 }
 
@@ -46,7 +46,7 @@ get_ma_percent <- function(.fulldata, .partdata, newname = "percent"){
 hhs_table_summary <- function(.data) { 
   
   hhs_stats <- .data %>% 
-    #dplyr::filter(ma_name != '') %>% should already be done
+    #dplyr::filter(maa != '') %>% should already be done
     #droplevels %>% 
     dplyr::mutate(
       updatedat = as.Date(updatedat)
@@ -110,7 +110,7 @@ hhs_table_summary <- function(.data) {
     dplyr::filter(`6_gender` == "F") %>% 
     dplyr::pull(percent)
   
-  #Extract ma_names  levels
+  #Extract maas  levels
   district_names <- hhs_stats %>% 
     dplyr::group_by(maa) %>% 
     dplyr::summarise(lat = mean(lat, na.rm = TRUE)) %>% 
@@ -169,9 +169,9 @@ hhs_table_summary <- function(.data) {
       "Date surveys ended" = NA,
       "Households surveyed" = sum(table_summary$`Households surveyed`),
       "No. communities" = sum(table_summary$`No. communities`),
-      "Fisher households (%)" = mean_sem(table_summary$`Fisher households (%)`, 1),
-      "Women interviewed (%)" = mean_sem(table_summary$`Women interviewed (%)`, 1),
-      "Men interviewed (%)" = mean_sem(table_summary$`Men interviewed (%)`, 1)
+      "Fisher households (%)" = compute_summary_line(table_summary$`Fisher households (%)`, 1),
+      "Women interviewed (%)" = compute_summary_line(table_summary$`Women interviewed (%)`, 1),
+      "Men interviewed (%)" = compute_summary_line(table_summary$`Men interviewed (%)`, 1)
     ),
     c(
       "MA name"= NA,
@@ -217,7 +217,6 @@ prep_data_for_plot <- function(
   bar_column = `1`,
   key_order = NULL) {
 
-  #`8_religion`
 
   dat <- .data %>%
     dplyr::filter({{ focus_var }} != "") %>%
@@ -226,6 +225,7 @@ prep_data_for_plot <- function(
   if(!is.null(recoding)){
     vals <- unique(dat[[rlang::as_name(enquo(focus_var))]])
     recoding <- recoding[recoding %in% vals]
+    mode(recoding) <- "character" # needed for fct_recode
     dat <- dat %>% 
       dplyr::mutate(
         {{ focus_var }} := forcats::fct_recode(factor({{ focus_var }}), !!!recoding)
@@ -338,7 +338,7 @@ prep_facet <- function(
   summary_row <- c(
     NA,
     sum(dat_summary$N),
-    purrr::map_chr(var_names, ~mean_sem(dat_summary[[.]], 1))
+    purrr::map_chr(var_names, ~compute_summary_line(dat_summary[[.]], 1))
   )
   
   dat_summary <- rbind(dat_summary, summary_row)

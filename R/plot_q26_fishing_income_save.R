@@ -4,8 +4,8 @@ prep_q26_fishing_income_save <- function(.data){
 }
 
 plot_q26_fishing_income_save <- function(.data, use_plotly = TRUE){
-hhs_Q26 <- selectedData()[,c("ma_name", "26_fishing_income_save")] %>%
-            filter(`26_fishing_income_save` != "") 
+hhs_Q26 <- .data[,c("maa", "26_fishing_income_save")] %>%
+            dplyr::filter(`26_fishing_income_save` != "") 
          
          #Convert to 0 and 1
          hhs_Q26$X26_fishing_income_save <-
@@ -21,7 +21,7 @@ hhs_Q26 <- selectedData()[,c("ma_name", "26_fishing_income_save")] %>%
          #rename
          colnames(Q26_summary) <- c("MA name", "N", "Proportion (%)")
          #summary
-         Q26 <- data_4plot(Q26_summary)
+         Q26 <- clean_plot_data(Q26_summary)
           
          #Plot
          plot_Q26 <-

@@ -4,7 +4,7 @@ prep_q37_ability_min_size <- function(.data){
 }
 
 plot_q37_ability_min_size <- function(.data, use_plotly = TRUE){
-hhs_Q37min <- selectedData()[,c("ma_name", "37_ability_min_size")] %>%
+hhs_Q37min <- .data[,c("maa", "37_ability_min_size")] %>%
                               rbind(c(NA,0), c(NA,1), c(NA,-1))
          hhs_Q37min$`37_ability_min_size`[hhs_Q37min$`37_ability_min_size` == -1] <- 0
          hhs_Q37min$`37_ability_min_size`[hhs_Q37min$`37_ability_min_size` == ''] <- 0
@@ -21,7 +21,7 @@ hhs_Q37min <- selectedData()[,c("ma_name", "37_ability_min_size")] %>%
          
          
          ### Q37 Proportion of community members familar with specific max fish size restricions in MA
-         hhs_Q37max <- selectedData()[,c("ma_name", "37_ability_max_size")] %>%
+         hhs_Q37max <- .data[,c("maa", "37_ability_max_size")] %>%
                               rbind(c(NA,0), c(NA,1), c(NA,-1))
          hhs_Q37max$`37_ability_max_size`[hhs_Q37max$`37_ability_max_size` == -1] <- 0
          hhs_Q37max$`37_ability_max_size`[hhs_Q37max$`37_ability_max_size` == ''] <- 0
@@ -29,7 +29,7 @@ hhs_Q37min <- selectedData()[,c("ma_name", "37_ability_min_size")] %>%
          #proportion
          Q37_summary_max <-
             proportion(hhs_Q37max$`37_ability_max_size`,
-                       hhs_Q37max$ma_name,
+                       hhs_Q37max$maa,
                        3,2)[, -3]
          #rename
          colnames(Q37_summary_max) <-
@@ -47,7 +47,7 @@ hhs_Q37min <- selectedData()[,c("ma_name", "37_ability_min_size")] %>%
                values_to = "Proportion (%)"
             )
          
-         Q37 <- data_4plot(Q37_summary_long)
+         Q37 <- clean_plot_data(Q37_summary_long)
          
          plot_Q37 <-
             ggplot(Q37, aes(`MA name`, `Proportion (%)`, N = N)) +

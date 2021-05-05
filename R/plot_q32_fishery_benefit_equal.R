@@ -4,20 +4,20 @@ prep_q32_fishery_benefit_equal <- function(.data){
 }
 
 plot_q32_fishery_benefit_equal <- function(.data, use_plotly = TRUE){
-hhs_Q32 <- selectedData()[,c("ma_name", "32_fishery_benefit_equal")] %>%
-            filter(`32_fishery_benefit_equal` %in% c(0,1)) %>%
+hhs_Q32 <- .data[,c("maa", "32_fishery_benefit_equal")] %>%
+            dplyr::filter(`32_fishery_benefit_equal` %in% c(0,1)) %>%
                rbind(c(NA,0), c(NA,1)) %>%
                   droplevels()
          
          #proportion
          Q32_summary <-
             proportion(hhs_Q32$`32_fishery_benefit_equal`,
-                       hhs_Q32$ma_name,
+                       hhs_Q32$maa,
                        3, type = 2)[, -3]
          #summary for table
          colnames(Q32_summary) <- c("MA name", "N", "Proportion (%)")
          
-         Q32 <- data_4plot(Q32_summary)
+         Q32 <- clean_plot_data(Q32_summary)
          
          #Plot
          plot_Q32 <-

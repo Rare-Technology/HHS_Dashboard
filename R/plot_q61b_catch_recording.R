@@ -4,13 +4,13 @@ prep_q61b_catch_recording <- function(.data){
 }
 
 plot_q61b_catch_recording <- function(.data, use_plotly = TRUE){
-hhs_Q61b <- selectedData()[,c("ma_name", "61b_catch_recording")] %>%
-                        filter( `61b_catch_recording` %in% c(1:5)) %>%
+hhs_Q61b <- .data[,c("maa", "61b_catch_recording")] %>%
+                        dplyr::filter( `61b_catch_recording` %in% c(1:5)) %>%
                            rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5)) %>%
                                        droplevels()
       
          Q61b_summary <- proportion(hhs_Q61b$`61b_catch_recording`,
-                                 hhs_Q61b$ma_name,
+                                 hhs_Q61b$maa,
                                  3,5)
       
          colnames(Q61b_summary) <-
@@ -24,7 +24,7 @@ hhs_Q61b <- selectedData()[,c("ma_name", "61b_catch_recording")] %>%
             )
          
          Q61b_summary_grouped <- Q61b_summary %>%
-                                    filter(`MA name` != "Mean ± SE")
+                                    dplyr::filter(`MA name` != "Mean ± SE")
          
          Q61b_summary_grouped$`Disagree (%)` <- as.numeric(Q61b_summary_grouped$Disagree) +
                                            as.numeric(Q61b_summary_grouped$`Strongly disagree`)
@@ -61,7 +61,7 @@ hhs_Q61b <- selectedData()[,c("ma_name", "61b_catch_recording")] %>%
                   "Agree (%)"
                )
             )
-         Q61b <- data_4plot(Q61b_summary_long)
+         Q61b <- clean_plot_data(Q61b_summary_long)
          
          #Plot
          plot_Q61b <-

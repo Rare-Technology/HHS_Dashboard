@@ -4,8 +4,8 @@ prep_q41_ma_fishers_allowed <- function(.data){
 }
 
 plot_q41_ma_fishers_allowed <- function(.data, use_plotly = TRUE){
-hhs_Q41 <- selectedData()[,c("ma_name", "41_ma_fishers_allowed")] %>%
-                        filter(`41_ma_fishers_allowed` %in% 
+hhs_Q41 <- .data[,c("maa", "41_ma_fishers_allowed")] %>%
+                        dplyr::filter(`41_ma_fishers_allowed` %in% 
                                   c("Community only",
                                     "Don't know",
                                     "No managed access",
@@ -58,7 +58,7 @@ hhs_Q41 <- selectedData()[,c("ma_name", "41_ma_fishers_allowed")] %>%
                   )
             )
          
-         Q41 <- data_4plot(Q41_summary_long)
+         Q41 <- clean_plot_data(Q41_summary_long)
          
          #Plot
          plot_Q41 <-

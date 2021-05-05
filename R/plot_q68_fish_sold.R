@@ -4,16 +4,16 @@ prep_q68_fish_sold <- function(.data){
 }
 
 plot_q68_fish_sold <- function(.data, use_plotly = TRUE){
-hhs_Q68 <- selectedData()[,c("ma_name", "68_fish_eaten", "68_fish_sold")] %>%
+hhs_Q68 <- .data[,c("maa", "68_fish_eaten", "68_fish_sold")] %>%
                         dplyr::filter(!is.na(`68_fish_sold`)) %>%
-                              filter(`68_fish_eaten` < 800000)
+                              dplyr::filter(`68_fish_eaten` < 800000)
          Q68_fish_eaten <-
-            tapply(hhs_Q68$`68_fish_eaten`, hhs_Q68$ma_name, mean, na.rm = TRUE)
+            tapply(hhs_Q68$`68_fish_eaten`, hhs_Q68$maa, mean, na.rm = TRUE)
          Q68_fish_sold <-
-            tapply(hhs_Q68$`68_fish_sold`, hhs_Q68$ma_name, mean, na.rm = TRUE)
+            tapply(hhs_Q68$`68_fish_sold`, hhs_Q68$maa, mean, na.rm = TRUE)
          Q68_summary_bind <-
             as.data.frame(cbind(as.vector(summary(
-               hhs_Q68$ma_name
+               hhs_Q68$maa
             )),
             round(
                Q68_fish_sold / (Q68_fish_eaten + Q68_fish_sold), 3
@@ -22,13 +22,13 @@ hhs_Q68 <- selectedData()[,c("ma_name", "68_fish_eaten", "68_fish_sold")] %>%
          Q68_summary <-
             rbind(Q68_summary_bind, "Mean ± SE" = c(
                sum(Q68_summary_bind$N),
-               mean_sem(Q68_summary_bind$`Fish for subsistence`, 1)
+               compute_summary_line(Q68_summary_bind$`Fish for subsistence`, 1)
             ))
          
-         Q68_summary <- rownames_to_column(Q68_summary_bind, "MA name")
+         Q68_summary <-tibble::rownames_to_column(Q68_summary_bind, "MA name")
          colnames(Q68_summary) <- c("MA name", "N", "Proportion (%)")
          
-         Q68 <- data_4plot(Q68_summary)
+         Q68 <- clean_plot_data(Q68_summary)
          
          #Plot
          plot_Q68 <-

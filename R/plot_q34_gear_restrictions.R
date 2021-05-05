@@ -4,8 +4,8 @@ prep_q34_gear_restrictions <- function(.data){
 }
 
 plot_q34_gear_restrictions <- function(.data, use_plotly = TRUE){
-hhs_Q34 <- selectedData()[,c("ma_name", "34_gear_restrictions")] %>%
-                        filter(`34_gear_restrictions` %in% c(0,1,-1)) %>%
+hhs_Q34 <- .data[,c("maa", "34_gear_restrictions")] %>%
+                        dplyr::filter(`34_gear_restrictions` %in% c(0,1,-1)) %>%
                            rbind(c(NA,0), c(NA,1)) %>%
                             droplevels()
          #No MA as 0 answer
@@ -19,7 +19,7 @@ hhs_Q34 <- selectedData()[,c("ma_name", "34_gear_restrictions")] %>%
          colnames(Q34_summary) <-
             c("MA name", "N", "Proportion (%)")
          
-         Q34 <- data_4plot (Q34_summary)
+         Q34 <- clean_plot_data (Q34_summary)
          
          #Plot
          plot_Q34 <-

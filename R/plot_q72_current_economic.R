@@ -4,12 +4,12 @@ prep_q72_current_economic <- function(.data){
 }
 
 plot_q72_current_economic <- function(.data, use_plotly = TRUE){
-hhs_Q72 <- selectedData()[,c("ma_name", "72_current_economic")] %>%
-                        filter(`72_current_economic`!= "")
+hhs_Q72 <- .data[,c("maa", "72_current_economic")] %>%
+                        dplyr::filter(`72_current_economic`!= "")
                               
          Q72_length <-
             tapply(hhs_Q72$`72_current_economic` ,
-                   hhs_Q72$ma_name,
+                   hhs_Q72$maa,
                    length)
          hhs_Q72$`72_current_economic_no` <-
             as.numeric(as.character(
@@ -26,7 +26,7 @@ hhs_Q72 <- selectedData()[,c("ma_name", "72_current_economic")] %>%
             data.frame(N = Q72_length, AVG = round(
                tapply(
                   hhs_Q72$`72_current_economic_no`,
-                  hhs_Q72$ma_name,
+                  hhs_Q72$maa,
                   mean
                ),
                2
@@ -35,20 +35,20 @@ hhs_Q72 <- selectedData()[,c("ma_name", "72_current_economic")] %>%
          Q72_summary <-
             rbind(Q72_summary_bind, "Mean ± SE" = c(
                sum(Q72_summary_bind$N),
-               mean_sem(Q72_summary_bind$AVG, 2)
+               compute_summary_line(Q72_summary_bind$AVG, 2)
             ))
          
-         Q72_summary_rn <- rownames_to_column(Q72_summary, "MA name")
+         Q72_summary_rn <-tibble::rownames_to_column(Q72_summary, "MA name")
          colnames(Q72_summary_rn) <- c("MA name", "N", "Current")
          
          ### Q73 Future economic income ####
         
-         hhs_Q73 <- selectedData()[,c("ma_name", "73_future_economic")] %>%
-                        filter(`73_future_economic` != "")
+         hhs_Q73 <- .data[,c("maa", "73_future_economic")] %>%
+                        dplyr::filter(`73_future_economic` != "")
         
          Q73_length <-
             tapply(hhs_Q73$`73_future_economic` ,
-                   hhs_Q73$ma_name,
+                   hhs_Q73$maa,
                    length)
          hhs_Q73$`73_future_economic_no` <-
             as.numeric(as.character(
@@ -65,7 +65,7 @@ hhs_Q72 <- selectedData()[,c("ma_name", "72_current_economic")] %>%
                                         AVG = round(
                                            tapply(
                                               hhs_Q73$`73_future_economic_no`,
-                                              hhs_Q73$ma_name,
+                                              hhs_Q73$maa,
                                               mean
                                            ),
                                            2
@@ -74,9 +74,9 @@ hhs_Q72 <- selectedData()[,c("ma_name", "72_current_economic")] %>%
          Q73_summary <-
             rbind(Q73_summary_bind, "Mean ± SE" = c(
                sum(Q73_summary_bind$N),
-               mean_sem(Q73_summary_bind$AVG, 2)
+               compute_summary_line(Q73_summary_bind$AVG, 2)
             ))
-         Q73_summary_rn <- rownames_to_column(Q73_summary, "MA name")
+         Q73_summary_rn <-tibble::rownames_to_column(Q73_summary, "MA name")
          colnames(Q73_summary_rn) <- c("MA name", "N", "Future")
          
          #combine Q72 and Q73
@@ -100,7 +100,7 @@ hhs_Q72 <- selectedData()[,c("ma_name", "72_current_economic")] %>%
                )
             )$N
          
-         Q72_73a <- data_4plot(Q72_73)
+         Q72_73a <- clean_plot_data(Q72_73)
          
          colnames(Q72_73a) <- c("MA name", "N", "key", "Average")
          

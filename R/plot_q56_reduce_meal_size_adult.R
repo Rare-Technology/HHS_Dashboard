@@ -4,17 +4,17 @@ prep_q56_reduce_meal_size_adult <- function(.data){
 }
 
 plot_q56_reduce_meal_size_adult <- function(.data, use_plotly = TRUE){
-hhs_Q56 <- selectedData()[c("ma_name", "56_reduce_meal_size_adult")] %>%
-                        filter (`56_reduce_meal_size_adult` != "") %>%
+hhs_Q56 <- .data[c("maa", "56_reduce_meal_size_adult")] %>%
+                        dplyr::filter (`56_reduce_meal_size_adult` != "") %>%
                            droplevels()
          
          Q56_summary <- proportion (hhs_Q56$`56_reduce_meal_size_adult`,
-                                      hhs_Q56$ma_name,
+                                      hhs_Q56$maa,
                                       3,2)[,-3]
          
          colnames(Q56_summary) <- c("MA name", "N", "Proportion (%)")
          
-         Q56 <- data_4plot(Q56_summary)
+         Q56 <- clean_plot_data(Q56_summary)
          
          #Plot
          plot_Q56 <-

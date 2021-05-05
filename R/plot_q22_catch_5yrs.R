@@ -35,9 +35,9 @@ prep_q22_catch_5yrs <- function(.data){
                            "Improves")],
       `Mean ± SE` = c('',
                       sum(as.numeric(Q22_summary_bind$N)),
-                      mean_sem(Q22_summary_bind$Declines, 1),
-                      mean_sem(Q22_summary_bind$Stays.the.same, 1),
-                      mean_sem(Q22_summary_bind$Improves), 1)
+                      compute_summary_line(Q22_summary_bind$Declines, 1),
+                      compute_summary_line(Q22_summary_bind$Stays.the.same, 1),
+                      compute_summary_line(Q22_summary_bind$Improves), 1)
     )
   
   Q22_summary <- Q22_summary %>% dplyr::filter (`MA name` != "")

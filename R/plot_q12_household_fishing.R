@@ -30,9 +30,9 @@ prep_q12_household_fishing <- function(.data) {
     c(
       NA,
       sum(Q12_summary$N),
-      mean_sem(Q12_summary$`fisher men`, 1),
-      mean_sem(Q12_summary$`fisher women`, 1),
-      mean_sem(Q12_summary$`fisher children`, 1)
+      compute_summary_line(Q12_summary$`fisher men`, 1),
+      compute_summary_line(Q12_summary$`fisher women`, 1),
+      compute_summary_line(Q12_summary$`fisher children`, 1)
     )
   )
 

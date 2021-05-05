@@ -4,8 +4,8 @@ prep_q66_reaction_fishing_reserve <- function(.data){
 }
 
 plot_q66_reaction_fishing_reserve <- function(.data, use_plotly = TRUE){
-hhs_Q66 <- selectedData()[,c("ma_name", "66_reaction_fishing_reserve")] %>%
-            filter(`66_reaction_fishing_reserve` != "" ) %>%
+hhs_Q66 <- .data[,c("maa", "66_reaction_fishing_reserve")] %>%
+            dplyr::filter(`66_reaction_fishing_reserve` != "" ) %>%
                droplevels()
          
          hhs_Q66$`66_reaction_fishing_reserve` <- 
@@ -21,7 +21,7 @@ hhs_Q66 <- selectedData()[,c("ma_name", "66_reaction_fishing_reserve")] %>%
                            "Non-saction" = "Non-sanction")
                            
          Q66_summary <- proportion(hhs_Q66$`66_reaction_fishing_reserve`,
-                                   hhs_Q66$ma_name,
+                                   hhs_Q66$maa,
                                    3,
                                    length(unique(hhs_Q66$`66_reaction_fishing_reserve`))
          )
@@ -45,7 +45,7 @@ hhs_Q66 <- selectedData()[,c("ma_name", "66_reaction_fishing_reserve")] %>%
                            "Negative.informal.sanction" = "Informal sanction",
                            "Negative.formal.sanction" =  "Formal sanction")
          
-         Q66 <- data_4plot(Q66_summary_long)
+         Q66 <- clean_plot_data(Q66_summary_long)
          
          #plot
          plot_Q66 <-
