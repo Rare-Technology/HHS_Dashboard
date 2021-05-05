@@ -46,7 +46,7 @@
 }
 
 .well{
-  background-color: white;
+  background-color: #efefef;
 }
 
 
@@ -77,7 +77,14 @@ a {
     height: 200px;
 }
 
+.shiny-input-container:not(.shiny-input-container-inline) {
+  width: 100%;
+}
 
+.select-label {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight: bold;
+}
 
 
 .tab-content{
@@ -172,10 +179,28 @@ a {
   width: 100% !important;
 }
 
-.select-holder{
+.select-holder {
+  display: flex;
+  flex-direction: row;
+}
 
+.select-holder>.shiny-input-container>div>.selectize-control>.selectize-input {
+  padding: 10px 12px;
+  background-color:#efefef;
+  border: none;
+  box-shadow: -2px 4px 8px -3px rgba(141,150,151,1);
+  -webkit-box-shadow: -2px 4px 8px -3px rgba(141,150,151,1);
+  -moz-box-shadow: -2px 4px 8px -3px rgba(141,150,151,1);
+}
+
+
+.select-holder>.shiny-input-container>.control-label{
+display: none;
 }
 
 .select-label{
-  
+  margin: 10px 10px 0px 0px;
+}
+
+.control-label {
 }
