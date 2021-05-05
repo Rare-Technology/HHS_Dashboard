@@ -2,7 +2,7 @@ prep_q51_fishers_caught <- function(.data){
 
 }
 
-prep_q51_fishers_caught <- function(.data, use_plotly = TRUE){
+prep_q51_fishers_caught <- function(.data, ...){
 hhs_Q51d <- .data[,c("maa", "51d_fishers_violate_fish_size")] %>%
                         dplyr::filter(`51d_fishers_violate_fish_size` %in% c(0:10)) %>%
                            droplevels()
@@ -65,7 +65,7 @@ hhs_Q51d <- .data[,c("maa", "51d_fishers_violate_fish_size")] %>%
          #pivot table
          Q51d_e_summary_long <-
             as.data.frame(
-               Q51d_51e_summary %>% pivot_longer(
+               Q51d_51e_summary %>% tidyr::pivot_longer(
                   cols = c(
                      "Fish Size Violations (%)",
                      "Seasonal Closures Violations (%)"
@@ -77,7 +77,7 @@ hhs_Q51d <- .data[,c("maa", "51d_fishers_violate_fish_size")] %>%
          #Fix Ns
          Q51d_e_summary_long$N <-
             as.data.frame(
-               pivot_longer(
+               tidyr::pivot_longer(
                   Q51d_e_summary_long,
                   cols = c("N", "N"),
                   names_repair = "unique",

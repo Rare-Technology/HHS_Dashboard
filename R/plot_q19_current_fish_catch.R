@@ -49,7 +49,7 @@ prep_q19_current_fish_catch <- function(.data){
   Q19
 }
 
-plot_q19_current_fish_catch <- function(.data){
+plot_q19_current_fish_catch <- function(.data, ...){
   
   
         .data_plot <- prep_q19_current_fish_catch(.data)

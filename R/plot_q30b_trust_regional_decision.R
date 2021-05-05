@@ -1,5 +1,5 @@
 
-prep_q30_trust_regional_decision <- function(.data){
+prep_q30b_trust_regional_decision <- function(.data){
   hhs_Q30b <- .data[,c("maa", "30_trust_regional_decision")] %>%
     dplyr::filter(`30_trust_regional_decision` %in% c(1:5)) %>%
     rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5)) %>%
@@ -31,9 +31,9 @@ prep_q30_trust_regional_decision <- function(.data){
   Q30b
 }
 
-plot_q30_trust_regional_decision <- function(.data, use_plotly = TRUE){
+plot_q30b_trust_regional_decision <- function(.data, ...){
 
-  .data_plot <- prep_q30_trust_regional_decision(.data)
+  .data_plot <- prep_q30b_trust_regional_decision(.data)
   plot_horiz_bar(
     .data_plot,
     title = "Proportion of community members who trust in \nregional goverment to make decisions that benefit \nthe community over their own interests"

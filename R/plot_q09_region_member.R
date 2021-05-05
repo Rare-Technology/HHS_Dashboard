@@ -1,10 +1,9 @@
 
-plot_q09_region_member <- function(.data){
+plot_q09_region_member <- function(.data, ...){
 
          .data_plot <-  prep_data_for_plot(
            .data,
            `9_region_member`,
-           include_summary_line = FALSE,
            type = "bar",
            bar_column = `1`
          )

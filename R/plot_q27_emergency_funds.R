@@ -58,7 +58,7 @@ prep_q27_emergency_funds <- function(.data){
   Q27
 }
 
-plot_q27_emergency_funds <- function(.data, use_plotly = TRUE){
+plot_q27_emergency_funds <- function(.data, ...){
 
            .data_plot <- prep_q27_emergency_funds(.data)
            

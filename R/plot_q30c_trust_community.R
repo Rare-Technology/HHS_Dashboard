@@ -1,5 +1,5 @@
 
-prep_q30_trust_community <- function(.data){
+prep_q30c_trust_community <- function(.data){
   
   hhs_Q30c <- .data[,c("maa", "30_trust_community")] %>%
     dplyr::filter(`30_trust_community` %in% c(1:5)) %>%
@@ -32,9 +32,9 @@ prep_q30_trust_community <- function(.data){
   Q30c <- clean_plot_data(Q30c_summary)
 }
 
-plot_q30_trust_community <- function(.data, use_plotly = TRUE){
+plot_q30c_trust_community <- function(.data, ...){
 
-          .data_plot <- prep_q30_trust_community(.data)
+          .data_plot <- prep_q30c_trust_community(.data)
           plot_horiz_bar(
             .data_plot,
             title = "Proportion of community members who trust in \ntheir fellow community members"

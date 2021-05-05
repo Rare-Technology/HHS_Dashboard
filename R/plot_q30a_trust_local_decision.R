@@ -1,5 +1,5 @@
 
-prep_q30_trust_local_decision <- function(.data){
+prep_q30a_trust_local_decision <- function(.data){
   hhs_Q30a <- .data[,c("maa", "30_trust_local_decision")] %>%
     dplyr::filter(`30_trust_local_decision` %in% c(1:5)) %>%
     rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5)) %>%
@@ -29,9 +29,9 @@ prep_q30_trust_local_decision <- function(.data){
   Q30a
 }
 
-plot_q30_trust_local_decision <- function(.data, use_plotly = TRUE){
+plot_q30a_trust_local_decision <- function(.data, ...){
 
-  .data_plot <- prep_q30_trust_local_decision(.data)
+  .data_plot <- prep_q30a_trust_local_decision(.data)
   
   plot_horiz_bar(
     .data_plot,

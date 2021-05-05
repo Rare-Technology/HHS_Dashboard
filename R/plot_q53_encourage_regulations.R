@@ -3,7 +3,7 @@ prep_q53_encourage_regulations <- function(.data){
 
 }
 
-plot_q53_encourage_regulations <- function(.data, use_plotly = TRUE){
+plot_q53_encourage_regulations <- function(.data, ...){
 hhs_Q53 <- .data[,c("maa", "53_encourage_regulations")] %>%
                         dplyr::filter(`53_encourage_regulations` != "" &
                                `53_encourage_regulations` != 'No regulations') %>%
@@ -26,7 +26,7 @@ hhs_Q53 <- .data[,c("maa", "53_encourage_regulations")] %>%
          #pivot table
          Q53_summary_long <-
             as.data.frame(
-               Q53_summary %>% pivot_longer(
+               Q53_summary %>% tidyr::pivot_longer(
                   cols = c(
                      "Never",
                      "Rarely",

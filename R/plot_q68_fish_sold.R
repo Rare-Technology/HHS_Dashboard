@@ -3,7 +3,7 @@ prep_q68_fish_sold <- function(.data){
 
 }
 
-plot_q68_fish_sold <- function(.data, use_plotly = TRUE){
+plot_q68_fish_sold <- function(.data, ...){
 hhs_Q68 <- .data[,c("maa", "68_fish_eaten", "68_fish_sold")] %>%
                         dplyr::filter(!is.na(`68_fish_sold`)) %>%
                               dplyr::filter(`68_fish_eaten` < 800000)

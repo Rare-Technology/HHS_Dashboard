@@ -13,6 +13,7 @@ create_state <- function(){
       choices = hhs_init_geo_selections$country$choices,
       selected = hhs_init_geo_selections$country$selected
     ),
+    iso3 = list(selected = get_iso3(hhs_init_geo_selections$country$selected)),
     subnational = list(
       choices = hhs_init_geo_selections$subnational$choices,
       selected = hhs_init_geo_selections$subnational$choices
@@ -25,7 +26,6 @@ create_state <- function(){
       choices = hhs_init_geo_selections$maa$choices,
       selected = hhs_init_geo_selections$maa$choices
     ),
-    
     section = list(
       choices = names(hhs_questions),
       selected = hhs_init_section

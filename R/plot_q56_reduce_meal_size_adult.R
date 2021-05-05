@@ -3,7 +3,7 @@ prep_q56_reduce_meal_size_adult <- function(.data){
 
 }
 
-plot_q56_reduce_meal_size_adult <- function(.data, use_plotly = TRUE){
+plot_q56_reduce_meal_size_adult <- function(.data, ...){
 hhs_Q56 <- .data[c("maa", "56_reduce_meal_size_adult")] %>%
                         dplyr::filter (`56_reduce_meal_size_adult` != "") %>%
                            droplevels()

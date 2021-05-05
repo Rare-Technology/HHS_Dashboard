@@ -1,4 +1,4 @@
-plot_q26_fishing_income_save <- function(.data, use_plotly = TRUE) {
+plot_q26_fishing_income_save <- function(.data, ...) {
   .data[["26_fishing_income_save"]] <- ifelse(.data$`26_fishing_income_save` > 0, 1, 0)
 
   .data_plot <- prep_data_for_plot(

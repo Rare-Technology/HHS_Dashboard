@@ -49,7 +49,7 @@ prep_q25_financial_account <- function(.data) {
   Q25
 }
 
-plot_q25_financial_account <- function(.data, use_plotly = TRUE) {
+plot_q25_financial_account <- function(.data, ...) {
   .data_plot <- prep_q25_financial_account(.data)
 
   plot_horiz_bar(

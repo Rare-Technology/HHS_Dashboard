@@ -3,7 +3,7 @@ prep_q70a_hh_income_all <- function(.data){
 
 }
 
-plot_q70a_hh_income_all <- function(.data, use_plotly = TRUE){
+plot_q70a_hh_income_all <- function(.data, ...){
 if (input$Country == "IDN") {
             conversion <- quantmod::getQuote("IDRUSD=X")$Last
          }

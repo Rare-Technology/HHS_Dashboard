@@ -66,7 +66,7 @@ prep_q22_catch_5yrs <- function(.data){
   Q22
 }
 
-plot_q22_catch_5yrs <- function(.data, use_plotly = TRUE){
+plot_q22_catch_5yrs <- function(.data, ...){
 
          
         .data_plot <- prep_q22_catch_5yrs(.data)

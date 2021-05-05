@@ -1,5 +1,5 @@
 
-plot_q18_fishing_high_profit <- function(.data, use_plotly = TRUE){
+plot_q18_fishing_high_profit <- function(.data, ...){
 
   
   .data_plot <- prep_data_for_plot(

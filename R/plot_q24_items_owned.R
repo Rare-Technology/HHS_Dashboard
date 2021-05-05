@@ -128,7 +128,7 @@ prep_q24_items_owned <- function(.data){
   Q24
 }
 
-plot_q24_items_owned <- function(.data, use_plotly = TRUE){
+plot_q24_items_owned <- function(.data, ...){
 
 
         .data_plot <- prep_q24_items_owned(.data)

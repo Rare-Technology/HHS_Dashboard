@@ -3,7 +3,7 @@ prep_q61i_help_neighbors <- function(.data){
 
 }
 
-plot_q61i_help_neighbors <- function(.data, use_plotly = TRUE){
+plot_q61i_help_neighbors <- function(.data, ...){
 hhs_Q61i <- .data[,c("maa", "61i_help_neighbors")] %>%
                         dplyr::filter(`61i_help_neighbors` %in% c(1:5)) %>%
                            rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
@@ -42,7 +42,7 @@ hhs_Q61i <- .data[,c("maa", "61i_help_neighbors")] %>%
                                         "Disagree (%)",
                                         "Neither agree nor disagree (%)",
                                         "Agree (%)" )] %>% 
-                  pivot_longer(
+                  tidyr::pivot_longer(
                      cols = c(
                         "Disagree (%)",
                         "Neither agree nor disagree (%)",

@@ -3,7 +3,7 @@ prep_q61a_current_regulations <- function(.data){
 
 }
 
-plot_q61a_current_regulations <- function(.data, use_plotly = TRUE){
+plot_q61a_current_regulations <- function(.data, ...){
 hhs_Q61a <- .data[,c("maa", "61a_current_regulations")] %>%
                            dplyr::filter(`61a_current_regulations` %in% c(1:5)) %>%
                               rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
@@ -46,7 +46,7 @@ hhs_Q61a <- .data[,c("maa", "61a_current_regulations")] %>%
               "Agree (%)")
          #pivot table
          Q61a_summary_long <-
-            Q61a_summary %>% pivot_longer(
+            Q61a_summary %>% tidyr::pivot_longer(
                cols = c(
                   "Disagree (%)",
                   "Neither (%)",

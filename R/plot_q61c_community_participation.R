@@ -3,7 +3,7 @@ prep_q61c_community_participation <- function(.data){
 
 }
 
-plot_q61c_community_participation <- function(.data, use_plotly = TRUE){
+plot_q61c_community_participation <- function(.data, ...){
 hhs_Q61c <- .data[,c("maa", "61c_community_participation")] %>%
                         dplyr::filter (`61c_community_participation` %in% c(1:5)) %>%
                            rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
@@ -35,7 +35,7 @@ hhs_Q61c <- .data[,c("maa", "61c_community_participation")] %>%
          Q61c_summary_long <-
             as.data.frame(
                Q61c_summary_grouped %>% 
-                  pivot_longer(
+                  tidyr::pivot_longer(
                      cols = c(
                         "Disagree (%)",
                         "Neither agree nor disagree (%)",

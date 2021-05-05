@@ -3,7 +3,7 @@ prep_q52_ma_benefit_5yrs <- function(.data){
 
 }
 
-plot_q52_ma_benefit_5yrs <- function(.data, use_plotly = TRUE){
+plot_q52_ma_benefit_5yrs <- function(.data, ...){
 hhs_Q52 <- .data[,c("maa", "52_ma_benefit_5yrs")] %>%
                         dplyr::filter(`52_ma_benefit_5yrs` %in% c("Yes", "Unsure", "No")) %>%
                            rbind (tibble(maa = c(NA,NA,NA),
@@ -17,7 +17,7 @@ hhs_Q52 <- .data[,c("maa", "52_ma_benefit_5yrs")] %>%
                                    3,3)
          #pivot table
          Q52_summary_long <-
-            Q52_summary %>% pivot_longer(
+            Q52_summary %>% tidyr::pivot_longer(
                cols = c("No", "Unsure", "Yes"),
                names_to = "key",
                values_to = "Proportion (%)"

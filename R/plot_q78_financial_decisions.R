@@ -3,7 +3,7 @@ prep_q78_financial_decisions <- function(.data){
 
 }
 
-plot_q78_financial_decisions <- function(.data, use_plotly = TRUE){
+plot_q78_financial_decisions <- function(.data, ...){
 
          hhs_Q78 <- .data[,c("6_gender", "maa", "78_financial_decisions")] %>%
                            dplyr::filter(`78_financial_decisions` != "") %>%
@@ -70,7 +70,7 @@ plot_q78_financial_decisions <- function(.data, use_plotly = TRUE){
          #pivot table
          Q78_summary_long <-
             as.data.frame(
-               Q78_summary %>% pivot_longer(
+               Q78_summary %>% tidyr::pivot_longer(
                   cols = c("Female (%)", "Male (%)", "Both (%)"),
                   names_to = "key",
                   values_to = "Proportion (%)"

@@ -3,7 +3,7 @@ prep_q63_fishing_in_reserve <- function(.data){
 
 }
 
-plot_q63_fishing_in_reserve <- function(.data, use_plotly = TRUE){
+plot_q63_fishing_in_reserve <- function(.data, ...){
 hhs_Q63 <- .data[,c("maa", "63_fishing_in_reserve")] %>%
                         dplyr::filter(`63_fishing_in_reserve` %in% c(0,1))
          

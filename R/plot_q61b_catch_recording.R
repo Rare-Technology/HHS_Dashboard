@@ -3,7 +3,7 @@ prep_q61b_catch_recording <- function(.data){
 
 }
 
-plot_q61b_catch_recording <- function(.data, use_plotly = TRUE){
+plot_q61b_catch_recording <- function(.data, ...){
 hhs_Q61b <- .data[,c("maa", "61b_catch_recording")] %>%
                         dplyr::filter( `61b_catch_recording` %in% c(1:5)) %>%
                            rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5)) %>%
@@ -42,7 +42,7 @@ hhs_Q61b <- .data[,c("maa", "61b_catch_recording")] %>%
                                          "Disagree (%)", 
                                          "Neither agree nor disagree (%)",
                                          "Agree (%)")] %>% 
-                  pivot_longer(
+                  tidyr::pivot_longer(
                      cols = c(
                         "Disagree (%)",
                         "Neither agree nor disagree (%)",

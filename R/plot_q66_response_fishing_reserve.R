@@ -3,7 +3,7 @@ prep_q66_response_fishing_reserve <- function(.data){
 
 }
 
-plot_q66_response_fishing_reserve <- function(.data, use_plotly = TRUE){
+plot_q66_response_fishing_reserve <- function(.data, ...){
 hhs_Q66 <- .data[,c("maa", "66_response_fishing_reserve")] %>%
             dplyr::filter(`66_response_fishing_reserve` %in% c(0,1)) %>%
                droplevels()

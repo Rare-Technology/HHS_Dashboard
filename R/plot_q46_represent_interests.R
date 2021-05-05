@@ -3,7 +3,7 @@ prep_q46_represent_interests <- function(.data){
 
 }
 
-plot_q46_represent_interests <- function(.data, use_plotly = TRUE){
+plot_q46_represent_interests <- function(.data, ...){
 hhs_Q46 <- .data[,c("maa","46_represent_interests")] %>%
                         dplyr::filter (`46_represent_interests` != "") %>%
                            dplyr::filter (`46_represent_interests` != "na") %>%
@@ -20,7 +20,7 @@ hhs_Q46 <- .data[,c("maa","46_represent_interests")] %>%
                                     type = length(unique(hhs_Q46[[2]])))
          #pivot table
          Q46_summary_long <-
-            Q46_summary %>% pivot_longer(
+            Q46_summary %>% tidyr::pivot_longer(
                cols = names(Q46_summary)[-c(1:2)],
                names_to = "key",
                values_to = "Proportion (%)"

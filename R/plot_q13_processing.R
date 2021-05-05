@@ -1,4 +1,4 @@
-plot_q13_processing <- function(.data, use_plotly = TRUE){
+plot_q13_processing <- function(.data, ...){
 
     .data_plot <- prep_facet(.data,
                select_vars = c(`13a_processing_men`,

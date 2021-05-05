@@ -2,7 +2,7 @@ prep_q44b_meeting_attendance_alt <- function(.data){
 
 }
 
-plot_q44b_meeting_attendance_alt <- function(.data, use_plotly = TRUE){
+plot_q44b_meeting_attendance_alt <- function(.data, ...){
 hhs_fishers <- .data[,c("submissionid","maa", 
                                           "12a_fishing_men", "12b_fishing_women",
                                           "12c_fishing_children")] %>%
@@ -11,7 +11,7 @@ hhs_fishers <- .data[,c("submissionid","maa",
                                      `12c_fishing_children` > 0) %>%
                                  droplevels()
         hhs_Q44f <-
-            left_join(
+            dplyr::left_join(
                hhs_fishers[, c("submissionid")],
                selectedData_Q44()[,c("submissionid",
                                      "maa", 
@@ -31,7 +31,7 @@ hhs_fishers <- .data[,c("submissionid","maa",
                                    length(unique(hhs_Q44f[[3]])))
          
          Q44f_summary_long <-
-            Q44f_summary %>% pivot_longer(
+            Q44f_summary %>% tidyr::pivot_longer(
                cols = names(Q44f_summary[-c(1:2)]),
                names_to = "key",
                values_to = "Proportion (%)"

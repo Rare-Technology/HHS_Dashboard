@@ -3,7 +3,7 @@ prep_q67_reserve_boundry <- function(.data){
 
 }
 
-plot_q67_reserve_boundry <- function(.data, use_plotly = TRUE){
+plot_q67_reserve_boundry <- function(.data, ...){
 hhs_Q67 <- .data[,c("maa", "67_reserve_boundry")] %>%
                            dplyr::filter(`67_reserve_boundry` != "")
           

@@ -90,6 +90,7 @@ sidebarGeoServer <- function(id, state) {
         {
           if (input$sel_country != state$country$selected) {
             state$country$selected <- input$sel_country
+            state$iso3$selected <- get_iso3(input$sel_country)
           }
 
           subnational_info <- get_subnational_selections(
@@ -169,7 +170,7 @@ sidebarGeoServer <- function(id, state) {
             state$maa$selected <- input$sel_maa
           }
 
-          state$data_filtered <- state$data_full %>%
+          state$hhs_data_filtered <- state$hhs_data_all %>%
             dplyr::filter(
               country %in% input$sel_country,
               subnational %in% input$sel_subnational,

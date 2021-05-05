@@ -2,7 +2,7 @@ prep_q70b_hh_income_fishing <- function(.data){
 
 }
 
-plot_q70b_hh_income_fishing <- function(.data, use_plotly = TRUE){
+plot_q70b_hh_income_fishing <- function(.data, ...){
 if (input$Country == "IDN") {
             conversion <- quantmod::getQuote("IDRUSD=X")$Last
          }

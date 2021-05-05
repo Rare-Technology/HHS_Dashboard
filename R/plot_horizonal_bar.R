@@ -14,14 +14,29 @@ plot_horiz_bar <- function(
   palette_direction = -1,
   limits = c(0, 110),
   breaks = seq(0, 100, 20),
-  guide_reverse = TRUE
+  guide_reverse = TRUE,
+  sort_by_value = FALSE
 ){
 
   # TODO: must be a better way!
   facet_var_str <- quo_name(enquo(facet_var))
   
+  if(sort_by_value){
+    .data <- .data %>% 
+      dplyr::mutate(
+        {{ x_var }} := forcats::fct_reorder(factor({{ x_var }}), {{ y_var }})
+      )
+
+  }
+  
+  
   p <- .data %>% 
     ggplot(aes({{ x_var }}, {{ y_var }}, N = {{ n_var }}))
+  
+  
+  if(sort_by_value){
+
+  }
   
   if(type == 'bar'){
     p <- p + geom_col(fill = fill_col, alpha = 0.8)
@@ -37,7 +52,7 @@ plot_horiz_bar <- function(
       scale_fill_brewer(palette = palette, direction = palette_direction) 
   }
   
-  p<- p + 
+  p <- p + 
     labs(
       title = title,
       x = x_title,

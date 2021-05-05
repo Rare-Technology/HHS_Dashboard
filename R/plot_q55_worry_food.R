@@ -3,7 +3,7 @@ prep_q55_worry_food <- function(.data){
 
 }
 
-plot_q55_worry_food <- function(.data, use_plotly = TRUE){
+plot_q55_worry_food <- function(.data, ...){
 hhs_Q55 <- .data[,c("maa", "55_worry_food")] %>%
                         dplyr::filter(`55_worry_food` != "") %>% 
                            droplevels()
@@ -15,7 +15,7 @@ hhs_Q55 <- .data[,c("maa", "55_worry_food")] %>%
             )
          
          Q55_summary_long <-
-            Q55_summary %>% pivot_longer(
+            Q55_summary %>% tidyr::pivot_longer(
                cols = c(`Never`, `Often`, `Sometimes`),
                names_to = "key",
                values_to = "Proportion (%)"

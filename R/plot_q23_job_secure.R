@@ -1,6 +1,6 @@
 
 
-plot_q23_job_secure <- function(.data, use_plotly = TRUE){
+plot_q23_job_secure <- function(.data, ...){
 
   .data <- .data %>% 
     dplyr::filter(`23_job_secure`%in% c(0,1))

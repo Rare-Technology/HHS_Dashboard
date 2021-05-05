@@ -1,4 +1,4 @@
-plot_q28_buyer_loans <- function(.data, use_plotly = TRUE) {
+plot_q28_buyer_loans <- function(.data, ...) {
   .data_plot <- prep_data_for_plot(
     .data,
     `28_buyer_loans`,

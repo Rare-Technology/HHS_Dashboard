@@ -41,7 +41,7 @@ prep_q29_family_income <- function(.data) {
   Q29
 }
 
-plot_q29_family_income <- function(.data, use_plotly = TRUE) {
+plot_q29_family_income <- function(.data, ...) {
   .data_plot <- prep_q29_family_income(.data)
 
   plot_horiz_bar(

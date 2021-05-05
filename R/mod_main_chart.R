@@ -60,13 +60,17 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
       ignoreInit = TRUE
     )
     
-    observeEvent(input$question, {
+    observeEvent(c(input$question, state$hhs_data_filtered), {
       req(input$question, input$question!="")
    
+      browser()
       plot_hhs <- base::get(HHS_PLOT_FUNS[grepl(input$question, HHS_PLOT_FUNS)])
-      p <- plot_hhs(state$hhs_data_filtered)
+      p <- try(plot_hhs(state$hhs_data_filtered, iso3 = state$iso3$selected), silent = TRUE)
       
+
       output$chart_ui <- renderUI({
+        
+        if("try-error" %in% class(p)) return(div("There was an error in plot generation"))
         
         if(TRUE){
           #output$chart <- renderPlotly(ggplot(mtcars, aes(cyl, mpg)) + geom_point() + ggtitle("This is my title"))

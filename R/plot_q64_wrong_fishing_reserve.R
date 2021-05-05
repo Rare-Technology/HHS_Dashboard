@@ -3,7 +3,7 @@ prep_q64_wrong_fishing_reserve <- function(.data){
 
 }
 
-plot_q64_wrong_fishing_reserve <- function(.data, use_plotly = TRUE){
+plot_q64_wrong_fishing_reserve <- function(.data, ...){
 hhs_Q64 <- .data[,c("maa", "64_wrong_fishing_reserve")] %>%
                         dplyr::filter (`64_wrong_fishing_reserve` != "") %>%
                            droplevels()
@@ -34,7 +34,7 @@ hhs_Q64 <- .data[,c("maa", "64_wrong_fishing_reserve")] %>%
          Q64_summary_long <-
             as.data.frame(
                Q64_summary %>% 
-                  pivot_longer(
+                  tidyr::pivot_longer(
                      cols = c(
                         "Not wrong at all",
                         "Slightly wrong",

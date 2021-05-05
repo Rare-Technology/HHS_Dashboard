@@ -3,7 +3,7 @@ prep_q47_represent_contributions <- function(.data){
 
 }
 
-plot_q47_represent_contributions <- function(.data, use_plotly = TRUE){
+plot_q47_represent_contributions <- function(.data, ...){
 hhs_Q47 <- .data[,c("maa", "47_represent_contributions")] %>%
                            rbind(tibble("maa" = c(NA,NA,NA),
                                         "47_represent_contributions"= c("Agree", 
@@ -17,7 +17,7 @@ hhs_Q47 <- .data[,c("maa", "47_represent_contributions")] %>%
                                    3,3)
          #pivot table
          Q47_summary_long <-
-            Q47_summary %>% pivot_longer(
+            Q47_summary %>% tidyr::pivot_longer(
                cols = c("Neither", "Disagree", "Agree"),
                names_to = "key",
                values_to = "Proportion (%)"

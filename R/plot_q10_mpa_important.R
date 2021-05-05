@@ -1,4 +1,4 @@
-plot_q10_mpa_important <- function(.data){
+plot_q10_mpa_important <- function(.data, ...){
 
          .data_plot <-prep_data_for_plot(
            .data, 

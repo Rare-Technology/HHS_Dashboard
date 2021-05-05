@@ -3,7 +3,7 @@ prep_q60_hh_fish_consumption <- function(.data){
 
 }
 
-plot_q60_hh_fish_consumption <- function(.data, use_plotly = TRUE){
+plot_q60_hh_fish_consumption <- function(.data, ...){
 hhs_Q60 <- .data[,c("maa", "60_hh_fish_consumption")] %>%
                         dplyr::filter(`60_hh_fish_consumption` != "") %>%
                            droplevels()
@@ -17,7 +17,7 @@ hhs_Q60 <- .data[,c("maa", "60_hh_fish_consumption")] %>%
                                      "More than few per week", "Rarely")
           
           Q60_summary_long <-
-             Q60_summary %>% pivot_longer(
+             Q60_summary %>% tidyr::pivot_longer(
                 cols = c("Few",
                          "Few per month", 
                          "Few per week",

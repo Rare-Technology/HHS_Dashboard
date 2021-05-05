@@ -32,7 +32,7 @@ prep_q14_responsibilities <- function(.data){
   .data_final
 }
 
-plot_q14_responsibilities <- function(.data, use_plotly = TRUE){
+plot_q14_responsibilities <- function(.data, ...){
 
       .data_plot <- prep_q14_responsibilities(.data)
          

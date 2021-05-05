@@ -147,7 +147,7 @@ prep_q11_income <- function(.data){
 
 }
 
-plot_q11_income <- function(.data, use_plotly = TRUE){
+plot_q11_income <- function(.data, ...){
 
          .data_plot <- prep_q11_income(.data)
           

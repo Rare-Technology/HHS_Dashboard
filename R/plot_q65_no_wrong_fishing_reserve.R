@@ -3,7 +3,7 @@ prep_q65_no_wrong_fishing_reserve <- function(.data){
 
 }
 
-plot_q65_no_wrong_fishing_reserve <- function(.data, use_plotly = TRUE){
+plot_q65_no_wrong_fishing_reserve <- function(.data, ...){
 hhs_Q65 <- .data[,c("maa", "65_no_wrong_fishing_reserve")] %>%
                         dplyr::filter(`65_no_wrong_fishing_reserve` %in% c(0:10))
           

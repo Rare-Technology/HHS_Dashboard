@@ -3,7 +3,7 @@ prep_q59_food_procurement <- function(.data){
 
 }
 
-plot_q59_food_procurement <- function(.data, use_plotly = TRUE){
+plot_q59_food_procurement <- function(.data, ...){
 hhs_Q59 <- .data[,c("maa","59_food_procurement")] %>%
                         dplyr::filter(`59_food_procurement` != "") %>%
                            rbind(c(NA, "Confident not"), 
@@ -23,7 +23,7 @@ hhs_Q59 <- .data[,c("maa","59_food_procurement")] %>%
                                     "Confident", 
                                     "Very confident")
          Q59_summary_long <-
-            Q59_summary %>% pivot_longer(
+            Q59_summary %>% tidyr::pivot_longer(
                cols = c("Not very confident",
                         "Not confident",
                         "Uncertain",

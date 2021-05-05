@@ -3,7 +3,7 @@ prep_q77_hh_ends_meet <- function(.data){
 
 }
 
-plot_q77_hh_ends_meet <- function(.data, use_plotly = TRUE){
+plot_q77_hh_ends_meet <- function(.data, ...){
 hhs_Q77 <- .data[,c("maa", "77_hh_ends_meet")] %>%
                         dplyr::filter(`77_hh_ends_meet` != "") %>%
                            droplevels()
@@ -19,7 +19,7 @@ hhs_Q77 <- .data[,c("maa", "77_hh_ends_meet")] %>%
        Q77_summary_long <-
             as.data.frame(
                Q77_summary %>% 
-                  pivot_longer(
+                  tidyr::pivot_longer(
                      cols = c(
                         "With great difficulty",
                         "With difficulty",

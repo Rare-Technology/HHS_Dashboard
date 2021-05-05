@@ -2,7 +2,7 @@ prep_q51_fishers_permission <- function(.data){
 
 }
 
-plot_q51_fishers_permission <- function(.data, use_plotly = TRUE){
+plot_q51_fishers_permission <- function(.data, ...){
 hhs_Q51a <- .data[,c("maa", "51a_fishers_gear_not_permitted")] %>%
                         dplyr::filter(`51a_fishers_gear_not_permitted` %in% c(0:10)) %>% 
                            droplevels()
@@ -92,7 +92,7 @@ hhs_Q51a <- .data[,c("maa", "51a_fishers_gear_not_permitted")] %>%
          #pivot table
          Q51a_c_summary_long <-
             as.data.frame(
-               Q51a_c_summary %>% pivot_longer(
+               Q51a_c_summary %>% tidyr::pivot_longer(
                   cols = c(
                      "Unapproved gear",
                      "Fishing in reserve",
@@ -105,7 +105,7 @@ hhs_Q51a <- .data[,c("maa", "51a_fishers_gear_not_permitted")] %>%
          #Fix Ns
          Q51a_c_summary_long$N <-
             as.data.frame(
-               pivot_longer(
+               tidyr::pivot_longer(
                   Q51a_c_summary,
                   cols = c("N", "N", "N"),
                   names_repair = "unique",

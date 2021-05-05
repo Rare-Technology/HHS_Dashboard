@@ -3,7 +3,7 @@ prep_q66_reaction_fishing_reserve <- function(.data){
 
 }
 
-plot_q66_reaction_fishing_reserve <- function(.data, use_plotly = TRUE){
+plot_q66_reaction_fishing_reserve <- function(.data, ...){
 hhs_Q66 <- .data[,c("maa", "66_reaction_fishing_reserve")] %>%
             dplyr::filter(`66_reaction_fishing_reserve` != "" ) %>%
                droplevels()
@@ -29,7 +29,7 @@ hhs_Q66 <- .data[,c("maa", "66_reaction_fishing_reserve")] %>%
          Q66_summary_long <-
             tibble(
                Q66_summary %>% 
-                  pivot_longer(
+                  tidyr::pivot_longer(
                      cols = c(
                         "Non.sanction",
                         "Negative.informal.sanction",

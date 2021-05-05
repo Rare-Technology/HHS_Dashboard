@@ -372,3 +372,16 @@ clean_plot_data <- function (.data_summary) {
     dplyr::filter (`MA name` !=  "Mean ± SE") %>%
     dplyr::mutate(`Proportion (%)` = as.numeric(`Proportion (%)`)) 
 }
+
+get_iso3 <- function(country){
+  switch (country,
+    "Brazil" = "BRA",
+    "Indonesia" = "IDN",
+    "Honduras" = "HND",
+    "Philippines" = "PHL",
+    "Mozambique" = "MOZ",
+    "Federated States of Micronesia" = "FSM",
+    "Palau" = "PLW"
+    
+  )
+}

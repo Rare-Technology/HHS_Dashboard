@@ -3,7 +3,7 @@ prep_q61d_strong_enforcement <- function(.data){
 
 }
 
-plot_q61d_strong_enforcement <- function(.data, use_plotly = TRUE){
+plot_q61d_strong_enforcement <- function(.data, ...){
 hhs_Q61d <- .data[,c("maa", "61d_strong_enforcement")] %>%
                            dplyr::filter (`61d_strong_enforcement` %in% c(1:5)) %>%
                               rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
@@ -39,7 +39,7 @@ hhs_Q61d <- .data[,c("maa", "61d_strong_enforcement")] %>%
                                "Disagree (%)",
                                "Neither agree nor disagree (%)",
                                "Agree (%)" )] %>% 
-                  pivot_longer(
+                  tidyr::pivot_longer(
                      cols = c(
                         "Disagree (%)",
                         "Neither agree nor disagree (%)",

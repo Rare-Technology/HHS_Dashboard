@@ -1,5 +1,5 @@
 
-plot_q08_religion <- function(.data) {
+plot_q08_religion <- function(.data, ...) {
 
   .data_plot <- prep_data_for_plot(.data, `8_religion`, type = "stacked")
 

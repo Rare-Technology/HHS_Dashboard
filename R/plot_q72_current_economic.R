@@ -3,7 +3,7 @@ prep_q72_current_economic <- function(.data){
 
 }
 
-plot_q72_current_economic <- function(.data, use_plotly = TRUE){
+plot_q72_current_economic <- function(.data, ...){
 hhs_Q72 <- .data[,c("maa", "72_current_economic")] %>%
                         dplyr::filter(`72_current_economic`!= "")
                               
@@ -83,7 +83,7 @@ hhs_Q72 <- .data[,c("maa", "72_current_economic")] %>%
          Q72_73_summary <- cbind(Q72_summary_rn, Q73_summary_rn[, -1])
          
          Q72_73 <-
-            Q72_73_summary %>% pivot_longer (
+            Q72_73_summary %>% tidyr::pivot_longer (
                cols = c("Current", "Future"),
                names_to = "key",
                values_to = "Proportion (%)"
@@ -91,7 +91,7 @@ hhs_Q72 <- .data[,c("maa", "72_current_economic")] %>%
          #Fix Ns
          Q72_73$N <-
             as.data.frame(
-               pivot_longer(
+               tidyr::pivot_longer(
                   Q72_73,
                   cols = c("N", "N"),
                   names_repair = "unique",

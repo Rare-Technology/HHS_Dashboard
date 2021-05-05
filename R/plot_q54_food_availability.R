@@ -3,7 +3,7 @@ prep_q54_food_availability <- function(.data){
 
 }
 
-plot_q54_food_availability <- function(.data, use_plotly = TRUE){
+plot_q54_food_availability <- function(.data, ...){
 hhs_Q54 <- .data[,c("maa", "54_food_availability")] %>%
                         dplyr::filter(`54_food_availability` != "") %>%
                            droplevels()
@@ -24,7 +24,7 @@ hhs_Q54 <- .data[,c("maa", "54_food_availability")] %>%
             c("MA name", "N", "Bad", "Normal", "Good")
          #pivot
          Q54_summary_long <-
-            Q54_summary %>% pivot_longer(
+            Q54_summary %>% tidyr::pivot_longer(
                cols = c(`Good`, `Bad`, `Normal`),
                names_to = "key",
                values_to = "Proportion (%)"
