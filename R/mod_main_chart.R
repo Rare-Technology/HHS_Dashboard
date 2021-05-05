@@ -27,14 +27,14 @@ chartUI <- function(id) {
 }
 
 
-chartServer <- function(id, state) {
+chartServer <- function(id, state, HHS_PLOT_FUNS) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     observeEvent(input$section,
       {
-        questions <- hhs_questions[input$section] %>%
-          unlist() %>%
-          unname()
+        questions <- hhs_questions[input$section] #%>%
+         # unlist() %>%
+          #unname()
         state$question <- list(
           choices = questions,
           selected = questions[1]
@@ -43,33 +43,31 @@ chartServer <- function(id, state) {
         updateSelectInput(
           session,
           "question",
-          choices = questions,
-          selected = questions[1]
+          choices = questions#,
+          #selected = questions[1]
         )
       },
       ignoreInit = TRUE
     )
     
     observeEvent(input$question, {
+  
+      plot_hhs <- base::get(HHS_PLOT_FUNS[grepl(input$question, HHS_PLOT_FUNS)])
+      p <- plot_hhs(state$hhs_data_filtered)
       
-      plot_hhs <- switch (input$question,
-        "q8" = plot_q08_religion,
-        "q9" = plot_q09_region_member,
-        "q10" = plot_q10_mpa_important
-      )
-      
-      
-
       output$chart_ui <- renderUI({
         
+        if(TRUE){
+          #output$chart <- renderPlotly(ggplot(mtcars, aes(cyl, mpg)) + geom_point() + ggtitle("This is my title"))
+          output$chart <- renderPlotly(p)
+          p_output <- plotlyOutput(ns("chart"), height = '750px')
+        } else {
+          output$chart <- renderPlot(p)
+          p_output <- plotOutput(ns("chart"), height = '750px')
+        }
 
-        output$chart <- renderPlotly({
-          plot_hhs(state$data_filtered, use_plotly = TRUE)
-        })
-        
         list(
-          p("This is a warning"),
-          plotlyOutput(ns("chart"), height = '750px')
+          p_output
         )
       })
       

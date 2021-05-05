@@ -24,9 +24,9 @@ dataServer <- function(id, state){
   moduleServer(
     id,
     function(input, output, server){
-      observeEvent(state$data_filtered , {
-
-        data_summary <- state$data_filtered %>% 
+      observeEvent(state$hhs_data_filtered , {
+        
+        data_summary <- state$hhs_data_filtered %>% 
           hhs_table_summary()
         
         

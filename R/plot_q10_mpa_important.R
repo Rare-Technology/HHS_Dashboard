@@ -1,52 +1,19 @@
+plot_q10_mpa_important <- function(.data){
 
-prep_q10_mpa_important <- function(.data){
-  
-  res <- .data %>%
-    dplyr::filter(`10_mpa_important` != "") %>%
-    dplyr::select(maa, `10_mpa_important`) %>% 
-    rbind(c(NA,1), c(NA,0), c(NA,-1))
-
-  res <- proportion(
-    res$`10_mpa_important`,
-    res$maa,
-    3,
-    type= 3
-    )
-  
-  colnames(res) <- c("MA name", "N", "Neutral", "No", "Yes")
-  
-  res_long <- res %>% 
-    tidyr::pivot_longer(
-      cols = c("Neutral", "No", "Yes"),
-      names_to = "key",
-      values_to = "Proportion (%)"
-    )
-  
-  clean_plot_data(res_long)
-}
-
-plot_q10_mpa_important <- function(.data, use_plotly = TRUE){
-
-         .data_plot <- prep_q10_mpa_important(.data)
+         .data_plot <-prep_data_for_plot(
+           .data, 
+           focus_var = `10_mpa_important`, 
+           recoding = c("Neutral" = -1, "No" = 0, "Yes" = 1),
+           type = "facet"
+         )
          
-         p <- .data_plot %>% 
-            ggplot(aes(`MA name`, `Proportion (%)`, N = N)) +
-            facet_wrap (~ key) + 
-            geom_col(fill = "#005BBB", alpha = 0.8) +  
-            labs(
-              title = "Proportion of households that believe is important \nthat the region is managed and protected",
-              x = NULL,
-              y = "Proportion (%)"
-            ) +
-            scale_y_continuous(limits = c(0, 110),
-                               breaks = seq(0, 100, 20)) +
-            coord_flip(clip = "on") + 
-           theme_rare()
-         
-         if(use_plotly)
-           ggplotly(p)
-         
-         p
+         plot_horiz_bar(
+           .data_plot,
+           title = glue::glue("Proportion of households that believe is important",
+           "\nthat the region is managed and protected"),
+           facet_var = key
+         )
+
       
 }
 

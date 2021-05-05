@@ -1,7 +1,8 @@
 state <- reactiveValues(
   # data_source = rarefma::init_data_source,
-  data_full = rarehhs::hhs_data,
-  data_filtered = rarehhs::hhs_data_filtered,
+  hhs_data_all = rarehhs::hhs_data,
+  hhs_data_filtered = rarehhs::hhs_data_filtered,
+
   # data_summary = rarefma::data_summary[[rarefma::init_data_source]],
   # data_summary_filtered = rarefma::init_data_summary_filtered,
   hhs_data_geo = rarehhs::hhs_data_geo,
@@ -36,3 +37,4 @@ state <- reactiveValues(
   performance_indicators = 'Reporting Effort'
 
 )
+
