@@ -57,7 +57,8 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
       
       output$chart_ui <- renderUI({
         
-        if(FALSE){
+        if(TRUE){
+          #output$chart <- renderPlotly(ggplot(mtcars, aes(cyl, mpg)) + geom_point() + ggtitle("This is my title"))
           output$chart <- renderPlotly(p)
           p_output <- plotlyOutput(ns("chart"), height = '750px')
         } else {
@@ -66,7 +67,6 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
         }
 
         list(
-          p("This is a warning"),
           p_output
         )
       })

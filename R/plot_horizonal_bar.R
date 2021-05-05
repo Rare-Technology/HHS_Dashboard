@@ -48,8 +48,7 @@ plot_horiz_bar <- function(
       breaks = breaks
       ) +
     coord_flip(clip = "on") +
-    theme_rare() +
-    theme(legend.position = "right") 
+    theme_rare()
   
   if(facet_var_str != " ")
     p <- p + facet_wrap( vars({{ facet_var }}))
