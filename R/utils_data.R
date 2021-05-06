@@ -212,14 +212,14 @@ prep_data_for_plot <- function(
   values_name = "Proportion (%)", 
   rounding = 3,
   include_summary_line = FALSE,
-  recoding = NULL, # new value on right
+  recoding = NULL, # new value as names (on left of assignment)
   type = "bar", # stacked or facet
   bar_column = `1`,
   key_order = NULL) {
 
 
   dat <- .data %>%
-    dplyr::filter({{ focus_var }} != "") %>%
+    dplyr::filter({{ focus_var }} != "", !is.na({{ focus_var}}), {{focus_var}} != "na") %>%
     dplyr::select(maa, {{ focus_var }})
   
   if(!is.null(recoding)){
@@ -307,7 +307,7 @@ prep_data_for_plot <- function(
   
 }
 
-prep_facet <- function(
+prep_data_for_plot_facet <- function(
   .data, 
   select_vars, 
   group_by_var = maa, 
@@ -317,7 +317,7 @@ prep_facet <- function(
   my_func = function(x){round(mean(x, na.rm = TRUE), 1)}
 ){
   
-  
+
   group_by_str <- rlang::as_name(enquo(group_by_var))
   
   dat <- .data %>% 

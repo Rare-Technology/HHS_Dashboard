@@ -1,5 +1,5 @@
 prep_q44a_meeting_attendance <- function(.data){
-  browser()
+
   hhs_Q44 <- .data[,c("maa", "44_meeting_attendance")] %>%
     tidyr::unnest(cols = `44_meeting_attendance`) %>% 
     dplyr::filter(`44_meeting_attendance` != '') %>%
@@ -18,7 +18,7 @@ prep_q44a_meeting_attendance <- function(.data){
       values_to = "Proportion (%)"
     )
   
-  Q44_summary_long$key <- str_replace (Q44_summary_long$key, "[.]", " ")
+  Q44_summary_long$key <- stringr::str_replace (Q44_summary_long$key, "[.]", " ")
   Q44 <- clean_plot_data(Q44_summary_long)
   Q44
 }
@@ -26,7 +26,7 @@ prep_q44a_meeting_attendance <- function(.data){
 plot_q44a_meeting_attendance <- function(.data, ...){
 
   
-  .data_plot <- prep_q44_meeting_attendance(.data)
+  .data_plot <- prep_q44a_meeting_attendance(.data)
   
   plot_horiz_bar(
     .data_plot,

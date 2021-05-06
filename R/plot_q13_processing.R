@@ -1,6 +1,6 @@
 plot_q13_processing <- function(.data, ...){
 
-    .data_plot <- prep_facet(.data,
+    .data_plot <- prep_data_for_plot(.data,
                select_vars = c(`13a_processing_men`,
                `13b_processing_women`,
                `13c_processing_children`),

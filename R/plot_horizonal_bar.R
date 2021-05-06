@@ -66,7 +66,7 @@ plot_horiz_bar <- function(
     theme_rare()
   
   if(facet_var_str != " ")
-    p <- p + facet_wrap( vars({{ facet_var }}))
+    p <- p + facet_wrap( vars({{ facet_var }}), labeller = label_wrap_gen(20))
   
   p
 }
