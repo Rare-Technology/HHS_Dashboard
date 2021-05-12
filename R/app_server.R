@@ -24,6 +24,7 @@ app_server <- function( input, output, session ) {
   # Main panel
   dataServer("dataUI", state)
   chartServer("chartUI", state, HHS_PLOT_FUNS)
+  mapServer("mapUI", state)
   #selectServer("selectUI")
   #visualizeServer("visualizeUI")
   #interpretServer("interpretUI")

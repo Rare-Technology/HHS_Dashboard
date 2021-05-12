@@ -16,7 +16,7 @@ mainUI <- function(id){
                   tabsetPanel(id = ns("tabs"),
                     tabPanel("Summary data", dataUI("dataUI")),
                     tabPanel("Survey charts", chartUI("chartUI")),
-                    tabPanel("View map", "View map"),
+                    tabPanel("Map", mapUI("mapUI")),
                     tabPanel("Generate report", "Generate report")
                   )
                 )
