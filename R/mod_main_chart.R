@@ -67,6 +67,7 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
       f <- HHS_PLOT_FUNS[grepl(input$question, HHS_PLOT_FUNS)]
       if(input$question %in% c("q51a", "q51b", "q51c")) f <- "plot_q51_fishers_permission"
       if(input$question %in% c("q51d", "q51d")) f <- "plot_q51_fishers_caught"
+      if(input$question %in% c("q73")) f <- "plot_q72_current_economic"
       plot_hhs <- base::get(f)
       p <- try(plot_hhs(state$hhs_data_filtered, iso3 = state$iso3$selected), silent = TRUE)
       

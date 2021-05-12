@@ -16,6 +16,22 @@ read_multi_csv <- function(urls, col_type_spec = NULL, rowmax = 1000000) {
   dat
 }
 
+
+convert_money <- function(iso3){
+  from <- switch (iso3,
+    "IDN" = "IDR",
+    "HND" = "HNL",
+    "PHL" = "PHP",
+    "MOZ" = "MZN",
+    "BRA" = "BRL",
+    "FSM" = "USD",
+    "PLW" = "USD"
+  )
+  
+  quantmod::getQuote(glue::glue("{from}USD=X"))$Last
+}
+
+
 apply_PLW_adjustment <- function(.data){
   .data %>% 
     dplyr::mutate(

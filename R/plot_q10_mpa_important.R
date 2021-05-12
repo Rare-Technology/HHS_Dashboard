@@ -13,8 +13,6 @@ plot_q10_mpa_important <- function(.data, ...){
            "\nthat the region is managed and protected"),
            facet_var = key
          )
-
-      
 }
 
 
