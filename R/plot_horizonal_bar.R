@@ -20,6 +20,10 @@ plot_horiz_bar <- function(
 
   # TODO: must be a better way!
   facet_var_str <- quo_name(enquo(facet_var))
+
+  
+  title <- stringr::str_wrap(title, width = 65)
+  label_wrap_val <- 
   
   if(sort_by_value){
     .data <- .data %>% 
@@ -65,8 +69,16 @@ plot_horiz_bar <- function(
     coord_flip(clip = "on") +
     theme_rare()
   
-  if(facet_var_str != " ")
-    p <- p + facet_wrap( vars({{ facet_var }}), labeller = label_wrap_gen(20))
+
+  if(facet_var_str != " "){
+    
+    label_wrap_val <- 20 # good example is knowledge/41
+    l <- .data[[facet_var_str]] %>% unique() %>% length()
+    
+    if(l >= 6) label_wrap_val <- 15
+    
+    p <- p + facet_wrap( vars({{ facet_var }}), labeller = label_wrap_gen(label_wrap_val), nrow = 1)
+  }
   
   p
 }

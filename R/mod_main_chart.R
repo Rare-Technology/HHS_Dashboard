@@ -78,6 +78,7 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
         
         if(TRUE){
           #output$chart <- renderPlotly(ggplot(mtcars, aes(cyl, mpg)) + geom_point() + ggtitle("This is my title"))
+          p <- make_plotly(p)
           output$chart <- renderPlotly(p)
           p_output <- plotlyOutput(ns("chart"), height = '750px')
         } else {
