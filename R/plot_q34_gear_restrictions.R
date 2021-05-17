@@ -1,4 +1,5 @@
-plot_q34_gear_restrictions <- function(.data) {
+plot_q34_gear_restrictions <- function(.data, ...) {
+  
   .data_plot <- .data %>%
     dplyr::filter(`34_gear_restrictions` %in% c(0, 1, -1)) %>%
     dplyr::mutate(
@@ -12,6 +13,6 @@ plot_q34_gear_restrictions <- function(.data) {
 
   plot_horiz_bar(
     .data_plot,
-    title = "Proportion of community members who are aware \nof gear restrictions in the managed access area"
+    title = "Proportion of community members who are aware of gear restrictions in the managed access area"
   )
 }

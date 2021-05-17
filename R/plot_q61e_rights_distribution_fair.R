@@ -1,14 +1,14 @@
 
-prep_q61f_rights_distribution_fair <- function(.data){
-  hhs_Q61f <- .data[,c("maa", "61f_rights_distribution_fair")] %>%
-    dplyr::filter(`61f_rights_distribution_fair` %in% c(1:5)) %>%
+prep_q61e_rights_distribution_fair <- function(.data){
+  hhs_Q61e <- .data[,c("maa", "61e_rights_distribution_fair")] %>%
+    dplyr::filter(`61e_rights_distribution_fair` %in% c(1:5)) %>%
     rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
   
-  Q61f_summary <- proportion ( hhs_Q61f$`61f_rights_distribution_fair`,
-                               hhs_Q61f$maa,
+  Q61e_summary <- proportion ( hhs_Q61e$`61e_rights_distribution_fair`,
+                               hhs_Q61e$maa,
                                3,5)
   
-  colnames(Q61f_summary) <-
+  colnames(Q61e_summary) <-
     c( "MA name",
        "N",
        "Strongly disagree",
@@ -18,26 +18,26 @@ prep_q61f_rights_distribution_fair <- function(.data){
        "Strongly agree"
     )
   
-  Q61f_summary_grouped <- Q61f_summary %>% 
+  Q61e_summary_grouped <- Q61e_summary %>% 
     dplyr::filter (`MA name` != "Mean ± SE")
   
-  Q61f_summary_grouped$`Agree (%)` <- as.numeric(Q61f_summary_grouped$Agree) + 
-    as.numeric(Q61f_summary_grouped$`Strongly agree`)
+  Q61e_summary_grouped$`Agree (%)` <- as.numeric(Q61e_summary_grouped$Agree) + 
+    as.numeric(Q61e_summary_grouped$`Strongly agree`)
   
-  Q61f_summary_grouped$`Neither agree nor disagree (%)` <- 
-    as.numeric(Q61f_summary_grouped$`Neither agree nor disagree`)
+  Q61e_summary_grouped$`Neither agree nor disagree (%)` <- 
+    as.numeric(Q61e_summary_grouped$`Neither agree nor disagree`)
   
-  Q61f_summary_grouped$`Disagree (%)` <- as.numeric(Q61f_summary_grouped$Disagree) + 
-    as.numeric(Q61f_summary_grouped$`Strongly disagree`)
+  Q61e_summary_grouped$`Disagree (%)` <- as.numeric(Q61e_summary_grouped$Disagree) + 
+    as.numeric(Q61e_summary_grouped$`Strongly disagree`)
   
-  Q61f_summary <- Q61f_summary_grouped[,c("MA name", "N", 
+  Q61e_summary <- Q61e_summary_grouped[,c("MA name", "N", 
                                           "Disagree (%)",
                                           "Neither agree nor disagree (%)",
                                           "Agree (%)" )]
   #pivot table
-  Q61f_summary_long <-
+  Q61e_summary_long <-
     as.data.frame(
-      Q61f_summary_grouped[, c("MA name", "N",
+      Q61e_summary_grouped[, c("MA name", "N",
                                "Disagree (%)",
                                "Neither agree nor disagree (%)",
                                "Agree (%)" )] %>% 
@@ -51,9 +51,9 @@ prep_q61f_rights_distribution_fair <- function(.data){
           values_to = "Proportion (%)"
         )
     )
-  Q61f_summary_long$key <-
+  Q61e_summary_long$key <-
     factor(
-      Q61f_summary_long$key,
+      Q61e_summary_long$key,
       levels = c(
         "Disagree (%)",
         "Neither agree nor disagree (%)",
@@ -61,21 +61,21 @@ prep_q61f_rights_distribution_fair <- function(.data){
       )
     )
   
-  Q61f <- clean_plot_data(Q61f_summary_long)
-  Q61f
+  Q61e <- clean_plot_data(Q61e_summary_long)
+  Q61e
 }
 
-plot_q61f_rights_distribution_fair <- function(.data, ...){
+plot_q61e_rights_distribution_fair <- function(.data, ...){
 
-  .data_plot <- prep_q61f_rights_distribution_fair(.data)
+  .data_plot <- prep_q61e_rights_distribution_fair(.data)
   plot_horiz_bar(
     .data_plot,
     title = "Proportion of fishers who believe that \naccess rights have been distributed fairly",
     facet_var = key
   )
          #Plot
-         # plot_Q61f <-
-         #    ggplot(Q61f, aes(`MA name`, `Proportion (%)`, N = N)) +
+         # plot_Q61e <-
+         #    ggplot(Q61e, aes(`MA name`, `Proportion (%)`, N = N)) +
          #    theme_rare + geom_col(fill = "#005BBB", alpha = 0.8) +
          #    facet_wrap( ~ key,
          #                scale = input$x_axis,
@@ -88,5 +88,5 @@ plot_q61f_rights_distribution_fair <- function(.data, ...){
          #    xlab (NULL) + ylab ("Proportion (%)") + 
          #    coord_flip(ylim = c(0, 119))
          # 
-         # ggplotly(plot_Q61f, height = 750)
+         # ggplotly(plot_Q61e, height = 750)
 }

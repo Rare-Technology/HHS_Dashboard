@@ -1,7 +1,7 @@
-
-prep_q63_fishing_in_reserve <- function(.data){
-
-}
+# 
+# prep_q63_fishing_in_reserve <- function(.data){
+# 
+# }
 
 plot_q63_fishing_in_reserve <- function(.data, ...){
   
@@ -10,7 +10,7 @@ plot_q63_fishing_in_reserve <- function(.data, ...){
   
   .data_plot <-  prep_data_for_plot(
     .data,
-    `9_region_member`,
+    `63_fishing_in_reserve`,
     type = "bar",
     bar_column = `1`
   )

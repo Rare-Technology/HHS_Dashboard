@@ -1,10 +1,10 @@
 
-prep_q61h_individual_behavior <- function(.data){
-  hhs_Q61h <- .data[,c("maa","61h_individual_behavior")] %>%
-    dplyr::filter (`61h_individual_behavior` %in% c(1:5)) %>%
+prep_q61h_help_neighbors <- function(.data){
+  hhs_Q61h <- .data[,c("maa", "61h_help_neighbors")] %>%
+    dplyr::filter(`61h_help_neighbors` %in% c(1:5)) %>%
     rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
   
-  Q61h_summary <- proportion(hhs_Q61h$`61h_individual_behavior`,
+  Q61h_summary <- proportion(hhs_Q61h$`61h_help_neighbors`,
                              hhs_Q61h$maa,
                              rounding = 3,
                              type = 5)
@@ -62,13 +62,14 @@ prep_q61h_individual_behavior <- function(.data){
   Q61h
 }
 
-plot_q61h_individual_behavior <- function(.data, ...){
-  .data_plot <- prep_q61h_individual_behavior(.data)
-        plot_horiz_bar(
-          .data_plot,
-          title = "Proportion of community members who feel that, \nthrough their individual fishing behavior, \ncan make a meaningful contribution to the sustainability of the fishery",
-          facet_var = key
-        )
+plot_q61h_help_neighbors <- function(.data, ...){
+.data_plot <- prep_q61h_help_neighbors(.data)
+plot_horiz_bar(
+  .data_plot,
+  title = "Proportion of community members who feel that it is important for them \nto be able to help their neighbors in times of need",
+  facet_var = key
+)
+         
          #Plot
          # plot_Q61h <-
          #    ggplot(Q61h, aes(`MA name`, `Proportion (%)`, N = N)) +
@@ -80,7 +81,7 @@ plot_q61h_individual_behavior <- function(.data, ...){
          #    scale_y_continuous(limits = c(0, 110),
          #                       breaks = seq(0, 100, 20)) +
          #    ggtitle(
-         #       "Proportion of community members who feel that, \nthrough their individual fishing behavior, \ncan make a meaningful contribution to the sustainability of the fishery"
+         #       "Proportion of community members who feel that it is important for them \nto be able to help their neighbors in times of need"
          #    ) +
          #    xlab (NULL) + ylab ("Proportion (%)") + 
          #    coord_flip(ylim = c(0, 119))

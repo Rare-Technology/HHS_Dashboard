@@ -6,8 +6,6 @@ prep_q59_food_procurement <- function(.data){
 plot_q59_food_procurement <- function(.data, ...){
   
   
-
-  browser()
   .data_plot <-prep_data_for_plot(
     .data, 
     focus_var = `59_food_procurement`, 

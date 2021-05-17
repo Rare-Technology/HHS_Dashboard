@@ -27,7 +27,7 @@ mapServer <- function(id, state){
       
       output$map <- leaflet::renderLeaflet({
       tmap::tmap_options(basemaps = "Esri.WorldTopoMap")
-      sites <- sf::st_as_sf(tibble(
+      sites <- sf::st_as_sf(tibble::tibble(
         id = 1:2,
         lat = c(42, 43),
         lng = c(-122,-133)

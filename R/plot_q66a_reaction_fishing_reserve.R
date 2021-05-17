@@ -100,5 +100,4 @@ plot_q66a_reaction_fishing_reserve <- function(.data, ...) {
   #             xlab (NULL) + ylab ("") +
   #             coord_flip(clip = "on")
 
-  ggplotly(plot_Q66, height = 750)
 }

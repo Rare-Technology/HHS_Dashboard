@@ -1,14 +1,14 @@
 
-prep_q61g_fishing_change_behavior <- function(.data){
-  hhs_Q61g <- .data[,c("maa","61g_fishing_change_behavior")] %>%
-    dplyr::filter( `61g_fishing_change_behavior` %in% c(1:5)) %>%
+prep_q61f_fishing_change_behavior <- function(.data){
+  hhs_Q61f <- .data[,c("maa","61f_fishing_change_behavior")] %>%
+    dplyr::filter( `61f_fishing_change_behavior` %in% c(1:5)) %>%
     rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
   
-  Q61g_summary <- proportion (hhs_Q61g$`61g_fishing_change_behavior`,
-                              hhs_Q61g$maa,
+  Q61f_summary <- proportion (hhs_Q61f$`61f_fishing_change_behavior`,
+                              hhs_Q61f$maa,
                               3,5 )
   
-  colnames(Q61g_summary) <-
+  colnames(Q61f_summary) <-
     c( "MA name",
        "N",
        "Strongly disagree",
@@ -18,22 +18,22 @@ prep_q61g_fishing_change_behavior <- function(.data){
        "Strongly agree"
     )
   
-  Q61g_summary_grouped <- Q61g_summary %>% 
+  Q61f_summary_grouped <- Q61f_summary %>% 
     dplyr::filter (`MA name` != "Mean ± SE")
   
-  Q61g_summary_grouped$`Agree (%)` <- as.numeric(Q61g_summary_grouped$Agree) + 
-    as.numeric(Q61g_summary_grouped$`Strongly agree`)
+  Q61f_summary_grouped$`Agree (%)` <- as.numeric(Q61f_summary_grouped$Agree) + 
+    as.numeric(Q61f_summary_grouped$`Strongly agree`)
   
-  Q61g_summary_grouped$`Neither agree nor disagree (%)` <- 
-    as.numeric(Q61g_summary_grouped$`Neither agree nor disagree`)
+  Q61f_summary_grouped$`Neither agree nor disagree (%)` <- 
+    as.numeric(Q61f_summary_grouped$`Neither agree nor disagree`)
   
-  Q61g_summary_grouped$`Disagree (%)` <- as.numeric(Q61g_summary_grouped$Disagree) + 
-    as.numeric(Q61g_summary_grouped$`Strongly disagree`)
+  Q61f_summary_grouped$`Disagree (%)` <- as.numeric(Q61f_summary_grouped$Disagree) + 
+    as.numeric(Q61f_summary_grouped$`Strongly disagree`)
   
   #pivot table
-  Q61g_summary_long <-
+  Q61f_summary_long <-
     as.data.frame(
-      Q61g_summary_grouped[, c("MA name", "N",
+      Q61f_summary_grouped[, c("MA name", "N",
                                "Disagree (%)",
                                "Neither agree nor disagree (%)",
                                "Agree (%)" )] %>% 
@@ -47,9 +47,9 @@ prep_q61g_fishing_change_behavior <- function(.data){
           values_to = "Proportion (%)"
         )
     )
-  Q61g_summary_long$key <-
+  Q61f_summary_long$key <-
     factor(
-      Q61g_summary_long$key,
+      Q61f_summary_long$key,
       levels = c(
         "Disagree (%)",
         "Neither agree nor disagree (%)",
@@ -57,22 +57,22 @@ prep_q61g_fishing_change_behavior <- function(.data){
       )
     )
   
-  Q61g <- clean_plot_data(Q61g_summary_long)
-  Q61g
+  Q61f <- clean_plot_data(Q61f_summary_long)
+  Q61f
 }
 
-plot_q61g_fishing_change_behavior <- function(.data, ...){
+plot_q61f_fishing_change_behavior <- function(.data, ...){
 
   
-  .data_plot <- prep_q61g_fishing_change_behavior(.data)
+  .data_plot <- prep_q61f_fishing_change_behavior(.data)
   plot_horiz_bar(
     .data_plot,
     title = "Proportion of community members who are \nwilling to change their individual fishing behavior",
     facet_var = key
   )
          #Plot
-         # plot_Q61g <-
-         #    ggplot(Q61g, aes(`MA name`, `Proportion (%)`, N = N)) +
+         # plot_Q61f <-
+         #    ggplot(Q61f, aes(`MA name`, `Proportion (%)`, N = N)) +
          #    theme_rare + geom_col(fill = "#005BBB", alpha = 0.8) +
          #    facet_wrap( ~ key,
          #                scale = input$x_axis,
@@ -86,5 +86,5 @@ plot_q61g_fishing_change_behavior <- function(.data, ...){
          #    xlab (NULL) + ylab ("Proportion (%)") + 
          #    coord_flip(ylim = c(0, 119))
          # 
-         # ggplotly(plot_Q61g, height = 750)
+         # ggplotly(plot_Q61f, height = 750)
 }

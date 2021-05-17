@@ -27,10 +27,10 @@ prep_q65_no_wrong_fishing_reserve <- function(.data){
 
 plot_q65_no_wrong_fishing_reserve <- function(.data, ...){
 
-          
+  .data_plot <- prep_q65_no_wrong_fishing_reserve(.data)
   plot_horiz_bar(
     .data_plot,
-    title = "Proportion of community members who think \nis wrong to fish in the reserve"
+    title = "Proportion of community members who think is wrong to fish in the reserve"
   )
 
 

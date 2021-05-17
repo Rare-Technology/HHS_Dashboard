@@ -32,13 +32,13 @@ convert_money <- function(iso3){
 }
 
 
-apply_PLW_adjustment <- function(.data){
-  .data %>% 
-    dplyr::mutate(
-      level2_name = ifelse(country == "PLW", level1_name, level2_name),
-      maa = ifelse(country == "PLW", level1_name, maa)
-    )
-}
+# apply_PLW_adjustment <- function(.data){
+#   .data %>% 
+#     dplyr::mutate(
+#       level2_name = ifelse(country == "PLW", level1_name, level2_name),
+#       maa = ifelse(country == "PLW", level1_name, maa)
+#     )
+# }
 
 
 get_ma_percent <- function(.fulldata, .partdata, newname = "percent"){
