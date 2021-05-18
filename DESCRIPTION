@@ -15,7 +15,10 @@ Imports:
     stringr,
     plotly,
     tidyr,
-    forcats
+    forcats,
+    tippy,
+    glue,
+    leaflet
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1

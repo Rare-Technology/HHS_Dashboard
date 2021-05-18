@@ -13,7 +13,7 @@ plot_horiz_bar <- function(
   palette = "Blues",
   palette_direction = -1,
   limits = c(0, 110),
-  breaks = seq(0, 100, 20),
+  breaks = seq(0, 100, 25),
   guide_reverse = TRUE,
   sort_by_value = FALSE
 ){

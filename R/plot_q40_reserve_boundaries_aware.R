@@ -1,12 +1,32 @@
 
 prep_q40_reserve_boundaries_aware <- function(.data, iso3){
-  
+
   if (iso3== "MOZ") {
-    print('plot40, Moz')
+  
     hhs_Q40_moz <- .data[,c("maa", "40_reserve_boundaries_aware")] %>%
       dplyr::filter (`40_reserve_boundaries_aware` != "" &
                        `40_reserve_boundaries_aware` != "No reserve") %>%
       droplevels()
+    
+    hhs_Q40_moz <- hhs_Q40_moz %>% 
+      dplyr::mutate(
+        `40_reserve_boundaries_aware` = forcats::fct_recode(
+          factor(`40_reserve_boundaries_aware`),
+          "Strongly disagree" = "0",
+          #"Strongly disagree" = "1", # 1 does not occur
+          "Strongly disagree" = "2",
+          "Disagree" = "3",
+          "Disagree" = "4",
+          "Neither" = "5",
+          "Agree" = "6",
+          "Agree" = "7",
+          "Strongly agree" = "8",
+          "Strongly agree" = "9",
+          "Strongly agree" = "10"
+        ),
+        `40_reserve_boundaries_aware` = as.character(`40_reserve_boundaries_aware`)
+      )
+    
     Q40_summary_moz <-
       proportion(
         question = hhs_Q40_moz[[2]],
@@ -52,7 +72,7 @@ prep_q40_reserve_boundaries_aware <- function(.data, iso3){
     
    dat <- clean_plot_data(Q40_summary_moz_long) 
   } else {
-      print('plot40, not Moz')
+
       hhs_Q40 <- .data[,c("maa", "40_reserve_boundaries_aware")] %>% 
         dplyr::filter(`40_reserve_boundaries_aware` %in% c(0:10)) %>%
         droplevels()
@@ -90,10 +110,21 @@ prep_q40_reserve_boundaries_aware <- function(.data, iso3){
 plot_q40_reserve_boundaries_aware <- function(.data, ...){
   dots <- list(...)
   .data_plot <- prep_q40_reserve_boundaries_aware(.data, iso3 = dots$iso3)
-  plot_horiz_bar(
-    .data_plot,
-    title = "Proportion of community members that think that \nmost fishers are aware of the boundaries of the reserve area"
-  )
+
   
+  if(dots$iso3 != "MOZ"){
+    p <- plot_horiz_bar(
+      .data_plot,
+      title = "Proportion of community members that think that most fishers are aware of the boundaries of the reserve area"
+    )
+  } else {
+    p <- plot_horiz_bar(
+      .data_plot,
+      title = "Proportion of community members that think that most fishers are aware of the boundaries of the reserve area",
+      facet_var = key
+    )
+  }
+
+  p
   
 }

@@ -15,3 +15,5 @@ The HHS Dashboard is an R package called `{ rarehhs }`
 Since this is a private repository, the user will need an auth_token from https://github.com/settings/tokens.
 
 remotes::install_github("Rare-Technology/HHS_Dashboard", auth_token = '')
+
+https://portal.rare.org/en/tools-and-data/household-survey-data/
