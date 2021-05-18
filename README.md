@@ -178,7 +178,7 @@ The following is the list of unique column names for the entire HHS data and ass
 **37_ability_max_size**: 1 (Yes), 0 (No), NA (not answered)            
 **38_reserve_fishing_allowed**: 1 (Yes), 0 (No), -1 (Community does not have a reserve area), NA (not answered)    
 **39_ma_boundaries_aware**: Factor, 6 levels, na (not answered)         
-**40_reserve_boundaries_aware**: Integer 0-10 in last HHS verison, but as factor (5 levels) for Mozambique        
+**40_reserve_boundaries_aware**: Integer 0-10 in last HHS verison, but as factor (5 levels) for Mozambique. Numeric values were assigned to factors in Mozambique. Agree = 7, Disagree =3, Neither = 5, No reserve = blank, Strongly agree = 10, Strongly disagree = 1      
 **41_ma_fishers_allowed**: Factor, 9 levels, na (not answered)            
 **42a_problem_regulation**: 1 (Yes), 0 (No), NA (not answered)   
 **42b_problem_restricted_gear**: 1 (Yes), 0 (No), NA (not answered), -1 (not answered, 1st hhs had NA as default)   
