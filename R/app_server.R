@@ -6,9 +6,6 @@
 #' @noRd
 app_server <- function( input, output, session ) {
 
-  # The state object is read in automatically from state.R
-  HHS_PLOT_FUNS <- ls("package:rarehhs", pattern = "plot_")
-  
   state <- create_state()
   
   # Main application
