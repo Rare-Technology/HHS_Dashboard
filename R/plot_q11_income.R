@@ -154,7 +154,7 @@ plot_q11_income <- function(.data, ...){
       
          plot_horiz_bar(
            .data_plot,
-           title = "Household source inconme and \nproportional income contribution",
+           title = "Household source income and \nproportional income contribution",
            palette = "Spectral",
            type = "stacked",
            stack_var = `Source`,
