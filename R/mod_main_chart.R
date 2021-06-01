@@ -77,7 +77,7 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
         
         if("try-error" %in% class(p)) return(div("There was an error in plot generation"))
         
-        if(TRUE){
+        if(FALSE){
           #output$chart <- renderPlotly(ggplot(mtcars, aes(cyl, mpg)) + geom_point() + ggtitle("This is my title"))
           p <- make_plotly(p)
           output$chart <- renderPlotly(p)

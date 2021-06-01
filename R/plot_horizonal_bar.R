@@ -20,10 +20,10 @@ plot_horiz_bar <- function(
 
   # TODO: must be a better way!
   facet_var_str <- quo_name(enquo(facet_var))
-
+  y_var_str <- quo_name(enquo(y_var))
   
   title <- stringr::str_wrap(title, width = 65)
-  label_wrap_val <- 
+
   
   if(sort_by_value){
     .data <- .data %>% 
@@ -43,7 +43,9 @@ plot_horiz_bar <- function(
   }
   
   if(type == 'bar'){
-    p <- p + geom_col(fill = fill_col, alpha = 0.8)
+    nudgeval <- max(breaks) * 0.01
+    p <- p + geom_col(fill = fill_col, alpha = 0.8) +
+      geom_text(aes(label = {{ y_var }}), hjust = 0, nudge_y = nudgeval, color = "grey40", size = 4)
   }
   
   if(type == 'stacked'){

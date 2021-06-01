@@ -1,16 +1,42 @@
-theme_rare <- function() {
-  theme_bw() +
+# theme_rare <- function() {
+#   
+#   base_text <- 14
+#   theme_bw() +
+#     theme(
+#       panel.grid = element_blank(),
+#       plot.margin = margin(t=20, b= 20),
+#       plot.title = element_text(hjust = 0.5, face = "bold", size = 16, vjust = 2),
+#       axis.title.x = element_text(size = base_text, vjust = 0),
+#       axis.title.y = element_text(size = base_text, hjust = 2, vjust = 5),
+#       axis.text = element_text(size = base_text),
+#       strip.text = element_text(size = base_text),
+# 
+#       legend.position = "right",
+#       legend.title = element_blank()
+#     )
+# }
+
+
+theme_rare <- function(rotate_x = FALSE, subtitle_color = "black") {
+  
+  # https://github.com/hrbrmstr/hrbrthemes/blob/master/R/theme-ipsum.r
+  theme <- hrbrthemes::theme_ipsum_rc(
+    axis_title_size = 14,
+    axis_title_just = "cc",
+    plot_margin = margin(5, 5, 5, 5),
+    axis_text_size = 13
+  ) +
     theme(
-      panel.grid = element_blank(),
-      plot.margin = margin(t=20, b= 20),
-      plot.title = element_text(hjust = 0.5, face = "bold", size = 12, vjust = 2),
-      axis.title.x = element_text(size = 12, vjust = 0),
-      axis.title.y = element_text(size = 12, hjust = 2, vjust = 5),
-      axis.text = element_text(size = 12),
-      strip.text = element_text(size = 12),
-      legend.position = "right",
-      legend.title = element_blank()
+      legend.text = element_text(size = 14),
+      plot.title = element_text(size = 22),
+      plot.subtitle = element_text(size = 15, colour = subtitle_color)
     )
+  
+  if (rotate_x) {
+    theme <- theme + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  }
+  
+  theme
 }
 
 
