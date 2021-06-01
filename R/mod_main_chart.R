@@ -74,7 +74,12 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
 
       output$chart_ui <- renderUI({
         
-        if("try-error" %in% class(p)) return(div("There was an error in plot generation"))
+        if("try-error" %in% class(p)){
+          state$current_plot <- NULL
+          return(div("There was an error in plot generation"))
+        }
+        
+        state$current_plot <- p
         
         if(FALSE){
           #output$chart <- renderPlotly(ggplot(mtcars, aes(cyl, mpg)) + geom_point() + ggtitle("This is my title"))
@@ -87,11 +92,18 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
         }
 
         list(
+          downloadButton(ns("downloadPlot"),class = "download-button", 'Download Plot'),
           p_output
         )
       })
       
     }, ignoreNULL = TRUE)
+    
+    output$downloadPlot <- downloadHandler(
+      filename = function(){paste0("plot_", tolower(gsub(" ", "_", state$question$selected)), ".png")},
+      content = function(file){
+        ggsave(file,plot=state$current_plot)
+      })
     
   })
 }

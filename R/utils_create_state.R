@@ -35,7 +35,8 @@ create_state <- function(){
       selected = hhs_questions[[1]][1]
     ),
     current_tab = 'Data',
-    performance_indicators = 'Reporting Effort'
+    performance_indicators = 'Reporting Effort',
+    current_plot = NULL
     
   )
 }

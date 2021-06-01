@@ -34,6 +34,7 @@ dataServer <- function(id, state){
           data = data_summary,
           class = "display nowrap",
           rownames = FALSE,
+          extensions = 'Buttons',
           # container = tags$table(
           #   class = "table table-striped table-hover table-header-vertalign",
           #   DT::tableHeader(table_data)
@@ -41,7 +42,8 @@ dataServer <- function(id, state){
           options = list(
             #columnDefs = table_column_alignment(table_data),
             pageLength = 100,
-            dom = "frtp",
+            buttons = c('copy', 'csv', 'excel'),
+            dom = "frBtp",
             scrollX = TRUE,
             scrollY = "600px",
             processing = FALSE,
