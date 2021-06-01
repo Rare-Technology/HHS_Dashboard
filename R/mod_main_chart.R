@@ -10,12 +10,12 @@
 chartUI <- function(id) {
   ns <- NS(id)
   tagList(
-    inline_select(
-      ns("section"),
-      "Section",
-      NULL, #isolate(state$section$choices),
-      NULL #isolate(state$section$selected)
-    ),
+    # inline_select(
+    #   ns("section"),
+    #   "Section",
+    #   NULL, #isolate(state$section$choices),
+    #   NULL #isolate(state$section$selected)
+    # ),
     inline_select(
       ns("question"),
       "Question",
@@ -31,31 +31,30 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     
-    observeEvent(input$section, {
+    observeEvent(input$question, {
       updateSelectInput(
         session,
-        "section",
-        choices = state$section$choices,
-        selected = state$section$selected
+        "question",
+        choices = state$question$choices,
+        selected = state$question$selected
       )
     }, once = TRUE)
     
     
     
-    observeEvent(input$section,
+    observeEvent(input$question,
       {
-        questions <- hhs_questions[input$section] 
+        # questions <- hhs_questions[input$section] 
         state$question <- list(
-          choices = questions,
-          selected = questions[1]
+          selected = input$question
         )
 
-        updateSelectInput(
-          session,
-          "question",
-          choices = questions#,
-          #selected = questions[1]
-        )
+        # updateSelectInput(
+        #   session,
+        #   "question",
+        #   choices = hhs_questions#,
+        #   #selected = questions[1]
+        # )
       },
       ignoreInit = TRUE
     )

@@ -29,7 +29,10 @@ theme_rare <- function(rotate_x = FALSE, subtitle_color = "black") {
     theme(
       legend.text = element_text(size = 14),
       plot.title = element_text(size = 22),
-      plot.subtitle = element_text(size = 15, colour = subtitle_color)
+      plot.subtitle = element_text(size = 15, colour = subtitle_color),
+      panel.grid.minor.y = element_blank(),
+      panel.grid.major.y = element_blank(),
+      strip.text = element_text(size = 14, face = "bold")
     )
   
   if (rotate_x) {

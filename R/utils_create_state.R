@@ -26,13 +26,13 @@ create_state <- function(){
       choices = hhs_init_geo_selections$maa$choices,
       selected = hhs_init_geo_selections$maa$choices
     ),
-    section = list(
-      choices = names(hhs_questions),
-      selected = hhs_init_section
-    ),
+    # section = list(
+    #   choices = names(hhs_questions),
+    #   selected = hhs_init_section
+    # ),
     question = list(
-      choices = hhs_questions[hhs_init_section],
-      selected = hhs_questions[hhs_init_section]
+      choices = hhs_questions,
+      selected = hhs_questions[[1]][1]
     ),
     current_tab = 'Data',
     performance_indicators = 'Reporting Effort'
