@@ -17,3 +17,7 @@ Since this is a private repository, the user will need an auth_token from https:
 remotes::install_github("Rare-Technology/HHS_Dashboard", auth_token = '')
 
 https://portal.rare.org/en/tools-and-data/household-survey-data/
+
+### Note on original app version
+
+The original app created by Abel is in an unrelated branch called abels_original_app
