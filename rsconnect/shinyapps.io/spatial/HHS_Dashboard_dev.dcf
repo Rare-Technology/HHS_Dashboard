@@ -1,0 +1,12 @@
+name: HHS_Dashboard_dev
+title: HHS_Dashboard_dev
+username:
+account: spatial
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4150058
+bundleId: 4617570
+url: https://spatial.shinyapps.io/HHS_Dashboard_dev/
+when: 1621454937.66684
+asMultiple: FALSE
+asStatic: FALSE
