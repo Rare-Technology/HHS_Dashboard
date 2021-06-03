@@ -9,7 +9,7 @@
 #' @importFrom shiny NS tagList 
 mainUI <- function(id){
   ns <- NS(id)
-    fillPage(
+    fixedPage(
               sidebarLayout(
                 sidebarUI("sidebarUI"),
                 mainPanel(
