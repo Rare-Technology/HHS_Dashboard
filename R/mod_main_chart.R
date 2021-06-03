@@ -102,7 +102,7 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
     output$downloadPlot <- downloadHandler(
       filename = function(){paste0("plot_", tolower(gsub(" ", "_", state$question$selected)), ".png")},
       content = function(file){
-        ggsave(file,plot=state$current_plot)
+        ggsave(file,plot=state$current_plot, width = 27, height = 20, units = "cm")
       })
     
   })

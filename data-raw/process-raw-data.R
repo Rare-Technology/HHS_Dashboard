@@ -283,6 +283,16 @@ usethis::use_data(
   overwrite = TRUE
 )
 
+# not_list <- function(x) !is.list(x)
+# hhs_not_list <- hhs_data %>%
+#   select_if(not_list)
+# 
+# readr::write_csv(hhs_not_list, "inst/data/hhs.csv")
+# zip("inst/data/hhs.zip", "inst/data/hhs.csv")
+
+# 
+# hhs_is_list <- hhs_data %>% 
+#   select_if(is.list)
 
 # I used this to create scripts
 # x <- names(hhs_data)[grepl("^\\d.*", names(hhs_data))]
