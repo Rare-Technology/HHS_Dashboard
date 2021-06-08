@@ -9,28 +9,30 @@ source("data-raw/urls-data.R")
 
 # You will see warnings because some variables do not exist in some tables
 # Load rarehhs package
-hhs_data <- read_multi_csv(urls$hhs, col_type_spec = spec_hhs) %>%
-  dplyr::filter(ma_name != "")
+# hhs_data <- read_multi_csv(urls$hhs, col_type_spec = spec_hhs) %>%
+#   dplyr::filter(ma_name != "")
 
+hhs_data <- readr::read_csv(urls$hhs, guess_max = 1000000) %>%
+  dplyr::filter(ma_name != "")
 #************************************************
 # Remove duplicates ----
 #************************************************
 
-
+# Per git12 I guess this is no longer needed?
 # rename and remove duplicates that where submitted on different times
-hhs_data <- hhs_data %>%
-  dplyr::select(-c(updatedat, endformtimestamp, startformtimestamp)) %>%
-  unique() %>%
-  dplyr::left_join(hhs_data[, c(
-    "submissionid",
-    "updatedat",
-    "startformtimestamp",
-    "endformtimestamp"
-  )] %>%
-    group_by(submissionid) %>%
-    summarise(updatedat = max(as.Date(updatedat))),
-  by = "submissionid"
-  )
+# hhs_data <- hhs_data %>%
+#   dplyr::select(-c(updatedat, endformtimestamp, startformtimestamp)) %>%
+#   unique() %>%
+#   dplyr::left_join(hhs_data[, c(
+#     "submissionid",
+#     "updatedat",
+#     "startformtimestamp",
+#     "endformtimestamp"
+#   )] %>%
+#     group_by(submissionid) %>%
+#     summarise(updatedat = max(as.Date(updatedat))),
+#   by = "submissionid"
+#   )
 
 
 #************************************************
@@ -116,16 +118,17 @@ join_with_hhs <- function(.hhs_data, .other_data, var1) {
 
 
 # These tables all have multiple answers
-hhs_q14 <- read_multi_csv(urls$q14)
+hhs_q14 <- readr::read_csv(urls$q14, guess_max = 1000000)
 hhs_data <- join_with_hhs(hhs_data, hhs_q14, `14_responsibility`)
 
 hhs_q15 <- readr::read_csv(urls$q15, guess_max = 1000000)
 hhs_data <- join_with_hhs(hhs_data, hhs_q15, `15_activity`)
 
-hhs_q44 <- read_multi_csv(urls$q44) 
+hhs_q44 <- readr::read_csv(urls$q44, guess_max = 1000000) 
 hhs_data <- join_with_hhs(hhs_data, hhs_q44, `44_meeting_attendance`)
 
-hhs_q45 <- read_multi_csv(urls$q45)
+hhs_q45 <- readr::read_csv(urls$q45, guess_max = 1000000) 
+#hhs_q45 <- read_multi_csv(urls$q45)
 hhs_data <- join_with_hhs(hhs_data, hhs_q45, `45_leadership_position`)
   
 hhs_q48 <- readr::read_csv(urls$q48, guess_max = 1000000)
@@ -269,12 +272,12 @@ usethis::use_data(
   hhs_data_filtered,
   hhs_questions,
   # hhs_q07,
-  hhs_q14,
-  hhs_q15,
-  hhs_q44,
-  hhs_q45,
-  hhs_q48,
-  hhs_q69,
+  # hhs_q14,
+  # hhs_q15,
+  # hhs_q44,
+  # hhs_q45,
+  # hhs_q48,
+  # hhs_q69,
   hhs_data_source,
   # hhs_init_data_source,
   hhs_data_geo,
