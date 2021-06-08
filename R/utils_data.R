@@ -231,12 +231,21 @@ prep_data_for_plot <- function(
   recoding = NULL, # new value as names (on left of assignment)
   type = "bar", # stacked or facet
   bar_column = `1`,
-  key_order = NULL) {
+  key_order = NULL,
+  unnest = FALSE
+  ) {
 
-
-  dat <- .data %>%
-    dplyr::filter({{ focus_var }} != "", !is.na({{ focus_var}}), {{focus_var}} != "na") %>%
+  browser()
+  dat <- .data %>% 
     dplyr::select(maa, {{ focus_var }})
+  
+  if(unnest){
+    dat <- dat %>% 
+      tidyr::unnest({{ focus_var }})
+  }
+
+  dat <- dat %>%
+    dplyr::filter({{ focus_var }} != "", !is.na({{ focus_var}}), {{focus_var}} != "na") 
   
   if(!is.null(recoding)){
     vals <- unique(dat[[rlang::as_name(enquo(focus_var))]])
@@ -334,6 +343,7 @@ prep_data_for_plot_facet <- function(
 ){
   
 
+  browser()
   group_by_str <- rlang::as_name(enquo(group_by_var))
   
   dat <- .data %>% 
