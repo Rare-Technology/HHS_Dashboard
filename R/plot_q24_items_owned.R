@@ -1,6 +1,7 @@
 
 prep_q24_items_owned <- function(.data){
 
+
   hhs_Q24 <- .data[, c(
     "24a_item_radio_no",
     "24b_item_tv_no",

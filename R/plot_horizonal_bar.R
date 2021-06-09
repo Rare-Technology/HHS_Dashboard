@@ -18,6 +18,7 @@ plot_horiz_bar <- function(
   sort_by_value = FALSE
 ){
 
+
   # TODO: must be a better way!
   facet_var_str <- quo_name(enquo(facet_var))
   y_var_str <- quo_name(enquo(y_var))
@@ -43,7 +44,7 @@ plot_horiz_bar <- function(
   }
   
   if(type == 'bar'){
-    nudgeval <- max(breaks) * 0.01
+    nudgeval <- layer_scales(p)$y$get_limits()[2] * 0.01
     p <- p + geom_col(fill = fill_col, alpha = 0.8) +
       geom_text(aes(label = {{ y_var }}), hjust = 0, nudge_y = nudgeval, color = "grey40", size = 4)
   }
