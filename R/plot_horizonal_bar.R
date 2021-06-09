@@ -18,7 +18,6 @@ plot_horiz_bar <- function(
   sort_by_value = FALSE
 ){
 
-
   # TODO: must be a better way!
   facet_var_str <- quo_name(enquo(facet_var))
   y_var_str <- quo_name(enquo(y_var))
@@ -37,11 +36,7 @@ plot_horiz_bar <- function(
   
   p <- .data %>% 
     ggplot(aes({{ x_var }}, {{ y_var }}, N = {{ n_var }}))
-  
-  
-  if(sort_by_value){
 
-  }
   
   if(type == 'bar'){
     nudgeval <- layer_scales(p)$y$get_limits()[2] * 0.01
