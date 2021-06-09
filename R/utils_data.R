@@ -235,7 +235,7 @@ prep_data_for_plot <- function(
   unnest = FALSE
   ) {
 
-  browser()
+
   dat <- .data %>% 
     dplyr::select(maa, {{ focus_var }})
   
@@ -332,42 +332,43 @@ prep_data_for_plot <- function(
   
 }
 
-prep_data_for_plot_facet <- function(
+
+# Q20 is an example
+prep_data_for_plot_multivar <- function(
   .data, 
   select_vars, 
   group_by_var = maa, 
   var_names, 
   key_name = "key", 
-  values_name = "Proportion (%)",
+  values_name = "Percentage",
   my_func = function(x){round(mean(x, na.rm = TRUE), 1)}
 ){
   
 
   browser()
   group_by_str <- rlang::as_name(enquo(group_by_var))
+  key_as_sym <- rlang::ensym(key_name)
   
   dat <- .data %>% 
     dplyr::select(maa, {{ select_vars }}) %>% 
-    dplyr::group_by( {{ group_by_var }})
+    tidyr::pivot_longer(
+      cols = -{{ group_by_var }},
+      names_to = key_name,
+      
+    ) %>% 
+    dplyr::filter(
+      !is.na(value)
+    )
+  
+  dat <- dat %>% 
+    dplyr::group_by( {{ group_by_var }}, {{ key_as_sym }} ) %>% 
+    dplyr::summarise(
+      Percentage = 100 * my_func(value)
+    )
   
   
-  dat_n <- dat %>% 
-    dplyr::summarise(N = dplyr::n())
   
-  dat_f <- dat %>% 
-    dplyr::summarise_at(vars({{select_vars}} ), my_func)
-  
-  
-  dat_summary <- dplyr::full_join(dat_n, dat_f, by = group_by_str )
-  names(dat_summary) <- c("maa", "N", var_names)
-  
-  summary_row <- c(
-    NA,
-    sum(dat_summary$N),
-    purrr::map_chr(var_names, ~compute_summary_line(dat_summary[[.]], 1))
-  )
-  
-  dat_summary <- rbind(dat_summary, summary_row)
+
   
   dat_summary_long <- dat_summary %>% 
     tidyr::pivot_longer(
