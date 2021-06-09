@@ -113,7 +113,7 @@ plot_q70a_hh_income_all <- function(.data, ...){
     title = "Average income in USD",
     limits = NULL,
     y_var = Average,
-    y_title = "US Dollars ($)"
+    y_title = "US Dollars ($)",
     breaks = waiver()
   )
          

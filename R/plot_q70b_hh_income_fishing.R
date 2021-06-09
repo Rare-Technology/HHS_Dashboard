@@ -125,7 +125,7 @@ plot_q70b_hh_income_fishing <- function(.data, ...){
            .data_plot,
            title = "Average household income from fishing-related activities in USD",
            y_var = Average,
-           y_title = "Average income in USD",
+           y_title = "US Dollars ($)",
            limits = NULL,
            breaks = waiver()
          )
