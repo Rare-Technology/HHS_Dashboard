@@ -340,12 +340,13 @@ prep_data_for_plot_multivar <- function(
   group_by_var = maa, 
   var_names, 
   key_name = "key", 
-  values_name = "Percentage",
-  my_func = function(x){round(mean(x, na.rm = TRUE), 1)}
+  values_name = "Percentage (%)",
+  recoding = NULL, # new value as names (on left of assignment)
+  my_func = function(x){round(mean(x, na.rm = TRUE), 2)}
 ){
   
 
-  browser()
+
   group_by_str <- rlang::as_name(enquo(group_by_var))
   key_as_sym <- rlang::ensym(key_name)
   
@@ -360,36 +361,55 @@ prep_data_for_plot_multivar <- function(
       !is.na(value)
     )
   
+  
+  if(!is.null(recoding)){
+    vals <- unique(dat[[key_name]])
+    recoding <- recoding[recoding %in% vals]
+    mode(recoding) <- "character" # needed for fct_recode
+    dat <- dat %>% 
+      dplyr::mutate(
+        {{ key_name }} := forcats::fct_recode(factor(!!sym(key_name)), !!!recoding)
+      )
+  }
+  
+  
   dat <- dat %>% 
     dplyr::group_by( {{ group_by_var }}, {{ key_as_sym }} ) %>% 
     dplyr::summarise(
-      Percentage = 100 * my_func(value)
+       !!sym(values_name):= 100 * round(mean(value, na.rm = TRUE),2)
+    ) %>% 
+      dplyr::mutate(!!sym(values_name) := as.numeric(!!sym(values_name))) %>%
+      dplyr::rename(
+        `MA name` = maa
+      ) %>% 
+    dplyr::mutate(
+      N = NA # TODO: the other function uses N and the plotting one needs it
     )
   
   
   
 
   
-  dat_summary_long <- dat_summary %>% 
-    tidyr::pivot_longer(
-      cols = var_names,
-      names_to = key_name,
-      values_to = values_name
-    )
+  # dat_summary_long <- dat_summary %>% 
+  #   tidyr::pivot_longer(
+  #     cols = var_names,
+  #     names_to = key_name,
+  #     values_to = values_name
+  #   )
+  # 
+  # dat_summary_long[[key_name]] <- 
+  #   factor(dat_summary_long[[key_name]], levels = var_names)
+  # 
+  # 
+  # 
+  # final_dat <- dat_summary_long %>% 
+  #   dplyr::filter (maa !=  "Mean ± SE") %>%
+  #   dplyr::mutate(!!sym(values_name) := as.numeric(!!sym(values_name))) %>% 
+  #   dplyr::rename(
+  #     `MA name` = maa
+   # )
   
-  dat_summary_long[[key_name]] <- 
-    factor(dat_summary_long[[key_name]], levels = var_names)
-  
-  
-  
-  final_dat <- dat_summary_long %>% 
-    dplyr::filter (maa !=  "Mean ± SE") %>%
-    dplyr::mutate(!!sym(values_name) := as.numeric(!!sym(values_name))) %>% 
-    dplyr::rename(
-      `MA name` = maa
-    )
-  
-  final_dat
+  dat
 }
 
 
