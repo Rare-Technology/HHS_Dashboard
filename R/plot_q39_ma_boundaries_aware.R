@@ -63,7 +63,7 @@ plot_q39_ma_boundaries_aware <- function(.data, ...){
 
 plot_horiz_bar(
   .data_plot,
-  "Proportion of fishers aware of the boundaries \nof the fisheries management/managed access area",
+  title = "Proportion of fishers aware of the boundaries \nof the fisheries management/managed access area",
   facet_var = key
 )
          

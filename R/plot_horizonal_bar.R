@@ -51,10 +51,8 @@ plot_horiz_bar <- function(
   p <- .data %>% 
     ggplot(aes({{ x_var }}, {{ y_var }}, N = {{ n_var }}))
   
-  
-  
   if(type == 'bar'){
-    nudgeval <- max(breaks) * 0.01
+    nudgeval <- layer_scales(p)$y$get_limits()[2] * 0.01
     p <- p + geom_col(fill = fill_col, alpha = 0.8) +
       geom_text(aes(label = {{ y_var }}), hjust = 0, nudge_y = nudgeval, color = "grey40", size = 4)
   }
