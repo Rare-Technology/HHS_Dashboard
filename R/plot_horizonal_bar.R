@@ -8,7 +8,7 @@ plot_horiz_bar <- function(
   type = "bar", #stacked
   title = "",
   x_title = NULL,
-  y_title = "Proportion (%)",
+  y_title = "Percentage (%)",
   fill_col = "#005BBB",
   palette = "Blues",
   palette_direction = -1,

@@ -226,7 +226,7 @@ prep_data_for_plot <- function(
   focus_var, 
   key_name = "key", 
   values_name = "Proportion (%)", 
-  rounding = 3,
+  rounding = 2,
   include_summary_line = FALSE,
   recoding = NULL, # new value as names (on left of assignment)
   type = "bar", # stacked or facet
