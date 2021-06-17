@@ -5,7 +5,7 @@ HHS_PLOT_FUNS <- c("clean_plot_data", "ggplot_add", "ggplot_build", "ggplot_gtab
                         "plot_q10_mpa_important", "plot_q11_income", "plot_q12_household_fishing", 
                         "plot_q13_processing", "plot_q14_responsibilities", "plot_q16_hh_main_fisher", 
                         "plot_q17_fishing_low_profit", "plot_q18_fishing_high_profit", 
-                        "plot_q19_current_fish_catch", "plot_q22_catch_5yrs", "plot_q23_job_secure", 
+                        "plot_q19_current_fish_catch", "plot_q20_gear", "plot_q22_catch_5yrs", "plot_q23_job_secure", 
                         "plot_q24_items_owned", "plot_q25_financial_account", "plot_q26_fishing_income_save", 
                         "plot_q27_emergency_funds", "plot_q28_buyer_loans", "plot_q29_family_income", 
                         "plot_q30a_trust_local_decision", "plot_q30b_trust_regional_decision", 
