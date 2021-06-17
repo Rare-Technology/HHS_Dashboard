@@ -270,7 +270,7 @@ detach(package:tidyr)
 usethis::use_data(
   hhs_data,
   hhs_data_filtered,
-  hhs_questions,
+  #hhs_questions,
   # hhs_q07,
   # hhs_q14,
   # hhs_q15,

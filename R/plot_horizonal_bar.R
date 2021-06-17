@@ -15,7 +15,8 @@ plot_horiz_bar <- function(
   limits = c(0, 110),
   breaks = seq(0, 100, 25),
   guide_reverse = TRUE,
-  sort_by_value = FALSE
+  sort_by_value = FALSE, 
+  reverse_maa_order = TRUE
 ){
 
   # TODO: must be a better way!
@@ -24,19 +25,31 @@ plot_horiz_bar <- function(
   
   title <- stringr::str_wrap(title, width = 65)
 
+  .data <- .data %>% 
+    dplyr::mutate(
+      {{ x_var }} := factor({{ x_var }})
+    )
+
+  if(reverse_maa_order){
+    .data <- .data %>% 
+      dplyr::mutate(
+        {{ x_var }} := forcats::fct_rev({{ x_var }})
+      )
+  }
   
   if(sort_by_value){
     .data <- .data %>% 
       dplyr::mutate(
-        {{ x_var }} := forcats::fct_reorder(factor({{ x_var }}), {{ y_var }})
+        {{ x_var }} := forcats::fct_reorder({{ x_var }}, {{ y_var }})
       )
 
   }
   
+
+  
   
   p <- .data %>% 
     ggplot(aes({{ x_var }}, {{ y_var }}, N = {{ n_var }}))
-
   
   if(type == 'bar'){
     nudgeval <- layer_scales(p)$y$get_limits()[2] * 0.01
@@ -77,6 +90,8 @@ plot_horiz_bar <- function(
     
     p <- p + facet_wrap( vars({{ facet_var }}), labeller = label_wrap_gen(label_wrap_val), nrow = 1)
   }
+  
+  
   
   p
 }

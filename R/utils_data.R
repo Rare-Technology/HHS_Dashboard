@@ -231,12 +231,21 @@ prep_data_for_plot <- function(
   recoding = NULL, # new value as names (on left of assignment)
   type = "bar", # stacked or facet
   bar_column = `1`,
-  key_order = NULL) {
+  key_order = NULL,
+  unnest = FALSE
+  ) {
 
 
-  dat <- .data %>%
-    dplyr::filter({{ focus_var }} != "", !is.na({{ focus_var}}), {{focus_var}} != "na") %>%
+  dat <- .data %>% 
     dplyr::select(maa, {{ focus_var }})
+  
+  if(unnest){
+    dat <- dat %>% 
+      tidyr::unnest({{ focus_var }})
+  }
+
+  dat <- dat %>%
+    dplyr::filter({{ focus_var }} != "", !is.na({{ focus_var}}), {{focus_var}} != "na") 
   
   if(!is.null(recoding)){
     vals <- unique(dat[[rlang::as_name(enquo(focus_var))]])
@@ -323,62 +332,84 @@ prep_data_for_plot <- function(
   
 }
 
-prep_data_for_plot_facet <- function(
+
+# Q20 is an example
+prep_data_for_plot_multivar <- function(
   .data, 
   select_vars, 
   group_by_var = maa, 
   var_names, 
   key_name = "key", 
-  values_name = "Proportion (%)",
-  my_func = function(x){round(mean(x, na.rm = TRUE), 1)}
+  values_name = "Percentage (%)",
+  recoding = NULL, # new value as names (on left of assignment)
+  my_func = function(x){round(mean(x, na.rm = TRUE), 2)}
 ){
   
 
+
   group_by_str <- rlang::as_name(enquo(group_by_var))
+  key_as_sym <- rlang::ensym(key_name)
   
   dat <- .data %>% 
     dplyr::select(maa, {{ select_vars }}) %>% 
-    dplyr::group_by( {{ group_by_var }})
-  
-  
-  dat_n <- dat %>% 
-    dplyr::summarise(N = dplyr::n())
-  
-  dat_f <- dat %>% 
-    dplyr::summarise_at(vars({{select_vars}} ), my_func)
-  
-  
-  dat_summary <- dplyr::full_join(dat_n, dat_f, by = group_by_str )
-  names(dat_summary) <- c("maa", "N", var_names)
-  
-  summary_row <- c(
-    NA,
-    sum(dat_summary$N),
-    purrr::map_chr(var_names, ~compute_summary_line(dat_summary[[.]], 1))
-  )
-  
-  dat_summary <- rbind(dat_summary, summary_row)
-  
-  dat_summary_long <- dat_summary %>% 
     tidyr::pivot_longer(
-      cols = var_names,
+      cols = -{{ group_by_var }},
       names_to = key_name,
-      values_to = values_name
+      
+    ) %>% 
+    dplyr::filter(
+      !is.na(value)
     )
   
-  dat_summary_long[[key_name]] <- 
-    factor(dat_summary_long[[key_name]], levels = var_names)
+  
+  if(!is.null(recoding)){
+    vals <- unique(dat[[key_name]])
+    recoding <- recoding[recoding %in% vals]
+    mode(recoding) <- "character" # needed for fct_recode
+    dat <- dat %>% 
+      dplyr::mutate(
+        {{ key_name }} := forcats::fct_recode(factor(!!sym(key_name)), !!!recoding)
+      )
+  }
   
   
-  
-  final_dat <- dat_summary_long %>% 
-    dplyr::filter (maa !=  "Mean ± SE") %>%
-    dplyr::mutate(!!sym(values_name) := as.numeric(!!sym(values_name))) %>% 
-    dplyr::rename(
-      `MA name` = maa
+  dat <- dat %>% 
+    dplyr::group_by( {{ group_by_var }}, {{ key_as_sym }} ) %>% 
+    dplyr::summarise(
+       !!sym(values_name):= 100 * round(mean(value, na.rm = TRUE),2)
+    ) %>% 
+      dplyr::mutate(!!sym(values_name) := as.numeric(!!sym(values_name))) %>%
+      dplyr::rename(
+        `MA name` = maa
+      ) %>% 
+    dplyr::mutate(
+      N = NA # TODO: the other function uses N and the plotting one needs it
     )
   
-  final_dat
+  
+  
+
+  
+  # dat_summary_long <- dat_summary %>% 
+  #   tidyr::pivot_longer(
+  #     cols = var_names,
+  #     names_to = key_name,
+  #     values_to = values_name
+  #   )
+  # 
+  # dat_summary_long[[key_name]] <- 
+  #   factor(dat_summary_long[[key_name]], levels = var_names)
+  # 
+  # 
+  # 
+  # final_dat <- dat_summary_long %>% 
+  #   dplyr::filter (maa !=  "Mean ± SE") %>%
+  #   dplyr::mutate(!!sym(values_name) := as.numeric(!!sym(values_name))) %>% 
+  #   dplyr::rename(
+  #     `MA name` = maa
+   # )
+  
+  dat
 }
 
 
