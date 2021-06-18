@@ -1,7 +1,7 @@
 
 #HHS_PLOT_FUNS <- dput(ls("package:rarehhs", pattern = "plot_"))
 HHS_PLOT_FUNS <- c("clean_plot_data", "ggplot_add", "ggplot_build", "ggplot_gtable", 
-                        "plot_horiz_bar", "plot_q08_religion", "plot_q09_region_member", 
+                        "plot_horiz_bar", "plot_q07_people", "plot_q08_religion", "plot_q09_region_member", 
                         "plot_q10_mpa_important", "plot_q11_income", "plot_q12_household_fishing", 
                         "plot_q13_processing", "plot_q14_responsibilities", "plot_q16_hh_main_fisher", 
                         "plot_q17_fishing_low_profit", "plot_q18_fishing_high_profit", 

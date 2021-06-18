@@ -5,7 +5,7 @@ hhs_questions <- readr::read_csv("data-raw/hhs_questions.csv")
 # Questions added
 hhs_questions <- hhs_questions %>% 
   dplyr::mutate(
-    question = ifelse(q_no == 20, question_no_included, question)
+    question = ifelse(q_no %in% c(7, 20), question_no_included, question)
   )
 
 hhs_questions <- hhs_questions %>% 
@@ -46,6 +46,7 @@ hhs_questions <- purrr::map(sections, function(x) {
   vect
 })
 names(hhs_questions) <- sections
+hhs_questions$`Basic Information`[hhs_questions$`Basic Information` == "q7"] <- "q07"
 hhs_questions$`Basic Information`[hhs_questions$`Basic Information` == "q8"] <- "q08"
 hhs_questions$`Basic Information`[hhs_questions$`Basic Information` == "q9"] <- "q09"
 

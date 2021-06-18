@@ -117,6 +117,11 @@ join_with_hhs <- function(.hhs_data, .other_data, var1) {
 #************************************************
 
 
+#
+hhs_q07 <- readr::read_csv(urls$q07, guess_max = 1000000) %>% 
+  dplyr::select(-ma_id)
+hhs_data <- left_join(hhs_data, hhs_q07, by = "submissionid")
+
 # These tables all have multiple answers
 hhs_q14 <- readr::read_csv(urls$q14, guess_max = 1000000)
 hhs_data <- join_with_hhs(hhs_data, hhs_q14, `14_responsibility`)
@@ -191,6 +196,11 @@ hhs_data <- hhs_data %>%
     `61h_help_neighbors` = `61i_help_neighbors`
   )
 
+#************************************************
+# Other fixes ----
+#************************************************
+
+hhs_data$`7_age`[hhs_data$`7_age` > 120] <- NA
 
 #************************************************
 # Review non-numbered variables ----
@@ -250,11 +260,15 @@ hhs_data_source <- "Socio-economic baseline"
 
 #Run this to make things faster for testing only.
 # hhs_data <- hhs_data %>%
-#   dplyr::select(matches("^\\D"), `3_community`, `6_gender`, `8_religion`, `9_region_member`,
-#                 `10_mpa_important`, `12a_fishing_men`, `12b_fishing_women`, `12c_fishing_children`)
-# 
-# 
-# 
+#   dplyr::select(matches("^\\D"), 
+#                 `1_interviewer`:`10_mpa_important`, 
+#                 dplyr::starts_with("7_")) %>% 
+#   dplyr::filter(
+#     maa %in% sample(unique(hhs_data$maa), 4)
+#   )
+
+
+
 # hhs_data_filtered <- hhs_data_filtered %>%
 #   dplyr::select(matches("^\\D"), `3_community`, `6_gender`, `8_religion`, `9_region_member`,
 #                 `10_mpa_important`, `12a_fishing_men`, `12b_fishing_women`, `12c_fishing_children`)
@@ -266,6 +280,8 @@ hhs_data_source <- "Socio-economic baseline"
 
 detach(pacakge:dplyr)
 detach(package:tidyr)
+
+
 
 usethis::use_data(
   hhs_data,
