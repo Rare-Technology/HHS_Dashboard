@@ -9,9 +9,14 @@ prep_q07_people <- function(.data){
   
   age <- prep_data_for_plot(.data, focus_var = `age_cut`, type = "stacked")
   
+  relationship <- prep_data_for_plot(.data, focus_var = `7_relationship`, type = "stacked")
+  education <- prep_data_for_plot(.data, focus_var = `7_education`, type = "stacked")
+  
   list(
     gender = gender,
-    age = age
+    age = age,
+    relationship = relationship,
+    education = education
   )
 }
 
@@ -21,14 +26,33 @@ plot_q07_people <- function(.data, ...){
 
   .data_plot <- prep_q07_people(.data)
   
-  browser()
+
+  p_gender <- plot_horiz_bar(
+    .data_plot$gender,
+    title = "Percentage female",
+    limits = NULL
+  )
   
-  iris1 <- ggplot(iris, aes(x = Species, y = Sepal.Length)) +
-    geom_boxplot() + theme_bw()
+  p_age <- plot_horiz_bar(
+    .data_plot$age,
+    title = "Age",
+    type = "stacked"
+  )
   
-  iris2 <- ggplot(iris, aes(x = Sepal.Length, fill = Species)) +
-    geom_density(alpha = 0.7) + theme_bw() +
-    theme(legend.position = c(0.8, 0.8))
+  p_relationship <- plot_horiz_bar(
+    .data_plot$relationship,
+    title = "Relationship",
+    type = "stacked"
+  )
   
-  cowplot::plot_grid(iris1, iris2, labels = "AUTO")
+  p_education <- plot_horiz_bar(
+    .data_plot$education,
+    title = "Education",
+    type = "stacked"
+  )
+  
+  
+
+  
+  cowplot::plot_grid(p_gender, p_relationship, p_age, p_education)
 }
