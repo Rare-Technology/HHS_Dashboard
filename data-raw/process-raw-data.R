@@ -285,34 +285,3 @@ usethis::use_data(
   hhs_init_section,
   overwrite = TRUE
 )
-
-# not_list <- function(x) !is.list(x)
-# hhs_not_list <- hhs_data %>%
-#   select_if(not_list)
-# 
-# readr::write_csv(hhs_not_list, "inst/data/hhs.csv")
-# zip("inst/data/hhs.zip", "inst/data/hhs.csv")
-
-# 
-# hhs_is_list <- hhs_data %>% 
-#   select_if(is.list)
-
-# I used this to create scripts
-# x <- names(hhs_data)[grepl("^\\d.*", names(hhs_data))]
-# x[stringr::str_detect(x, "meeting")]
-#
-# purrr::map(x, function(x){
-#   path <- glue::glue("~/junk/t/plot_q{x}.R")
-#   fs::file_create(path)
-#   cat(glue::glue("
-#
-# prep_q{x} <- function(.data){{
-#
-# }}
-#
-# plot_q{x} <- function(.data, use_plotly = TRUE){{
-#
-# }}"
-#
-#   ), file = path)
-# })
