@@ -260,9 +260,9 @@ hhs_data_source <- "Socio-economic baseline"
 
 #Run this to make things faster for testing only.
 # hhs_data <- hhs_data %>%
-#   dplyr::select(matches("^\\D"), 
-#                 `1_interviewer`:`10_mpa_important`, 
-#                 dplyr::starts_with("7_")) %>% 
+#   dplyr::select(matches("^\\D"),
+#                 `1_interviewer`:`10_mpa_important`,
+#                 dplyr::starts_with("7_")) %>%
 #   dplyr::filter(
 #     maa %in% sample(unique(hhs_data$maa), 4)
 #   )
