@@ -1,6 +1,7 @@
 
 prep_q14_responsibilities <- function(.data){
   
+
   .data <- .data %>% 
     dplyr::select(maa, submissionid, `14_responsibility`) %>% 
     tidyr::unnest(cols = `14_responsibility`)
