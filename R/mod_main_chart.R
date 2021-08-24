@@ -94,7 +94,7 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
 
         list(
           downloadButton(ns("downloadPlot"),class = "download-button", 'Download Plot'),
-          p_output
+          div(style='height:600px; overflow-y: scroll', p_output)
         )
       })
       
