@@ -9,12 +9,13 @@ prep_data_for_plot(
   focus_var,
   key_name = "key",
   values_name = "Proportion (\%)",
-  rounding = 3,
+  rounding = 2,
   include_summary_line = FALSE,
   recoding = NULL,
   type = "bar",
   bar_column = `1`,
-  key_order = NULL
+  key_order = NULL,
+  unnest = FALSE
 )
 }
 \arguments{

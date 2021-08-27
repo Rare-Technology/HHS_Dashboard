@@ -264,7 +264,7 @@ hhs_data_source <- "Socio-economic baseline"
 # usethis::use_data(hhs_questions, overwrite = TRUE)
 # usethis::use_data(hhs_q14, overwrite = TRUE)
 
-detach(pacakge:dplyr)
+detach(package:dplyr)
 detach(package:tidyr)
 
 usethis::use_data(
