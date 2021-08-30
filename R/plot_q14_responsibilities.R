@@ -35,20 +35,12 @@ prep_q14_responsibilities <- function(.data){
 
 plot_q14_responsibilities <- function(.data, ...){
 
-      .data_plot <- prep_q14_responsibilities(.data)
-         
-       # plot_horiz_bar(
-       #   .data_plot,
-       #    title = "Proportion of activities that are the responsibility \nof the women in the household in a typical week",
-       #    breaks = seq(0, 100, 25),
-       #   type= "stacked",
-       #    stack_var = Activity
-       #  )
-       
-       plot_bubble(
-         .data_plot,
-         title = "Proportion of activities that are the responsibility \nof the women in the household in a typical week",
-         x_var = Activity
-       )
+  .data_plot <- prep_q14_responsibilities(.data)
+   
+   plot_bubble(
+     .data_plot,
+     title = "Proportion of activities that are the responsibility \nof the women in the household in a typical week",
+     x_var = Activity
+   )
 
 }

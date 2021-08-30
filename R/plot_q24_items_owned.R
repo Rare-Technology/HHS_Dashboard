@@ -152,45 +152,38 @@ map_color <- Vectorize(function(x) {
 plot_q24_items_owned <- function(.data, ...){
 
 
-        .data_plot <- prep_q24_items_owned(.data)
-        
-        # plot_horiz_bar(
-        #   .data_plot,
-        #   y_var = Average,
-        #   y_title = "Average number of assets",
-        #   title = "Average number of major assets \npurchased in the previous 12 months",
-        #   limits = NULL,
-        #   breaks = waiver()
-        # )
-        
-        title <- 'Assets owned by households'
-        title <- stringr::str_wrap(title, width = 65)
-        subtitle <- 'Proportion of households (%)'
-        
-        .data_plot <- .data_plot %>% 
-          dplyr::mutate(
-            `MA name` := factor(`MA name`)
-          )
-        
-        .data_plot <- .data_plot %>% 
-          dplyr::mutate(
-            `MA name` := forcats::fct_rev(`MA name`)
-          )
-        
-        
-        ggplot(data = .data_plot,
-               aes(x = Item, y = `MA name`, fill = Proportion)) +
-          geom_tile() + 
-          geom_text(aes(label = Proportion, color=Proportion >= 50),
-                    show.legend = c(TRUE, FALSE)) +
-          scale_fill_viridis_c(option='magma') +
-          scale_color_manual(values=c('white', 'black')) +
-          labs(title = title, subtitle=subtitle) +
-          theme_rare() +
-          theme(
-            axis.text.x = element_text(angle=30, hjust=1),
-            axis.ticks.x = element_line(),
-            panel.grid.major.x = element_blank(),
-            axis.title.y = element_blank()
-          )
+  .data_plot <- prep_q24_items_owned(.data)
+  
+  
+  
+  title <- 'Assets owned by households'
+  title <- stringr::str_wrap(title, width = 65)
+  subtitle <- 'Proportion of households (%)'
+  
+  .data_plot <- .data_plot %>% 
+  dplyr::mutate(
+    `MA name` := factor(`MA name`)
+  )
+  
+  .data_plot <- .data_plot %>% 
+  dplyr::mutate(
+    `MA name` := forcats::fct_rev(`MA name`)
+  )
+  
+  
+  ggplot(data = .data_plot,
+       aes(x = Item, y = `MA name`, fill = Proportion)) +
+  geom_tile() + 
+  geom_text(aes(label = Proportion, color=Proportion >= 50),
+            show.legend = c(TRUE, FALSE)) +
+  scale_fill_viridis_c(option='magma') +
+  scale_color_manual(values=c('white', 'black')) +
+  labs(title = title, subtitle=subtitle) +
+  theme_rare() +
+  theme(
+    axis.text.x = element_text(angle=30, hjust=1),
+    axis.ticks.x = element_line(),
+    panel.grid.major.x = element_blank(),
+    axis.title.y = element_blank()
+  )
 }

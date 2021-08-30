@@ -25,15 +25,6 @@ plot_q18_fishing_high_profit <- function(.data, ...){
                       "Once or never"))
   )
   
-
-  
-  # plot_horiz_bar(
-  #   .data_plot,
-  #   title = "Frequency that the main fisher go fishing \nduring the high profitable fishing season",
-  #   type = "stacked",
-  #   stack_var = Frequency
-  # )
-  
   plot_bubble(
     .data_plot,
     title = "Frequency that the main fisher go fishing \nduring the high profitable fishing season",
