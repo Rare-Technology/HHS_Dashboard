@@ -8,6 +8,8 @@ plot_bubble <- function(
   title <- stringr::str_wrap(title, width = 65)
   subtitle <- 'Proportion (%)'
   
+  num_y <- .data %>% dplyr::pull({{y_var}}) %>% unique() %>% length()
+
   .data <- .data %>% 
     dplyr::mutate(
       `MA name` := factor(`MA name`)
@@ -26,7 +28,7 @@ plot_bubble <- function(
                shape=21, color='black', show.legend=FALSE) +
     scale_size_area(max_size=20, guide = 'none') +
     geom_text(aes(
-      y = as.numeric(as.factor({{y_var}})) - sqrt({{size_var}})/30, label={{size_var}}),
+      y = as.numeric(as.factor({{y_var}})) - num_y * sqrt({{size_var}})/200, label={{size_var}}),
       vjust = 1.3,
       size = 4
     ) +

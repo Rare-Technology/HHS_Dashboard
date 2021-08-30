@@ -52,7 +52,6 @@ prep_q37_ability_min_size <- function(.data){
 plot_q37_ability_min_size <- function(.data, ...){
 .data_plot <- prep_q37_ability_min_size(.data)
 
-View(.data_plot)
 plot_horiz_bar(
   .data_plot,
   title = "Proportion of community members who know specific \nfish size restrictions in the managed access area"
