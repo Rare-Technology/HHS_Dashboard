@@ -24,7 +24,7 @@ create_state <- function(){
     ),
     maa = list(
       choices = hhs_init_geo_selections$maa$choices,
-      selected = hhs_init_geo_selections$maa$choices
+      selected = NULL
     ),
     # section = list(
     #   choices = names(hhs_questions),

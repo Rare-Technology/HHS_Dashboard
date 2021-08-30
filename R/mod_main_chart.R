@@ -75,27 +75,31 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
 
       output$chart_ui <- renderUI({
         
-        if("try-error" %in% class(p)){
-          state$current_plot <- NULL
-          return(div("There was an error in plot generation"))
-        }
-        
-        state$current_plot <- p
-        
-        if(FALSE){
-          #output$chart <- renderPlotly(ggplot(mtcars, aes(cyl, mpg)) + geom_point() + ggtitle("This is my title"))
-          p <- make_plotly(p)
-          output$chart <- renderPlotly(p)
-          p_output <- plotlyOutput(ns("chart"), height = '750px')
+        if(is.null(state$maa$selected)) {
+          div('Select a managed access area.')
         } else {
-          output$chart <- renderPlot(p)
-          p_output <- plotOutput(ns("chart"), height = '750px')
+          if("try-error" %in% class(p)){
+            state$current_plot <- NULL
+            return(div("There was an error in plot generation"))
+          }
+          
+          state$current_plot <- p
+          
+          if(FALSE){
+            #output$chart <- renderPlotly(ggplot(mtcars, aes(cyl, mpg)) + geom_point() + ggtitle("This is my title"))
+            p <- make_plotly(p)
+            output$chart <- renderPlotly(p)
+            p_output <- plotlyOutput(ns("chart"), height = '750px')
+          } else {
+            output$chart <- renderPlot(p)
+            p_output <- plotOutput(ns("chart"), height = '750px')
+          }
+  
+          list(
+            downloadButton(ns("downloadPlot"),class = "download-button", 'Download Plot'),
+            div(style='height:600px; overflow-y: scroll', p_output)
+          )
         }
-
-        list(
-          downloadButton(ns("downloadPlot"),class = "download-button", 'Download Plot'),
-          div(style='height:600px; overflow-y: scroll', p_output)
-        )
       })
       
     }, ignoreNULL = TRUE)

@@ -42,7 +42,7 @@ sidebarGeoUI <- function(id) {
       ns("sel_maa"),
       "Managed access area",
       choices = hhs_init_geo_selections$maa$choices,
-      selected = hhs_init_geo_selections$maa$selected,
+      selected = NULL,
       multiple = TRUE,
       selectize = TRUE
     )
@@ -151,13 +151,13 @@ sidebarGeoServer <- function(id, state) {
           )
           state$maa <- list(
             choices = maa_info$choices,
-            selected = maa_info$selected
+            selected = NULL
           )
           updateSelectInput(
             session,
             "sel_maa",
             choices = maa_info$choices,
-            selected = maa_info$selected
+            selected = NULL
           )
         },
         ignoreInit = TRUE
