@@ -159,36 +159,42 @@ plot_q11_income <- function(.data, ...){
          #   stack_var = `Source`,
          #   guide_reverse = FALSE
          # )
-         title <- "Household source income and \nproportional income contribution"
-         title <- stringr::str_wrap(title, width = 65)
-         subtitle <- 'Proportion (%)'
          
-         .data_plot <- .data_plot %>% 
-           dplyr::mutate(
-             `MA name` := factor(`MA name`)
-           )
          
-         .data_plot <- .data_plot %>% 
-           dplyr::mutate(
-             `MA name` := forcats::fct_rev(`MA name`)
-           )
-         
-         ggplot(data = .data_plot, 
-                aes(x=`Source`, y=`MA name`)) +
-           geom_point(aes(size=`Proportion (%)`, fill=`Source`), shape=21, color='black', show.legend=FALSE) +
-           scale_size_area(max_size=20, guide = 'none') +
-           geom_text(aes(
-             y = as.numeric(as.factor(`MA name`)) - sqrt(`Proportion (%)`)/30, label=`Proportion (%)`),
-             vjust = 1.3,
-             size = 4
-           ) +
-           scale_fill_brewer(palette='Set3') +
-           labs(title = title, subtitle = subtitle) +
-           theme_rare() +
-           theme(
-             panel.grid.major.y = element_blank(),
-             axis.text.x = element_text(angle=30, hjust=1),
-             axis.title.y = element_blank()
-           )
-
+         # title <- "Household source income and \nproportional income contribution"
+         # title <- stringr::str_wrap(title, width = 65)
+         # subtitle <- 'Proportion (%)'
+         # 
+         # .data_plot <- .data_plot %>% 
+         #   dplyr::mutate(
+         #     `MA name` := factor(`MA name`)
+         #   )
+         # 
+         # .data_plot <- .data_plot %>% 
+         #   dplyr::mutate(
+         #     `MA name` := forcats::fct_rev(`MA name`)
+         #   )
+         # 
+         # ggplot(data = .data_plot, 
+         #        aes(x=`Source`, y=`MA name`)) +
+         #   geom_point(aes(size=`Proportion (%)`, fill=`Source`), shape=21, color='black', show.legend=FALSE) +
+         #   scale_size_area(max_size=20, guide = 'none') +
+         #   geom_text(aes(
+         #     y = as.numeric(as.factor(`MA name`)) - sqrt(`Proportion (%)`)/30, label=`Proportion (%)`),
+         #     vjust = 1.3,
+         #     size = 4
+         #   ) +
+         #   scale_fill_brewer(palette='Set3') +
+         #   labs(title = title, subtitle = subtitle) +
+         #   theme_rare() +
+         #   theme(
+         #     panel.grid.major.y = element_blank(),
+         #     axis.text.x = element_text(angle=30, hjust=1),
+         #     axis.title.y = element_blank()
+         #   )
+        plot_bubble(
+          .data_plot,
+          title = "Household source income and \nproportional income contribution",
+          x_var = Source
+        )
 }

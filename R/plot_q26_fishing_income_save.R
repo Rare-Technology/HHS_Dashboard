@@ -11,6 +11,6 @@ plot_q26_fishing_income_save <- function(.data, ...) {
 
   plot_horiz_bar(
     .data_plot,
-    title = "Proportion of househols with enough income to save"
+    title = "Proportion of households with enough income to save"
   )
 }

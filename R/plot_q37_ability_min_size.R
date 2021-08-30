@@ -44,12 +44,15 @@ prep_q37_ability_min_size <- function(.data){
     )
   
   Q37 <- clean_plot_data(Q37_summary_long)
+  Q37 <- aggregate(`Proportion (%)` ~ `MA name` + N, data=Q37, FUN=mean)
+  Q37$`Proportion (%)` <- round(Q37$`Proportion (%)`, digits=1)
   Q37
 }
 
 plot_q37_ability_min_size <- function(.data, ...){
 .data_plot <- prep_q37_ability_min_size(.data)
 
+View(.data_plot)
 plot_horiz_bar(
   .data_plot,
   title = "Proportion of community members who know specific \nfish size restrictions in the managed access area"

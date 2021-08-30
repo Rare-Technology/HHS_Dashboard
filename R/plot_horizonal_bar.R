@@ -5,6 +5,7 @@ plot_horiz_bar <- function(
   n_var = `N`,
   facet_var = ` `, # TODO: use NULL instead
   stack_var = `key`,
+  fill_var = `key`,
   type = "bar", #stacked
   title = "",
   x_title = NULL,
@@ -58,6 +59,12 @@ plot_horiz_bar <- function(
       geom_text(aes(label = {{ y_var }}), hjust = 0, nudge_y = nudgeval, color = "grey40", size = 4)
   }
   
+  if(type == 'grouped'){
+    nudgeval <- ggplot2::layer_scales(p)$y$get_limits()[2] * 0.01
+    p <- p + geom_col(aes(fill = {{fill_var}}), position='dodge', alpha=0.8) +
+      geom_text(aes(label = {{y_var}}), hjust = 0, nudge_y = nudgeval, color = "grey40", size = 4)
+  }
+  
   if(type == 'stacked'){
     p <- p + geom_bar(
       aes(fill = {{stack_var}}),
@@ -67,6 +74,7 @@ plot_horiz_bar <- function(
     ) + 
       scale_fill_brewer(palette = palette, direction = palette_direction) 
   }
+  
   
   p <- p + 
     labs(

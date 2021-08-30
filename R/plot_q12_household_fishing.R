@@ -60,7 +60,7 @@ prep_q12_household_fishing <- function(.data) {
 
 plot_q12_household_fishing <- function(.data, ...) {
   .data_plot <- prep_q12_household_fishing(.data)
-
+  
   .data_plot %>%
     plot_horiz_bar(
       y_var = Average,
