@@ -14,6 +14,7 @@ mainUI <- function(id){
                 sidebarUI("sidebarUI"),
                 mainPanel(
                   tabsetPanel(id = ns("tabs"),
+                    tabPanel("Start", startUI("startUI")),
                     tabPanel("Summary data", dataUI("dataUI")),
                     tabPanel("Survey charts", chartUI("chartUI"))
                   )
