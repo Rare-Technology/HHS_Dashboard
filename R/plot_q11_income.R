@@ -150,9 +150,14 @@ prep_q11_income <- function(.data){
 plot_q11_income <- function(.data, ...){
   .data_plot <- prep_q11_income(.data)
           
-  plot_bubble(
+  p <- plot_bubble(
     .data_plot,
     title = "Household source income and \nproportional income contribution",
     x_var = Source
+  )
+  
+  result <- list(
+    plot = p,
+    data = .data_plot
   )
 }

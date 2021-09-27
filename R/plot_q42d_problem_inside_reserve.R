@@ -8,9 +8,13 @@ plot_q42d_problem_inside_reserve <- function(.data, ...){
       bar_column = `1`
     )
   
-  plot_horiz_bar(
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of community members that \nknow how fishing inside the reserve affect the fishery"
   )
   
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

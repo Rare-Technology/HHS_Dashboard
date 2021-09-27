@@ -18,6 +18,7 @@
 usethis::use_package( "dplyr" )
 usethis::use_package( "DT" )
 usethis::use_package("shinyWidgets")
+usethis::use_package("shinyjs")
 usethis::use_pipe()
 
 ## Add modules ----
@@ -38,7 +39,7 @@ golem::add_utils( "data" )
 golem::add_utils( 'table')
 ## External resources
 ## Creates .js and .css files at inst/app/www
-golem::add_js_file( "script" )
+golem::add_js_file( "toggleFullScreen" )
 golem::add_js_handler( "handlers" )
 golem::add_css_file( "main" )
 golem::add_i

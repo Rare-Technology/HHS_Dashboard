@@ -52,8 +52,13 @@ prep_q25_financial_account <- function(.data) {
 plot_q25_financial_account <- function(.data, ...) {
   .data_plot <- prep_q25_financial_account(.data)
 
-  plot_horiz_bar(
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of households with \nactive accounts in financial institutions",
+  )
+  
+  result <- list(
+    plot = p,
+    data = .data_plot
   )
 }

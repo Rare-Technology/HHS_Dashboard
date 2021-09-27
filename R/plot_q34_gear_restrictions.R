@@ -11,8 +11,13 @@ plot_q34_gear_restrictions <- function(.data, ...) {
       bar_column = `1`
     )
 
-  plot_horiz_bar(
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of community members who are aware of gear restrictions in the managed access area"
+  )
+  
+  result <- list(
+    plot = p,
+    data = .data_plot
   )
 }

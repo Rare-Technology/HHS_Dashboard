@@ -23,9 +23,13 @@ plot_q38_reserve_fishing_allowed <- function(.data, ...){
   
   .data_plot <- prep_q38_reserve_fishing_allowed(.data)
   
-  plot_horiz_bar(
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of community members who are aware \nthat fishing is not allowed in the reserve area"
   )
 
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

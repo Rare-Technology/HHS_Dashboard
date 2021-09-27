@@ -24,29 +24,17 @@ prep_q44a_meeting_attendance <- function(.data){
 }
 
 plot_q44a_meeting_attendance <- function(.data, ...){
-
   
   .data_plot <- prep_q44a_meeting_attendance(.data)
   
-  plot_horiz_bar(
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of community members who \nattend management body meetings regularly",
     facet_var = key
   )
          
-         #Plot
-         # plot_Q44 <-
-         #    ggplot(Q44, aes(`MA name`, `Proportion (%)`, N = N)) +
-         #    theme_rare + geom_col(fill = "#005BBB", alpha = 0.8) +
-         #    facet_wrap( ~ key, ncol = 6) +
-         #    
-         #    scale_y_continuous(limits = c(0, 110),
-         #                       breaks = seq(0, 100, 25)) +
-         #    ggtitle(
-         #       "Proportion of community members who \nattend management body meetings regularly"
-         #    ) +
-         #    xlab (NULL) + ylab (NULL) + 
-         #       coord_flip(clip ="on")
-         # 
-         # ggplotly(plot_Q44, height = 750)
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

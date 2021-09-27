@@ -14,9 +14,13 @@ plot_q23_job_secure <- function(.data, ...){
     
   )
   
-  plot_horiz_bar(
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of fishers who are confident \nthat their jobs are secure"
   )
   
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

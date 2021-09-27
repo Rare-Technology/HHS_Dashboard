@@ -17,6 +17,7 @@ sidebarGeoUI <- function(id) {
       choices = hhs_data_source,
       selected = hhs_data_source,
     ),
+    div(class='sidetitle', "Geography"),
     selectInput(
       ns("sel_country"),
       "Country",

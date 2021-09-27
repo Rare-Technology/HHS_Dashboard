@@ -106,29 +106,20 @@ prep_q72_current_economic <- function(.data){
 
 plot_q72_current_economic <- function(.data, ...){
 
-        .data_plot <- prep_q72_current_economic(.data)
-        
-        plot_horiz_bar(
-          .data_plot,
-          y_var = Average,
-          title = "Average perception of current and future personal economic situation",
-          y_title = "Average score (much worse = 1; worse = 2; neither = 3; better = 4; much better = 5)",
-          limits = c(0, 5.5),
-          breaks = 1:5,
-          facet_var = key
-        )
-         #Plot
-         # plot_Q72_73 <-
-         #    ggplot(Q72_73a, aes(`MA name`, Average, N = N)) +
-         #       theme_rare +
-         #       geom_col(alpha = 0.8, fill = "#005BBB") +
-         #       facet_wrap(~key) +
-         #       ggtitle("Average perception of current and future personal economic situation") +
-         #       scale_y_continuous(limits = c(0, 5.5), breaks = c(1:5)) +
-         #       #scale_fill_distiller(palette = "Spectral")+
-         #       xlab (NULL) +
-         #       ylab ("Average score (much worse = 1; worse = 2; neither = 3; better = 4; much better = 5)") +
-         #       coord_flip(clip = "on")
-         # 
-         # ggplotly(plot_Q72_73, height = 750)
+  .data_plot <- prep_q72_current_economic(.data)
+  
+  p <- plot_horiz_bar(
+    .data_plot,
+    y_var = Average,
+    title = "Average perception of current and future personal economic situation",
+    y_title = "Average score (much worse = 1; worse = 2; neither = 3; better = 4; much better = 5)",
+    limits = c(0, 5.5),
+    breaks = 1:5,
+    facet_var = key
+  )
+  
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

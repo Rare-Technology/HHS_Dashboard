@@ -42,9 +42,13 @@ plot_q31_my_community_ability <- function(.data, ...){
 
   .data_plot <- prep_q31_my_community_ability(.data)
   
-  plot_horiz_bar(
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of community members who believe that the community has the ability to manage the fishery effectively to maximize food and profits"
   )
-
+  
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

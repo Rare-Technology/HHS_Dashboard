@@ -125,6 +125,9 @@ plot_q40_reserve_boundaries_aware <- function(.data, ...){
     )
   }
 
-  p
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
   
 }

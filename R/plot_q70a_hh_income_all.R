@@ -108,7 +108,7 @@ plot_q70a_hh_income_all <- function(.data, ...){
   .data_plot <- prep_q70a_hh_income_all(.data, dots$iso3)
          
 
-  plot_horiz_bar(
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Average income in USD",
     limits = NULL,
@@ -116,15 +116,9 @@ plot_q70a_hh_income_all <- function(.data, ...){
     y_title = "US Dollars ($)",
     breaks = waiver()
   )
-         
-         # #Plot
-         # plot_Q70 <-
-         #    ggplot(Q70, aes(`MA name`, Average, N = N)) +
-         #    theme_rare + 
-         #    geom_col(alpha = 0.8, fill = "#005BBB") +
-         #    ggtitle("Average household income in USD ") +
-         #    xlab (NULL) + ylab ("Average income in USD") +
-         #    coord_flip(clip = "on")
-         # 
-         # ggplotly(plot_Q70, height=750)
+
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

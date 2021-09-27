@@ -25,10 +25,14 @@ plot_q18_fishing_high_profit <- function(.data, ...){
                       "Once or never"))
   )
   
-  plot_bubble(
+  p <- plot_bubble(
     .data_plot,
     title = "Frequency that the main fisher go fishing \nduring the high profitable fishing season",
     x_var = Frequency
   )
   
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

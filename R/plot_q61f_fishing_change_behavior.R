@@ -65,26 +65,15 @@ plot_q61f_fishing_change_behavior <- function(.data, ...){
 
   
   .data_plot <- prep_q61f_fishing_change_behavior(.data)
-  plot_horiz_bar(
+  
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of community members who are \nwilling to change their individual fishing behavior",
     facet_var = key
   )
-         #Plot
-         # plot_Q61f <-
-         #    ggplot(Q61f, aes(`MA name`, `Proportion (%)`, N = N)) +
-         #    theme_rare + geom_col(fill = "#005BBB", alpha = 0.8) +
-         #    facet_wrap( ~ key,
-         #                scale = input$x_axis,
-         #                labeller = label_wrap_gen(20)) +
-         #    
-         #    scale_y_continuous(limits = c(0, 110),
-         #                       breaks = seq(0, 100, 20)) +
-         #    ggtitle(
-         #       "Proportion of community members who are \nwilling to change their individual fishing behavior"
-         #    ) +
-         #    xlab (NULL) + ylab ("Proportion (%)") + 
-         #    coord_flip(ylim = c(0, 119))
-         # 
-         # ggplotly(plot_Q61f, height = 750)
+
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

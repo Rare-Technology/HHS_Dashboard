@@ -30,20 +30,14 @@ plot_q68_fish_sold <- function(.data, ...){
 
          
   .data_plot <- prep_q68_fish_sold(.data)
-  plot_horiz_bar(
+ 
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of catch sold versus eaten in the household"
   )
-  
-         # plot_Q68 <-
-         #    ggplot(Q68, aes(x = `MA name`, y = `Proportion (%)`, N = N)) +
-         #    theme_rare + 
-         #    geom_col(fill = "#005BBB", alpha = 0.8) +
-         #    scale_y_continuous(limits = c(0, 110),
-         #                       breaks = seq(0, 100, 20)) +
-         #    ggtitle("Proportion of catch sold versus eaten in the household") +
-         #    xlab (NULL) + ylab ("Proportion (%)") + 
-         #    coord_flip(clip ="on")
-         # 
-         # ggplotly(plot_Q68, height = 750)
+
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

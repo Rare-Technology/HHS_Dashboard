@@ -89,24 +89,14 @@ prep_q51_fishers_caught <- function(.data){
 plot_q51_fishers_caught <- function(.data, ...){
 
   .data_plot <- prep_q51_fishers_caught(.data)
-  plot_horiz_bar(
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Perceived frequency of getting caught for violating regulations",
     facet_var = key
   )
   
-         # plot_Q51d_e <-
-         #    ggplot(Q51d_e, aes(`MA name`,`Proportion (%)`, N = N)) +
-         #    theme_rare + geom_col(fill = "#005BBB", alpha = 0.8) +
-         #    facet_wrap( ~ key,
-         #                scale = input$x_axis,
-         #                labeller = label_wrap_gen(20)) +
-         #    
-         #    scale_y_continuous(limits = c(0, 110),
-         #                       breaks = seq(0, 100, 20)) +
-         #    ggtitle("Perceived frequency of getting caught for violating regulations") +
-         #    xlab (NULL) + ylab ("Proportion (%)") + 
-         #    coord_flip(ylim = c(0, 119))
-         # 
-         # ggplotly(plot_Q51d_e, height = 750)
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

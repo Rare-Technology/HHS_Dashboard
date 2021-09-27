@@ -50,25 +50,15 @@ prep_q37_ability_min_size <- function(.data){
 }
 
 plot_q37_ability_min_size <- function(.data, ...){
-.data_plot <- prep_q37_ability_min_size(.data)
-
-plot_horiz_bar(
-  .data_plot,
-  title = "Proportion of community members who know specific \nfish size restrictions in the managed access area"
-)
-
-    
-       #   plot_Q37 <-
-       #      ggplot(Q37, aes(`MA name`, `Proportion (%)`, N = N)) +
-       #      facet_wrap(~ key, 
-       #                 ncol = 2) +
-       #                 #labeller = label_wrap_gen(25)) +
-       #      theme_rare + 
-       #      geom_col(fill = "#005BBB", alpha = 0.8) +
-       #      scale_y_continuous(limits = c(0, 125),
-       #                         breaks = seq(0, 100, 25)) +
-       #      ggtitle("Proportion of community members who know specific \nfish size restrictions in the managed access area") +
-       #      xlab (NULL) + ylab ("\nProportion (%)") + coord_flip(clip = "on")
-       #   
-       # ggplotly(plot_Q37, height = 700)
+  .data_plot <- prep_q37_ability_min_size(.data)
+  
+  p <- plot_horiz_bar(
+    .data_plot,
+    title = "Proportion of community members who know specific \nfish size restrictions in the managed access area"
+  )
+  
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

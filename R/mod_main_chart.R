@@ -10,17 +10,11 @@
 chartUI <- function(id) {
   ns <- NS(id)
   tagList(
-    # inline_select(
-    #   ns("section"),
-    #   "Section",
-    #   NULL, #isolate(state$section$choices),
-    #   NULL #isolate(state$section$selected)
-    # ),
     inline_select(
       ns("question"),
       "Question",
-      NULL, #isolate(state$question$choices),
-      NULL #isolate(state$question$selected)
+      NULL,
+      NULL
     ),
     uiOutput(ns("chart_ui"))
   )
@@ -44,17 +38,7 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
     
     observeEvent(input$question,
       {
-        # questions <- hhs_questions[input$section] 
-        state$question <- list(
-          selected = input$question
-        )
-
-        # updateSelectInput(
-        #   session,
-        #   "question",
-        #   choices = hhs_questions#,
-        #   #selected = questions[1]
-        # )
+        state$question <- list(selected = input$question)
       },
       ignoreInit = TRUE
     )
@@ -70,8 +54,9 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
 
 
       plot_hhs <- base::get(f)
-      p <- try(plot_hhs(state$hhs_data_filtered, iso3 = state$iso3$selected), silent = TRUE)
-      
+      result <- try(plot_hhs(state$hhs_data_filtered, iso3 = state$iso3$selected), silent = TRUE)
+      p <- result$plot
+      state$current_plot_data <- result$data
 
       output$chart_ui <- renderUI({
         
@@ -105,10 +90,21 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
     }, ignoreNULL = TRUE)
     
     output$downloadPlot <- downloadHandler(
-      filename = function(){paste0("plot_", tolower(gsub(" ", "_", state$question$selected)), ".png")},
+      filename = function(){paste0("hhs_", tolower(gsub(" ", "_", state$question$selected)), ".zip")},
       content = function(file){
-        ggsave(file,plot=state$current_plot, width = 27, height = 20, units = "cm")
-      })
+        wd <- getwd()
+        setwd(tempdir())
+        
+        data_name <- 'data.csv'
+        plot_name <- paste0("plot_", tolower(gsub(" ", "_", state$question$selected)), ".png")
+
+        write.csv(state$current_plot_data, data_name, row.names = FALSE)
+        ggsave(plot_name, plot=state$current_plot, width = 27, height = 20, units = "cm")
+        fs = c(data_name, plot_name)
+        zip(zipfile=file, files=fs)
+        
+        setwd(wd)
+      }, contentType = "application/zip")
     
   })
 }

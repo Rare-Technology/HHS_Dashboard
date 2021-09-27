@@ -61,8 +61,10 @@ plot_horiz_bar <- function(
   
   if(type == 'grouped'){
     nudgeval <- ggplot2::layer_scales(p)$y$get_limits()[2] * 0.01
-    p <- p + geom_col(aes(fill = {{fill_var}}), position='dodge', alpha=0.8) +
-      geom_text(aes(label = {{y_var}}), hjust = 0, nudge_y = nudgeval, color = "grey40", size = 4)
+    p <- p + geom_col(aes(fill = {{fill_var}}), position=position_dodge(width=0.9), alpha=0.8) +
+      geom_text(aes(label = {{y_var}}, fill = {{fill_var}}),
+                hjust = -1, position = position_dodge(width=0.9),
+                color = "grey40", size = 4)
   }
   
   if(type == 'stacked'){
@@ -72,7 +74,7 @@ plot_horiz_bar <- function(
       stat = "identity",
       alpha = 0.8
     ) + 
-      scale_fill_brewer(palette = palette, direction = palette_direction) 
+      scale_fill_brewer(palette = palette, direction = palette_direction)
   }
   
   

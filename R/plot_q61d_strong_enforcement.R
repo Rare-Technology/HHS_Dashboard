@@ -61,26 +61,15 @@ prep_q61d_strong_enforcement <- function(.data){
 plot_q61d_strong_enforcement <- function(.data, ...){
 
   .data_plot <- prep_q61d_strong_enforcement(.data)
-  plot_horiz_bar(
+  
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of fishers who believe that \nit is important to have a strong enforcement system",
     facet_var = key
   )
-         #Plot
-         # plot_Q61d <-
-         #    ggplot(Q61d, aes(`MA name`, `Proportion (%)`, N = N)) +
-         #    theme_rare + geom_col(fill = "#005BBB", alpha = 0.8) +
-         #    facet_wrap( ~ key,
-         #                scale = input$x_axis,
-         #                labeller = label_wrap_gen(25)) +
-         #    
-         #    scale_y_continuous(limits = c(0, 110),
-         #                       breaks = seq(0, 100, 20)) +
-         #    ggtitle(
-         #       "Proportion of fishers who believe that \nit is important to have a strong enforcement system"
-         #    ) +
-         #    xlab (NULL) + ylab ("Proportion (%)") + 
-         #    coord_flip(ylim = c(0, 119))
-         # 
-         # ggplotly(plot_Q61d, height = 750)
+
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

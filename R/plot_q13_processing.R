@@ -48,18 +48,22 @@ prep_q13_processing <- function(.data, ...){
 
 plot_q13_processing <- function(.data, ...){
 
-    .data_plot <- prep_q13_processing(.data)
+  .data_plot <- prep_q13_processing(.data)
   
   
-    plot_horiz_bar(
-      .data_plot,
-      y_var = Average,
-      facet_var = Processors,
-      title = "Average number of household members that participate in post-procesing activities",
-      limits = c(0, 3),
-      breaks = seq(0, 3, 1),
-      y_title = "\nNumber of people"
-    )
-    
+  p <- plot_horiz_bar(
+    .data_plot,
+    y_var = Average,
+    facet_var = Processors,
+    title = "Average number of household members that participate in post-procesing activities",
+    limits = c(0, 3),
+    breaks = seq(0, 3, 1),
+    y_title = "\nNumber of people"
+  )
+
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 
 }

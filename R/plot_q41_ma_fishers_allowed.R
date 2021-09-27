@@ -61,13 +61,17 @@ prep_q41_ma_fishers_allowed <- function(.data){
 
 plot_q41_ma_fishers_allowed <- function(.data, ...){
 
-         .data_plot <- prep_q41_ma_fishers_allowed(.data)
-         
-         plot_horiz_bar(
-           .data_plot,
-           title = "Proportion of households that are aware of who is allowed \nto fish in the fisheries management/managed access area?",
-           facet_var = `key`,
-           breaks = seq(0, 100, 30)
-         )
+  .data_plot <- prep_q41_ma_fishers_allowed(.data)
+  
+  p <- plot_horiz_bar(
+   .data_plot,
+   title = "Proportion of households that are aware of who is allowed \nto fish in the fisheries management/managed access area?",
+   facet_var = `key`,
+   breaks = seq(0, 100, 30)
+  )
 
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

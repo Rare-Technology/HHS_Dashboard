@@ -51,23 +51,14 @@ plot_q77_hh_ends_meet <- function(.data, ...){
          
   .data_plot <- prep_q77_hh_ends_meet(.data)
   
-  plot_horiz_bar(
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of household able to make ends meet",
     facet_var = key
   )
-        #Plot
-        # plot_Q77 <-
-        #    ggplot(Q77, aes(`MA name`, `Proportion (%)`, N = N)) +
-        #    theme_rare + 
-        #    geom_col(fill = "#005BBB", alpha = 0.8) +
-        #    facet_wrap( ~ key, ncol=5,
-        #                labeller = label_wrap_gen(25)) +
-        #    scale_y_continuous(limits = c(0, 110),
-        #                       breaks = seq(0, 100, 25)) +
-        #    ggtitle("Proportion of household able to make ends meet") +
-        #    xlab (NULL) + ylab ("Proportion (%)") + 
-        #        coord_flip(clip = "on")
-        # 
-        #  ggplotly(plot_Q77, height = 750)
+
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

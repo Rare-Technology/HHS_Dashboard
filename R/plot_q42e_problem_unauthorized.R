@@ -7,9 +7,13 @@ plot_q42e_problem_unauthorized <- function(.data, ...){
       bar_column = `1`
     )
   
-  plot_horiz_bar(
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of community members that know how \nunauthorized fishers fishing inside the managed access area affect the fishery?"
   )
 
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

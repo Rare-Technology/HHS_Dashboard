@@ -171,7 +171,7 @@ plot_q24_items_owned <- function(.data, ...){
   )
   
   
-  ggplot(data = .data_plot,
+  p <- ggplot(data = .data_plot,
        aes(x = Item, y = `MA name`, fill = Proportion)) +
   geom_tile() + 
   geom_text(aes(label = Proportion, color=Proportion >= 50),
@@ -185,5 +185,10 @@ plot_q24_items_owned <- function(.data, ...){
     axis.ticks.x = element_line(),
     panel.grid.major.x = element_blank(),
     axis.title.y = element_blank()
+  )
+  
+  result <- list(
+    plot = p,
+    data = .data_plot
   )
 }

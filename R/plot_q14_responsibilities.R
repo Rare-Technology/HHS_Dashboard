@@ -37,10 +37,14 @@ plot_q14_responsibilities <- function(.data, ...){
 
   .data_plot <- prep_q14_responsibilities(.data)
    
-   plot_bubble(
+   p <- plot_bubble(
      .data_plot,
      title = "Proportion of activities that are the responsibility \nof the women in the household in a typical week",
      x_var = Activity
    )
 
+   result <- list(
+     plot = p,
+     data = .data_plot
+   )
 }

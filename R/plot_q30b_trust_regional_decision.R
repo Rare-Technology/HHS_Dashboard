@@ -34,21 +34,15 @@ prep_q30b_trust_regional_decision <- function(.data){
 plot_q30b_trust_regional_decision <- function(.data, ...){
 
   .data_plot <- prep_q30b_trust_regional_decision(.data)
-  plot_horiz_bar(
+  
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of community members who trust in \nregional goverment to make decisions that benefit \nthe community over their own interests"
   )
-         #Plot
-         # plot_Q30b <-
-         #    ggplot(Q30b, aes(`MA name`, `Proportion (%)`, N = N)) +
-         #    theme_rare + geom_col(fill = "#005BBB", alpha = 0.8) +
-         #    scale_y_continuous(limits = c(0, 110),
-         #                       breaks = seq(0, 100, 20)) +
-         #    ggtitle(
-         #       "Proportion of community members who trust in \nregional goverment to make decisions that benefit \nthe community over their own interests"
-         #    ) +
-         #    xlab (NULL) + ylab ("Proportion (%)") + 
-         #    coord_flip(clip ="on")
-         # 
-         # ggplotly(plot_Q30b, height = 750)
+  
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
+
 }

@@ -61,7 +61,7 @@ prep_q12_household_fishing <- function(.data) {
 plot_q12_household_fishing <- function(.data, ...) {
   .data_plot <- prep_q12_household_fishing(.data)
   
-  .data_plot %>%
+  p <- .data_plot %>%
     plot_horiz_bar(
       y_var = Average,
       title = glue::glue("Average number of household members \nthat go fishing regularly"),
@@ -70,4 +70,9 @@ plot_q12_household_fishing <- function(.data, ...) {
       limits = c(0, 3),
       breaks = seq(0, 3, 1)
     )
+  
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

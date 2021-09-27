@@ -28,25 +28,14 @@ prep_q65_no_wrong_fishing_reserve <- function(.data){
 plot_q65_no_wrong_fishing_reserve <- function(.data, ...){
 
   .data_plot <- prep_q65_no_wrong_fishing_reserve(.data)
-  plot_horiz_bar(
+  
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of community members who think is wrong to fish in the reserve"
   )
 
-
-
-
-         
-         #plot
-         # plot_Q65 <-
-         #    ggplot(Q65, aes(`MA name`, `Proportion (%)`, N = N)) +
-         #    theme_rare + geom_col(fill = "#005BBB", alpha = 0.8) +
-         #    
-         #    scale_y_continuous(limits = c(0, 110),
-         #                       breaks = seq(0, 100, 20)) +
-         #    ggtitle("Proportion of community members who think \nis wrong to fish in the reserve") +
-         #    xlab (NULL) + ylab ("Proportion (%)") + 
-         #    coord_flip(clip ="on")
-         # 
-         # ggplotly(plot_Q65, height = 750)
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

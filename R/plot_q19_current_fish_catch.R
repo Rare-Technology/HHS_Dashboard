@@ -52,14 +52,17 @@ prep_q19_current_fish_catch <- function(.data){
 plot_q19_current_fish_catch <- function(.data, ...){
   
   
-        .data_plot <- prep_q19_current_fish_catch(.data)
+  .data_plot <- prep_q19_current_fish_catch(.data)
   
-
-        plot_horiz_bar(
-          .data_plot,
-          title = "Proportion of fishers who perceived that their catch \nremained stable or increased over the past 2 years",
-          facet_var = key
-        )
+  
+  p <- plot_horiz_bar(
+    .data_plot,
+    title = "Proportion of fishers who perceived that their catch \nremained stable or increased over the past 2 years",
+    facet_var = key
+  )
         
-         
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

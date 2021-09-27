@@ -37,8 +37,14 @@ prep_q30d_trust_village_alert <- function(.data) {
 
 plot_q30d_trust_village_alert <- function(.data, ...) {
   .data_plot <- prep_q30d_trust_village_alert(.data)
-  plot_horiz_bar(
+  
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of community members who believe that \nyou have that to be alert to someone taking advantage of you"
+  )
+  
+  result <- list(
+    plot = p,
+    data = .data_plot
   )
 }

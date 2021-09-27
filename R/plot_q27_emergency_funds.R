@@ -60,21 +60,15 @@ prep_q27_emergency_funds <- function(.data){
 
 plot_q27_emergency_funds <- function(.data, ...){
 
-           .data_plot <- prep_q27_emergency_funds(.data)
-           
-           plot_horiz_bar(
-             .data_plot,
-             title = "Proportion of households with access to emergency funds"
-           )
-         #plot
-         # plot_Q27 <-
-         #    ggplot(Q27, aes(`MA name`, `Proportion (%)`, N = N)) +
-         #    theme_rare + geom_col(fill = "#005BBB", alpha = 0.8) +
-         #    ggtitle("Proportion of households with access to emergency funds") +
-         #    scale_y_continuous(limits = c(0, 110),
-         #                       breaks = seq(0, 100, 20)) +
-         #    xlab (NULL) + ylab ("Proportion (%)") + 
-         #    coord_flip(clip = "on")
-         # 
-         #  ggplotly(plot_Q27, height = 750)
+  .data_plot <- prep_q27_emergency_funds(.data)
+  
+  p <- plot_horiz_bar(
+   .data_plot,
+   title = "Proportion of households with access to emergency funds"
+  )
+  
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

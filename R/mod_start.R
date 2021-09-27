@@ -9,16 +9,17 @@
 #' @importFrom shiny NS tagList 
 startUI <- function(id){
   ns <- NS(id)
-  tagList(
-      tags$h1("Welcome!"),
-      tags$h2("August 30 2021 Notes"),
-      tags$li("New plots for questions 8, 11, 14, 16, 17, 18, and 24"),
-      tags$li("Question 24 (assets owned) now shows breakdown by each asset type."),
-      tags$li("Fixed labels on question 37 (members who know size restrictions)"),
-      tags$li("Managed access area selection is now blank by default."),
-      tags$br(),
-      tags$p("To get started, select a country on the left and then select the managed access areas you would like to see."),
-      tags$p(tags$strong("No plots will show unless you select a managed access area."))
+  div(id="startpage",
+    tags$h1("Welcome!"),
+ 
+    tags$p("To get started, click on ", icon('filter'),
+           " to select a country and then select the managed access areas you ",
+           " would like to see."),
+    div(class = 'timeouttxt',
+        h3(class = 'timeouttitle', "Please note"),
+        p("This app may time-out if left idle too long, which will cause the",
+          " screen to grey-out. To use the app again, refresh the page.")
+    )
   )
 }
     

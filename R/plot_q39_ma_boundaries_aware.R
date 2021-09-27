@@ -59,31 +59,16 @@ prep_q39_ma_boundaries_aware <- function(.data){
 }
 
 plot_q39_ma_boundaries_aware <- function(.data, ...){
-.data_plot <- prep_q39_ma_boundaries_aware(.data)
-
-plot_horiz_bar(
-  .data_plot,
-  title = "Proportion of fishers aware of the boundaries \nof the fisheries management/managed access area",
-  facet_var = key
-)
-         
-         # #Plot
-         # plot_Q39 <-
-         #    ggplot(Q39, aes(`MA name`, `Proportion (%)`, N = N)) +
-         #    theme_rare + geom_col(fill = "#005BBB", alpha = 0.8) +
-         #    facet_wrap(
-         #       ~ key,
-         #       labeller = label_wrap_gen(20),
-         #       ncol = 5
-         #    ) +
-         #    
-         #    scale_y_continuous(limits = c(0, 110),
-         #                       breaks = seq(0, 100, 25)) +
-         #    ggtitle(
-         #       "Proportion of fishers aware of the boundaries \nof the fisheries management/managed access area"
-         #    ) +
-         #    xlab (NULL) + ylab ("Proportion (%)") + 
-         #    coord_flip(ylim = c(0, 119))
-         # 
-         # ggplotly(plot_Q39, height = 750)
+  .data_plot <- prep_q39_ma_boundaries_aware(.data)
+  
+  p <- plot_horiz_bar(
+    .data_plot,
+    title = "Proportion of fishers aware of the boundaries \nof the fisheries management/managed access area",
+    facet_var = key
+  )
+  
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

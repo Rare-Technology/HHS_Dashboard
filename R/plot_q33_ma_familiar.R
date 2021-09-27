@@ -8,8 +8,13 @@ plot_q33_ma_familiar <- function(.data, ...) {
       bar_column = `1`
     )
 
-  plot_horiz_bar(
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of community familiar with the \nmanaged access and reserve area management approach"
+  )
+  
+  result <- list(
+    plot = p,
+    data = .data_plot
   )
 }

@@ -69,12 +69,16 @@ prep_q22_catch_5yrs <- function(.data){
 plot_q22_catch_5yrs <- function(.data, ...){
 
          
-        .data_plot <- prep_q22_catch_5yrs(.data)
-        
-        plot_horiz_bar(
-          .data_plot,
-          title = "Proportion of fishers who perceived that their catch \nwill remain stable or increase over the next 5 years",
-          facet_var = key
-        )
-
+  .data_plot <- prep_q22_catch_5yrs(.data)
+  
+  p <- plot_horiz_bar(
+    .data_plot,
+    title = "Proportion of fishers who perceived that their catch \nwill remain stable or increase over the next 5 years",
+    facet_var = key
+  )
+  
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

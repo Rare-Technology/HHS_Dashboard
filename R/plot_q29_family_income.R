@@ -44,9 +44,14 @@ prep_q29_family_income <- function(.data) {
 plot_q29_family_income <- function(.data, ...) {
   .data_plot <- prep_q29_family_income(.data)
 
-  plot_horiz_bar(
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of community members that have \nsufficient income to cover their family's needs",
     facet_var = key
+  )
+  
+  result <- list(
+    plot = p,
+    data = .data_plot
   )
 }

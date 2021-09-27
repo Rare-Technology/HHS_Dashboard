@@ -81,30 +81,16 @@ prep_q78_financial_decisions <- function(.data){
 
 plot_q78_financial_decisions <- function(.data, ...){
   
-        .data_plot <- prep_q78_financial_decisions(.data)
+  .data_plot <- prep_q78_financial_decisions(.data)
 
-        plot_horiz_bar(
-          .data_plot,
-          title = "Proportion of community members who make financial decisions for the household",
-          facet_var = key
-        )
-         
-         #Plot
-         # plot_Q78 <-
-         #    ggplot(Q78, aes(`MA name`, `Proportion (%)`, N = N)) +
-         #    theme_rare + 
-         #    geom_col(fill = "#005BBB", alpha = 0.8) +
-         #    facet_wrap( ~ key,
-         #                scale = input$x_axis,
-         #                labeller = label_wrap_gen(25)) +
-         #    
-         #    scale_y_continuous(limits = c(0, 110),
-         #                       breaks = seq(0, 100, 25)) +
-         #    ggtitle(
-         #       "Proportion of community members who \nmake financial decisions for the household"
-         #    ) +
-         #    xlab (NULL) + ylab ("Proportion (%)") + 
-         #    coord_flip(ylim = c(0, 119))
-         # 
-         # ggplotly(plot_Q78, height = 750)
+  p <- plot_horiz_bar(
+    .data_plot,
+    title = "Proportion of community members who make financial decisions for the household",
+    facet_var = key
+  )
+  
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

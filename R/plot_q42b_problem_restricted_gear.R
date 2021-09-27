@@ -9,9 +9,13 @@ plot_q42b_problem_restricted_gear <- function(.data, ...){
     bar_column = `1`
   )
   
-  plot_horiz_bar(
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of community members that \nknow how fishing with restricted gear affect the fishery"
   )
 
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

@@ -33,21 +33,13 @@ plot_q30a_trust_local_decision <- function(.data, ...){
 
   .data_plot <- prep_q30a_trust_local_decision(.data)
   
-  plot_horiz_bar(
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of community members who trust in the local goverment \nto make decisions that benefit the community over their own interests"
   )
-         #Plot
-         # plot_Q30a <-
-         #    ggplot(Q30a, aes(`MA name`, `Proportion (%)`, N = N)) +
-         #    theme_rare + geom_col(fill = "#005BBB", alpha = 0.8) +
-         #    scale_y_continuous(limits = c(0, 110),
-         #                       breaks = seq(0, 100, 20)) +
-         #    ggtitle(
-         #       "Proportion of community members who trust in the local goverment \nto make decisions that benefit the community over their own interests"
-         #    ) +
-         #    xlab (NULL) + ylab ("Proportion (%)") + 
-         #    coord_flip(clip ="on")
-         # 
-         # ggplotly(plot_Q30a, height = 750)
+  
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }

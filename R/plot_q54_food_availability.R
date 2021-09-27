@@ -39,24 +39,14 @@ plot_q54_food_availability <- function(.data, ...){
   
   .data_plot <- prep_q54_food_availability(.data)
   
-  plot_horiz_bar(
+  p <- plot_horiz_bar(
     .data_plot,
     title = "Proportion of households who think that \nfood availability was good in the past year",
     facet_var = key
   )
-         #Plot
-         # plot_Q54 <-
-         #    ggplot(Q54, aes(x = `MA name`, y = `Proportion (%)`, N = N)) +
-         #    theme_rare + geom_col(fill = "#005BBB", alpha = 0.8) +
-         #    facet_wrap( ~ key, scale = input$x_axis, ncol = 3) +
-         #    
-         #    scale_y_continuous(limits = c(0, 110),
-         #                       breaks = seq(0, 100, 25)) +
-         #    ggtitle(
-         #       "Proportion of households who think that \nfood availability was good in the past year"
-         #    ) +
-         #    xlab (NULL) + ylab ("Proportion (%)") + 
-         #    coord_flip(clip ="on")
-         # 
-         # ggplotly(plot_Q54, height = 750)
+  
+  result <- list(
+    plot = p,
+    data = .data_plot
+  )
 }
