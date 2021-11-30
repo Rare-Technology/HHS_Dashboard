@@ -9,6 +9,7 @@ create_state <- function(){
     hhs_data_geo = hhs_data_geo,
     # dates = rarefma::init_dates,
     # selections_geo = rarefma::init_geo_selections,
+    sel_year = hhs_init_year_selections$selected,
     country = list(
       choices = hhs_init_geo_selections$country$choices,
       selected = hhs_init_geo_selections$country$selected

@@ -29,6 +29,7 @@ golem::add_module( name = "side" )
 golem::add_module( name = "side_geography" )
 golem::add_module( name = "side_assessment" )
 golem::add_module( name = "main_zyx" )
+golem::add_module( name = "side_year")
 ## Add helper functions ----
 ## Creates ftc_* and utils_*
 golem::add_fct( "helpers" ) 
@@ -36,7 +37,8 @@ golem::add_utils( "geo" )
 golem::add_utils( "species" )
 golem::add_utils( "state" )
 golem::add_utils( "data" )
-golem::add_utils( 'table')
+golem::add_utils( "table" )
+golem::add_utils( "year" )
 ## External resources
 ## Creates .js and .css files at inst/app/www
 golem::add_js_file( "toggleFullScreen" )

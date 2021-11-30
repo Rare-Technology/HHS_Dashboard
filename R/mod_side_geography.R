@@ -11,12 +11,12 @@
 sidebarGeoUI <- function(id) {
   ns <- NS(id)
   tagList(
-    selectInput(
-      ns("sel_datasource"),
-      "Data source",
-      choices = hhs_data_source,
-      selected = hhs_data_source,
-    ),
+    # selectInput(
+    #   ns("sel_datasource"),
+    #   "Data source",
+    #   choices = hhs_data_source,
+    #   selected = hhs_data_source,
+    # ),
     div(class='sidetitle', "Geography"),
     selectInput(
       ns("sel_country"),
@@ -97,6 +97,22 @@ sidebarGeoServer <- function(id, state) {
       # )
       # 
       # 
+      
+      observeEvent(state$sel_year, {
+        country_info <- get_country_selections(
+          state$hhs_data_geo,
+          year_selected = state$sel_year
+        )
+        
+        updateSelectInput(
+          session,
+          "sel_country",
+          choices = country_info$choices,
+          selected = country_info$selected
+        )
+      }, ignoreInit = TRUE
+      )
+      
       observeEvent(input$sel_country,
         {
           if (input$sel_country != state$country$selected) {
@@ -106,6 +122,7 @@ sidebarGeoServer <- function(id, state) {
 
           subnational_info <- get_subnational_selections(
             state$hhs_data_geo,
+            year_selected = state$sel_year,
             country_selected = input$sel_country
           )
           state$subnational <- list(
@@ -131,6 +148,7 @@ sidebarGeoServer <- function(id, state) {
           }
 
           local_info <- get_local_selections(state$hhs_data_geo,
+            year_selected = state$sel_year,
             country_selected = input$sel_country,
             subnational_selected = input$sel_subnational
           )
@@ -156,6 +174,7 @@ sidebarGeoServer <- function(id, state) {
 
           maa_info <- get_maa_selections(
             state$hhs_data_geo,
+            year_selected = state$sel_year,
             country_selected = input$sel_country,
             subnational_selected = input$sel_subnational,
             local_selected = input$sel_local
@@ -183,6 +202,7 @@ sidebarGeoServer <- function(id, state) {
 
           state$hhs_data_filtered <- state$hhs_data_all %>%
             dplyr::filter(
+              year %in% state$sel_year,
               country %in% input$sel_country,
               subnational %in% input$sel_subnational,
               local %in% input$sel_local,

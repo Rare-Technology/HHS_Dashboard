@@ -14,6 +14,7 @@ app_server <- function( input, output, session ) {
   # Sidebar
   sidebarServer("sidebarUI")
   sidebarGeoServer("sidebarGeoUI", state)
+  sidebarYearServer("sidebarYearUI", state)
   #sidebarStockServer("sidebarStockUI", state)
   sidebarSurveyServer("sidebarSurveyUI", state)
   

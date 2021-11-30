@@ -1,10 +1,11 @@
 
 
 
-get_country_selections <- function(.data){
+get_country_selections <- function(.data, year_selected){
 
   
     choices <- .data %>% 
+      dplyr::filter(year == year_selected) %>% 
       dplyr::pull(country) %>% 
       unique() %>% 
       as.character() %>% 
@@ -17,8 +18,9 @@ get_country_selections <- function(.data){
 }
 
 
-get_subnational_selections <- function(.data, country_selected){
+get_subnational_selections <- function(.data, year_selected, country_selected){
   choices <- .data %>% 
+    dplyr::filter(year %in% year_selected) %>% 
     dplyr::filter(country %in% country_selected) %>% 
     dplyr::pull(subnational) %>% 
     unique()
@@ -29,9 +31,13 @@ get_subnational_selections <- function(.data, country_selected){
 }
 
 
-get_local_selections <- function(.data, country_selected, subnational_selected){
+get_local_selections <- function(.data,
+                                 year_selected,
+                                 country_selected,
+                                 subnational_selected){
 
   choices <- .data %>% 
+    dplyr::filter(year %in% year_selected) %>% 
     dplyr::filter(country %in% country_selected) %>% 
     dplyr::filter(subnational %in% subnational_selected) %>% 
     dplyr::pull(local) %>% 
@@ -44,11 +50,13 @@ get_local_selections <- function(.data, country_selected, subnational_selected){
 
 
 get_maa_selections <- function(.data, 
+                               year_selected,
                                country_selected, 
                                subnational_selected,
                                local_selected){
 
   choices <- .data %>% 
+    dplyr::filter(year %in% year_selected) %>% 
     dplyr::filter(country %in% country_selected) %>% 
     dplyr::filter(subnational %in% subnational_selected) %>% 
     dplyr::filter(local %in% local_selected) %>% 
@@ -62,6 +70,7 @@ get_maa_selections <- function(.data,
 
 
 get_geo_selections <- function(.data, 
+                               year_selected = NULL,
                                country_choices = NULL, 
                                country_selected = NULL,
                                subnational_choices = NULL, 
@@ -74,6 +83,7 @@ get_geo_selections <- function(.data,
   
   if(is.null(country_choices)){
     country_choices <- .data %>% 
+      dplyr::filter(year == year_selected) %>% 
       dplyr::pull(country) %>% 
       unique() %>% 
       as.character() %>% 
@@ -86,6 +96,7 @@ get_geo_selections <- function(.data,
   
   if(is.null(subnational_choices)){
     subnational_choices <- .data %>% 
+      dplyr::filter(year == year_selected) %>% 
       dplyr::filter(country %in% country_selected) %>% 
       dplyr::pull(subnational) %>% 
       unique() %>% 
@@ -101,6 +112,7 @@ get_geo_selections <- function(.data,
   
   if(is.null(local_choices)){
     local_choices <- .data %>% 
+      dplyr::filter(year == year_selected) %>% 
       dplyr::filter(country %in% country_selected) %>% 
       dplyr::filter(subnational %in% subnational_selected) %>% 
       dplyr::pull(local) %>% 
@@ -116,6 +128,7 @@ get_geo_selections <- function(.data,
   
   if(is.null(maa_choices)){
     maa_choices <- .data %>% 
+      dplyr::filter(year == year_selected) %>% 
       dplyr::filter(country %in% country_selected) %>% 
       dplyr::filter(subnational %in% subnational_selected) %>% 
       dplyr::filter(local %in% local_selected) %>% 
