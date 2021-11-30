@@ -36,8 +36,8 @@ create_state <- function(){
     ),
     current_tab = 'Data',
     performance_indicators = 'Reporting Effort',
-    current_plot = NULL
-    
+    current_plot = NULL,
+    language = "English"
   )
 }
 

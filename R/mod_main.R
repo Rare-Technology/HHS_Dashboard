@@ -24,6 +24,13 @@ mainUI <- function(id){
                  style='material-circle'
         ),
         div(style='flex-grow: 1;'),
+        div(id="lang-select", selectInput(ns("language"), "", width = 80,
+                                          c("EN" = "English",
+                                            "ID" = "Bahasa Indonesia",
+                                            "BRA" = "Português (BRA)",
+                                            "ES" = "Español"
+                                            ))
+        ),
         div(class = 'fs-button',
             HTML(
               "<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='currentColor' class='bi bi-fullscreen' viewBox='0 0 16 16'>
@@ -32,11 +39,7 @@ mainUI <- function(id){
             onclick = "shinyjs.toggleFullScreen();"
         )
     ),
-    tabsetPanel(id = ns("tabs"),
-      tabPanel("Start", startUI("startUI")),
-      tabPanel("Summary data", dataUI("dataUI")),
-      tabPanel("Survey charts", chartUI("chartUI"))
-    )
+    uiOutput(ns("tabPanels"))
   )
 }
 
@@ -44,13 +47,24 @@ mainUI <- function(id){
 #'
 #' @noRd 
 mainServer <- function(id, state){
+  ns <- NS(id)
   moduleServer(
     id,
     function(input, output, session){
-
+      output$tabPanels <- renderUI({
+        ui <- tabsetPanel(id = ns("tabs"),
+                    tabPanel(tr(state, "Start"), startUI("startUI")),
+                    tabPanel(tr(state, "Summary data"), dataUI("dataUI")),
+                    tabPanel(tr(state, "Survey charts"), chartUI("chartUI"))
+        )
+        ui
+      })
       # observeEvent(input$tabs, {
       #   state$current_tab <- input$tabs
       # })
+      observeEvent(input$language, {
+        state$language <- input$language
+      })
     }
   )
   

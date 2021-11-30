@@ -6,6 +6,7 @@
 # I used this code to confirm types for the spec. I created
 # the initial spec based on BRA and created ALL_hhs based on
 # code below.
+# - Zev
 
 cols_spec <- spec_hhs$cols %>% purrr::map(function(x) unname(class(x)[1]))
 cols_spec <- data.frame(t(as_tibble(cols_spec)))

@@ -47,6 +47,7 @@ golem::add_i
 ## Add internal datasets ----
 ## If you have data in your package
 usethis::use_data_raw( name = "/Users/zevross/git-repos/FMA_Dashboard/Data/ourfish.rds", open = FALSE ) 
+usethis::use_data_raw("script")
 
 ## Tests ----
 ## Add one line by test you want to create
