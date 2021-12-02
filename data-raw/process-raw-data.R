@@ -206,6 +206,30 @@ hhs_q14 %>%
 
 
 #************************************************
+# year information ----
+# any year assignments here are subject to change eg Brazil gets new data, or 
+# Honduras 2022 survey is split between two years so that lubridate::year
+# trick doesn't work
+#************************************************
+
+hhs_data <- hhs_data %>%
+  mutate(yearmonth = lubridate::ym(substr(updatedat, 1, 7)))
+
+hhs_data$year[hhs_data$iso3 == "BRA"] <- 2019
+hhs_data$year[hhs_data$iso3 == "FSM"] <- 2020
+hhs_data$year[hhs_data$iso3 == "HND"] <- lubridate::year(
+  hhs_data$yearmonth[(hhs_data$iso3 == "HND")]
+)
+hhs_data$year[hhs_data$iso3 == "IDN"] <- 2019
+hhs_data$year[hhs_data$iso3 == "MOZ"] <- ifelse(
+  hhs_data$yearmonth[hhs_data$iso3 == "MOZ"] < lubridate::ym("2020-02"),
+  2019,
+  2021
+)
+hhs_data$year[hhs_data$iso3 == "PHL"] <- 2019
+hhs_data$year[hhs_data$iso3 == "PLW"] <- 2020
+
+#************************************************
 # Create the geotable ----
 #************************************************
 
