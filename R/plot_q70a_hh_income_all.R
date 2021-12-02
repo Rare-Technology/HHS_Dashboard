@@ -30,13 +30,12 @@ prep_q70a_hh_income_all <- function(.data, iso3){
       "11g_income_aquaculture",
       "11h_income_extraction",
       "11i_income_tourism",
-      "11k_income_other",
-      "70_hh_average_income"
+      "11k_income_other"
     )]
   
   income_source[is.na(income_source)] <- 0
   income_source$`70_hh_average_income` <- 
-    as.numeric(as.character(income_source$`70_hh_average_income`))
+    as.numeric(as.character(hhs_Q70$`70_hh_average_income`))
   income_source <- data.frame(income_source)
   
   ## Agregate income

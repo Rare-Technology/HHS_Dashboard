@@ -224,15 +224,15 @@ create_geo_table <- function(.data) {
 }
 
 hhs_init_year_selections <- list(
-  selected = 2019, # subject to change
+  selected = 2021, # subject to change
   choices = hhs_data$year %>% unique() %>% sort()
 )
 
 hhs_data_geo <- create_geo_table(hhs_data)
 hhs_init_geo_selections <- rarehhs::get_geo_selections(
   hhs_data_geo,
-  year_selected = 2019,
-  country_selected = "Indonesia"
+  year_selected = 2021,
+  country_selected = "Honduras"
 )
 
 geo_filter_data <- function(.data) {

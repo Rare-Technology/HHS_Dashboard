@@ -136,8 +136,7 @@ sidebarGeoServer <- function(id, state) {
             choices = subnational_info$choices,
             selected = subnational_info$selected
           )
-        },
-        ignoreInit = TRUE
+        }, ignoreInit = TRUE
       )
 
 
