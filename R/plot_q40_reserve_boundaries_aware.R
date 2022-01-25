@@ -13,7 +13,7 @@ prep_q40_reserve_boundaries_aware <- function(.data, iso3){
         `40_reserve_boundaries_aware` = forcats::fct_recode(
           factor(`40_reserve_boundaries_aware`),
           "Strongly disagree" = "0",
-          #"Strongly disagree" = "1", # 1 does not occur
+          "Strongly disagree" = "1",
           "Strongly disagree" = "2",
           "Disagree" = "3",
           "Disagree" = "4",
@@ -98,8 +98,7 @@ prep_q40_reserve_boundaries_aware <- function(.data, iso3){
       colnames(Q40_summary) <- c("MA name", "N", "Proportion (%)")
       
       dat <- clean_plot_data (Q40_summary)
-      
- 
+
       
   }
   
@@ -111,7 +110,6 @@ plot_q40_reserve_boundaries_aware <- function(.data, ...){
   dots <- list(...)
   .data_plot <- prep_q40_reserve_boundaries_aware(.data, iso3 = dots$iso3)
 
-  
   if(dots$iso3 != "MOZ"){
     p <- plot_horiz_bar(
       .data_plot,

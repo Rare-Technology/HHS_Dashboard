@@ -4,11 +4,8 @@ prep_q70b_hh_income_fishing <- function(.data, iso3){
   conversion <- convert_money(iso3)
   
   hhs_Q70 <- .data %>%
-    dplyr::filter (dplyr::between(
-      as.numeric(`70_hh_average_income`), 10, 1.00e+09)) %>%
-    droplevels()
   
-  Q70_lenght <-
+  Q70_length <-
     tapply(hhs_Q70$`70_hh_average_income`,
            hhs_Q70$maa,
            length)
@@ -26,13 +23,12 @@ prep_q70b_hh_income_fishing <- function(.data, iso3){
       "11g_income_aquaculture",
       "11h_income_extraction",
       "11i_income_tourism",
-      "11k_income_other",
-      "70_hh_average_income"
+      "11k_income_other"
     )]
   
   income_source[is.na(income_source)] <- 0
   income_source$`70_hh_average_income` <-
-    as.numeric(as.character(income_source$`70_hh_average_income`))
+    as.numeric(as.character(hhs_Q70$`70_hh_average_income`))
   income_source <- data.frame(income_source)
   
   ## Agregate income
@@ -43,7 +39,7 @@ prep_q70b_hh_income_fishing <- function(.data, iso3){
               data = income_source)
   
   HH_avg_income <- data.frame (
-    N = Q70_lenght,
+    N = Q70_length,
     Total_Income_USD = round(income_summary$X70_hh_average_income, 1),
     Farming = round(income_summary$X11a_income_farming, 1) /
       rowSums(income_summary[, c(2:11)], na.rm = TRUE) * 100,

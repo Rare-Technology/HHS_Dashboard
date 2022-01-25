@@ -54,7 +54,8 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
 
 
       plot_hhs <- base::get(f)
-      result <- try(plot_hhs(state$hhs_data_filtered, iso3 = state$iso3$selected), silent = TRUE)
+      result <- try(plot_hhs(state$hhs_data_filtered, iso3 = state$iso3$selected))#, silent = TRUE)
+      
       p <- result$plot
       state$current_plot_data <- result$data
 
