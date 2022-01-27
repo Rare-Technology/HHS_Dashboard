@@ -4,6 +4,9 @@ prep_q70b_hh_income_fishing <- function(.data, iso3){
   conversion <- convert_money(iso3)
   
   hhs_Q70 <- .data %>%
+    dplyr::filter (dplyr::between(
+      as.numeric(`70_hh_average_income`), 10, 1.00e+09)) %>%
+    droplevels()
   
   Q70_length <-
     tapply(hhs_Q70$`70_hh_average_income`,
