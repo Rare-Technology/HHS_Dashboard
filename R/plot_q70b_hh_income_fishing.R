@@ -1,5 +1,7 @@
 prep_q70b_hh_income_fishing <- function(.data, iso3){
   
+  #### inconsistent numbers  on number of respondents in 2019; is the filtering the  source
+  # of this discrepancy? check the numbers w/ and w/o filters
 
   conversion <- convert_money(iso3)
   

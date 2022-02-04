@@ -215,7 +215,11 @@ hhs_q14 %>%
 hhs_data <- hhs_data %>%
   mutate(yearmonth = lubridate::ym(substr(updatedat, 1, 7)))
 
-hhs_data$year[hhs_data$iso3 == "BRA"] <- 2019
+hhs_data$year[hhs_data$iso3 == "BRA"] <- ifelse(
+  hhs_data$yearmonth[hhs_data$iso3 == "BRA"] < lubridate::ym("2021-10"),
+  2019,
+  2022
+)
 hhs_data$year[hhs_data$iso3 == "FSM"] <- 2020
 hhs_data$year[hhs_data$iso3 == "HND"] <- lubridate::year(
   hhs_data$yearmonth[(hhs_data$iso3 == "HND")]

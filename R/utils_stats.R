@@ -15,12 +15,15 @@ compute_summary_line <-
 ## TODO: this comes from original app and needs re-writing
 proportion <- function(question, grouping, rounding, type)
 {
-
+  
+  # get number of samples from each group (maa)
   Q_length <- as.vector(tapply(question, grouping, length))
   Q_length[is.na(Q_length)] <- 0
+  
   #calculate responses values
   Q_count <- tapply(question, list(grouping, question), length)
   Q_count[is.na(Q_count)] <- 0
+  
   #calculate proportions and bind table
   summary_bind <-
     data.frame(N = Q_length, round(Q_count / Q_length, rounding) * 100)
@@ -73,8 +76,25 @@ proportion <- function(question, grouping, rounding, type)
             ))
   }
 
+  # Q19
   if(type == "5"){
-
+    
+    # case: not all options are in the filtered data; impute 0
+    if (ncol(summary_bind) < 6) {
+      response_choices <- c(
+        "Declined.a.lot",
+        "Declined.slightly",
+        "Stayed.the.same",
+        "Improved.slightly",
+        "Improved.heavily"
+      )
+      response_choices <- setdiff(response_choices, names(summary_bind))
+      
+      for(col_name in response_choices) {
+        summary_bind[col_name] <- 0
+      }
+    }
+    
     result <-
       rbind(
         summary_bind,
