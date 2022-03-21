@@ -8,8 +8,8 @@ prep_q70a_hh_income_all <- function(.data, iso3){
   #        as.numeric(as.character(`70_hh_average_income`)), 
   #          10, 1.00e+20)) %>%
   #           droplevels()
-  Q70_lenght <-
-    tapply(hhs_Q70$`70_hh_average_income`,
+  Q70_length <-
+    tapply(as.numeric(hhs_Q70$`70_hh_average_income`),
            hhs_Q70$maa,
            length)
   
@@ -38,7 +38,7 @@ prep_q70a_hh_income_all <- function(.data, iso3){
     as.numeric(as.character(hhs_Q70$`70_hh_average_income`))
   income_source <- data.frame(income_source)
   
-  ## Agregate income
+  ## Aggregate income
   income_summary <-
     aggregate(. ~ maa,
               FUN = mean,
@@ -46,7 +46,7 @@ prep_q70a_hh_income_all <- function(.data, iso3){
               data = income_source)
   
   HH_avg_income <- data.frame (
-    N = Q70_lenght,
+    N = Q70_length,
     Total_Income = round(income_summary$X70_hh_average_income, 1),
     Farming = round(income_summary$X11a_income_farming, 1) /
       rowSums(income_summary[, c(2:11)], na.rm = TRUE) * 100,

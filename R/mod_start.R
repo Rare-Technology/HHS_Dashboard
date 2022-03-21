@@ -25,7 +25,7 @@ startServer <- function(id, state){
           tags$h1(tr(state,"Welcome!")),
           
           tags$p(tr(state, "To get started, click on"), icon('filter'),
-                 tr(state, "to select a country and then select the managed access areas you would like to see.")),
+                 tr(state, "to select a country then select the managed access areas you would like to see.")),
           div(class = 'timeouttxt',
               h3(class = 'timeouttitle', tr(state, "Please note:")),
               p(tr(state, "This app may time-out if left idle too long, which will cause the screen to grey-out. To use the app again, refresh the page."))

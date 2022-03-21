@@ -1,12 +1,15 @@
 
 prep_q14_responsibilities <- function(.data){
   
-
+  ## figure out how to filter out rows where 14_responsibility are just length-1
+  ## lists with NULL as the only element (so, all of Honduras's rows)
+  
   .data <- .data %>% 
     dplyr::select(maa, submissionid, `14_responsibility`) %>% 
     tidyr::unnest(cols = `14_responsibility`)
     
-
+  if(nrow(.data) == 0) return(NO_PLOT_ATTEMPT)
+  
   .data$`14_responsibility` <- 
     dplyr::recode_factor(.data$`14_responsibility`,
                   "Prepare fishing gear" = 'Preparing gear for fishing',
@@ -37,6 +40,8 @@ plot_q14_responsibilities <- function(.data, ...){
 
   .data_plot <- prep_q14_responsibilities(.data)
    
+  if(is.null(.data_plot)) return(list(plot = NO_PLOT_ATTEMPT, data = NO_PLOT_ATTEMPT))
+  
    p <- plot_bubble(
      .data_plot,
      title = "Proportion of activities that are the responsibility \nof the women in the household in a typical week",

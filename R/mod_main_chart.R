@@ -63,6 +63,8 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
         
         if(is.null(state$maa$selected)) {
           div('Select a managed access area.')
+        } else if(is.null(p)) {
+          div("There was not enough data to create this plot. Contact Rare S&T if you believe there is a mistake.")
         } else {
           if("try-error" %in% class(p)){
             state$current_plot <- NULL

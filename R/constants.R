@@ -32,3 +32,4 @@ HHS_PLOT_FUNS <- c("clean_plot_data", "ggplot_add", "ggplot_build", "ggplot_gtab
                         "plot_q68_fish_sold", "plot_q70a_hh_income_all", "plot_q70b_hh_income_fishing", 
                         "plot_q72_current_economic", "plot_q77_hh_ends_meet", "plot_q78_financial_decisions", 
                         "prep_data_for_plot_facet")
+NO_PLOT_ATTEMPT <- NULL
