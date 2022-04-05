@@ -108,6 +108,9 @@ prep_q40_reserve_boundaries_aware <- function(.data, iso3){
 
 plot_q40_reserve_boundaries_aware <- function(.data, ...){
   dots <- list(...)
+  
+  if (dots$iso3 == "GTM") return("a" + "a")
+  
   .data_plot <- prep_q40_reserve_boundaries_aware(.data, iso3 = dots$iso3)
 
   if(dots$iso3 != "MOZ"){

@@ -48,6 +48,14 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
 
       plot_hhs <- base::get(f)
       result <- try(plot_hhs(state$hhs_data_filtered, iso3 = state$iso3$selected), silent = TRUE)
+
+      if('try-error' %in% class(result)) {
+        output$chart_ui <- renderUI({
+          state$current_plot <- NULL
+          return(div("There was an error in plot generation"))  
+        })
+        return(TRUE)
+      }
       
       p <- result$plot
       state$current_plot_data <- result$data
@@ -59,15 +67,12 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
         } else if(is.null(p)) {
           div("There was not enough data to create this plot. Contact Rare S&T if you believe there is a mistake.")
         } else {
-          if("try-error" %in% class(p)){
-            state$current_plot <- NULL
-            return(div("There was an error in plot generation"))
-          }
-          
           state$current_plot <- p
+          plot_height <- 400 + 50*length(state$sel_maa)
+          plot_height <- paste0(plot_height, 'px')
           
           if(FALSE){
-            #output$chart <- renderPlotly(ggplot(mtcars, aes(cyl, mpg)) + geom_point() + ggtitle("This is my title"))
+            # tweak this up some time, could be cool
             p <- make_plotly(p)
             output$chart <- renderPlotly(p)
             p_output <- plotlyOutput(ns("chart"), height = '750px')
@@ -75,10 +80,10 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
             output$chart <- renderPlot(p)
             p_output <- plotOutput(ns("chart"), height = '750px')
           }
-  
+          
           list(
             downloadButton(ns("downloadPlot"),class = "download-button", 'Download Plot'),
-            div(style='height:600px; overflow-y: scroll', p_output)
+            div(style='height: calc(100vh - 220px); overflow-y: scroll', p_output)
           )
         }
       })

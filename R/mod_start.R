@@ -30,7 +30,6 @@ startServer <- function(id, state){
               h3(class = 'timeouttitle', tr(state, "Please note:")),
               p(tr(state, "This app may time-out if left idle too long, which will cause the screen to grey-out. To use the app again, refresh the page."))
           ),
-          br(),
           tags$img(id="start_banner", src="www/start_banner.png")
       )
     })

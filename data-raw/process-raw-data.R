@@ -1,5 +1,6 @@
 library(readr)
 library(dplyr)
+library(tidyr)
 source("data-raw/spec-hhs-data.R")
 source("data-raw/urls-data.R")
 
@@ -49,7 +50,8 @@ country <- tribble(
   "Mozambique", "MOZ",
   "Philippines", "PHL",
   "Federated States of Micronesia", "FSM",
-  "Palau", "PLW"
+  "Palau", "PLW",
+  "Guatemala", "GTM",
 )
 
 hhs_data <- hhs_data %>%
@@ -232,6 +234,11 @@ hhs_data$year[hhs_data$iso3 == "MOZ"] <- ifelse(
 )
 hhs_data$year[hhs_data$iso3 == "PHL"] <- 2019
 hhs_data$year[hhs_data$iso3 == "PLW"] <- 2020
+hhs_data$year[hhs_data$iso3 == "GTM"] <- ifelse(
+  hhs_data$yearmonth[hhs_data$iso3 == "GTM"] < lubridate::ym("2022-11"),
+  2021,
+  2022
+)
 
 #************************************************
 # Create the geotable ----

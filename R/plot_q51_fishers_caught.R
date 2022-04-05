@@ -51,7 +51,7 @@ prep_q51_fishers_caught <- function(.data){
   ##rownames to column
   Q51e_summary <-tibble::rownames_to_column(Q51e_summary, "MA name")
   colnames(Q51e_summary) <-
-    c("MA name", "N", "Seasonal Closures Violations (%)")
+    c("MA name", "N", "Reserve Violations (%)")
   
   ### Combine Q51d and Q51e
   Q51d_51e_summary <-
@@ -64,7 +64,7 @@ prep_q51_fishers_caught <- function(.data){
       Q51d_51e_summary %>% tidyr::pivot_longer(
         cols = c(
           "Fish Size Violations (%)",
-          "Seasonal Closures Violations (%)"
+          "Reserve Violations (%)"
         ),
         names_to = "key",
         values_to = "Proportion (%)"
