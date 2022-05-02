@@ -29,6 +29,7 @@ mainUI <- function(id){
                                           c("EN" = "English",
                                             "ID" = "Bahasa Indonesia",
                                             "BRA" = "Português (BRA)",
+                                            "MOZ" = "Português (MOZ)",
                                             "ES" = "Español"
                                             ))
         ),
