@@ -66,6 +66,21 @@ mainServer <- function(id, state){
       # })
       observeEvent(input$language, {
         state$language <- input$language
+        
+        hhs_questions_copy <- hhs_questions
+        for (section_idx in 1:length(hhs_questions_copy)) {
+          for (q_idx in 1:length(hhs_questions_copy[[section_idx]])) {
+            current_q <- names(hhs_questions_copy[[section_idx]])[q_idx]
+            translated_q <- tr(state, current_q)
+            names(hhs_questions_copy[[section_idx]])[q_idx] <- translated_q
+          }
+          current_section <- names(hhs_questions_copy)[section_idx]
+          translated_section <- tr(state, current_section)
+          names(hhs_questions_copy)[section_idx] <- translated_section
+        }
+
+        state$question$choices <- hhs_questions_copy
+        state$question$selected <- hhs_questions_copy[[1]][1]
       })
     }
   )

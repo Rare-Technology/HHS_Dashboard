@@ -27,13 +27,13 @@ prep_q68_fish_sold <- function(.data){
 }
 
 plot_q68_fish_sold <- function(.data, ...){
-
+  # TODO redesign this plot as a horizontal stacked bar plot
          
   .data_plot <- prep_q68_fish_sold(.data)
  
   p <- plot_horiz_bar(
     .data_plot,
-    title = "Proportion of catch sold versus eaten in the household"
+    title = "Proportion of catch sold instead of eaten in the household"
   )
 
   result <- list(
