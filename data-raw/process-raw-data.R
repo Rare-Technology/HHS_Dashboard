@@ -232,7 +232,11 @@ hhs_data$year[hhs_data$iso3 == "MOZ"] <- ifelse(
   2019,
   2021
 )
-hhs_data$year[hhs_data$iso3 == "PHL"] <- 2019
+hhs_data$year[hhs_data$iso3 == "PHL"] <- ifelse(
+  hhs_data$yearmonth[hhs_data$iso3 == "PHL"] < lubridate::ym("2022-09"),
+  2019,
+  2022
+)
 hhs_data$year[hhs_data$iso3 == "PLW"] <- 2020
 hhs_data$year[hhs_data$iso3 == "GTM"] <- ifelse(
   hhs_data$yearmonth[hhs_data$iso3 == "GTM"] < lubridate::ym("2022-11"),

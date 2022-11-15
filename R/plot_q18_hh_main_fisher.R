@@ -1,7 +1,7 @@
 
-plot_q16_hh_main_fisher <- function(.data, ...) {
+plot_q18_hh_main_fisher <- function(.data, ...) {
 
-  .data_plot <- prep_data_for_plot(.data, `16_hh_main_fisher`, type = "stacked")
+  .data_plot <- prep_data_for_plot(.data, `18_hh_main_fisher`, type = "stacked")
 
   p <- plot_bubble(
     .data_plot,
