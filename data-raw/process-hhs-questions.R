@@ -61,6 +61,13 @@ library(readxl)
 library(httr)
 library(readxl)
 
+### Jan 4 2023
+# Get most recent data from old survey. In theory this shouldn't be necessary at
+# some point but as of right now we still get some old survey samples.
+source("data-raw/process-raw-data.R")
+devtools::document()
+rm(list=ls())
+
 httr::GET("https://query.data.world/s/jwd5niku3brhqgcn7smgfev4sxtw2d",
           httr::write_disk(tf <- tempfile(fileext = ".xlsx")))
 new_hhs <- readxl::read_excel(tf)
@@ -87,8 +94,8 @@ yesno_to_bool <- function(yn) {
   else {
     yn <- stringr::str_to_lower(yn)
     yn_bool <- switch(yn,
-                      "yes" = 1,
-                      "no" = 0,
+                      "yes" = "Yes",
+                      "no" = "No",
     )
     return(yn_bool)
   }
@@ -138,6 +145,7 @@ new_hhs <- new_hhs %>%
       iso3 == "BRA" ~ "Brazil",
       iso3 == "GTM" ~ "Guatemala",
       iso3 == "MOZ" ~ "Mozambique",
+      iso3 == "PLW" ~ "Palau",
       TRUE ~ iso3 # something slips through the cracks
     ),
     updatedat_ymd = lubridate::as_date(updatedat),
@@ -227,6 +235,77 @@ new_hhs <- new_hhs %>%
     stringr::str_subset(names(.), "note_")
   ))
 
+idn_update <- readxl::read_excel("../data/HHS/HHS IDN 2022 revisions.xlsx")
+
+idn_update <- idn_update %>% 
+  dplyr::mutate(
+    updatedat_ymd = lubridate::as_date(updatedat),
+    yearmonth = stringr::str_sub(updatedat_ymd, 1, 7),
+    year = stringr::str_sub(updatedat_ymd, 1, 4) %>% as.integer(),
+  ) %>% 
+  dplyr::select(-updatedat_ymd) %>% 
+  dplyr::filter(!(`1_interviewer` %in% c("George Stoyle", "test", "Test", "Test 2", "Teste", "Teste 2"))) %>% 
+  dplyr::select(c(intersect(names(new_hhs), names(.)), "77_fishing_in_reserve"))
+
+# Pull 2022 Indo records that were in the edited sheet.
+# There are 29 records that weren't in the edited sheet. They'll just stay
+# in the main dataset.
+idn22 <- new_hhs %>% 
+  dplyr::filter(submissionid %in% idn_update$submissionid)
+
+# Remove the idn22 rows from hhs
+new_hhs <- new_hhs %>% 
+  dplyr::filter(!(submissionid %in% idn_update$submissionid))
+
+# Take out the columns from idn22 that we are pushing in from the edit,
+# except for submissionid. We'll need that in a join in the next step
+# What's left is the columns that were NOT in the edited sheet.
+# It's not a lot:
+# [1] "iso3"                           "lat"                           
+# [3] "lon"                            "calculate_q14_total_proportion"
+# [5] "ma_area"                        "ma_status" 
+idn22 <- idn22 %>% 
+  dplyr::select(-setdiff(names(idn_update), "submissionid"))
+
+# Before joining idn22 and idn_update, I found out that idn_update has a duplicate
+# submissionid. It looks like the only difference between the two rows with this
+# submissionid is 2_affiliation. We'll just take the one that was updated most recently
+dup_id <- "45d59f45-53f5-453d-8ab6-b76dee5b12b1"
+most_recent <- idn_update %>% 
+  dplyr::filter(submissionid == dup_id) %>% 
+  dplyr::pull(updatedat) %>% 
+  max()
+idn_update <- idn_update %>% 
+  dplyr::filter(submissionid != dup_id | updatedat == most_recent)
+
+# Now just join the bit from kobo that has columns missing from the edit
+idn22 <- idn22 %>% 
+  dplyr::left_join(idn_update, by="submissionid")
+
+# Convert some columns to make sure the types are compatible
+new_hhs <- new_hhs %>% 
+  dplyr::mutate(
+    # The Indo edit introduced a string to a question on a 0-10 scale --
+    # "Rules have not been created"
+    `75_mgmt_rules_fair` = as.character(`75_mgmt_rules_fair`)
+  )
+
+idn22 <- idn22 %>% 
+  dplyr::mutate(
+    # `8_religion_other` = as.character(`8_religion_other`),
+    `37a_loan_repay_bank` = as.character(`37a_loan_repay_bank`),
+    `37b_loan_repay_buyer` = as.character(`37b_loan_repay_buyer`),
+    `37c_loan_repay_nonbank` = as.character(`37c_loan_repay_nonbank`),
+    `65a_fishers_gear_not_permitted` = as.double(`65a_fishers_gear_not_permitted`),
+    `65b_fishers_reserves` = as.double(`65b_fishers_reserves`),
+    `65c_fishers_ma_area` = as.double(`65c_fishers_ma_area`),
+    `65d_fishers_violate_fish_size` = as.double(`65d_fishers_violate_fish_size`),
+    `65e_fishers_caught` = as.double(`65e_fishers_caught`),
+    `80_no_wrong_fishing_reserve` = as.double(`80_no_wrong_fishing_reserve`),
+  )
+
+new_hhs <- dplyr::bind_rows(new_hhs, idn22)
+
 ### Moving on to the question mapping: Extract useful text from column names
 # sometimes it's clear what the mapping is from an old survey question to a new
 # survey question because the descriptive text is the same.
@@ -288,13 +367,15 @@ new_names <- purrr::map(old_names, function (x) {
   }
 }) %>% unlist()
 # Rename old columns using the mapper we just made
-hhs_data_update <- hhs_data %>% dplyr::rename_with(~ new_names, dplyr::all_of(old_names))
+old_hhs <- hhs_data %>% dplyr::rename_with(~ new_names, dplyr::all_of(old_names))
 
 ### Mapping remaining columns
 # After going through the output of q_mapping and cross-checking with the
 # mapping spreadsheet, we have to manually rename some columns to make
 # the mapping work
-hhs_data_update <- hhs_data_update %>% 
+old_hhs <- old_hhs %>% 
+  # Dropping 77 because will have another column take that name
+  dplyr::select(-`77_fishing_in_reserve`) %>% 
   dplyr::rename(
     `14d_months_fishing_aquaculture` = `11g_months_aquaculture`,
     `14d_income_fishing_aquaculture` = `11g_income_aquaculture`,
@@ -306,6 +387,7 @@ hhs_data_update <- hhs_data_update %>%
     `35c_other_nonbank` = `25d_financial_lender`,
     `33_hh_insurance/yes_unspecified` = `25e_financial_insurance`,
     `30_save_monthly_income` = `26_fishing_income_save`,
+    `35b_buyer` = `28_buyer_loans`,
     `46_ma_gear_trap` = `35l_ma_gear_traps`,
     `58_represent_role` = `47_represent_contributions`,
     `69a_rules_benefit_licensing` = `42a_problem_regulation`,
@@ -315,16 +397,27 @@ hhs_data_update <- hhs_data_update %>%
     `69e_rules_benefit_min_fish_size` = `42c_problem_undersize`,
     `74i_change_fishing_behavior` = `61f_fishing_change_behavior`,
     `76_complies_reserve` = `62_reserve_compliance`,
+    `77_fishing_in_reserve` = `63_times_fishing_reserve`,
     `78d_violate_reserve_fishing` = `66_reaction_fishing_reserve`
   ) %>% 
   dplyr::select(
     -c(username, username_2, level2_name, level4_id)
   )
 
+### Removing 46_ma_gear_other
+# Old 35_ma_gear_other was mapped to new 46_ma_gear_other but the information 
+# that these columns provide is different. The new 46_ma_gear_other simply says if
+# the gear specified in 46_ma_gear_other_specify is permitted or not. The old
+# 35_ma_gear_other is a mix of these two columns: some entries will say something
+# like "X is not permitted" while other entries will just specify a gear type and
+# not say if its permitted or not. Because of this inconsistency, we will simply
+# not carry forward the old 36_ma_gear_other
+old_hhs$`46_ma_gear_other` <- as.character(NA)
+
 ### Splitting up Q4, Q44, Q45, and Q48 into columns in the new survey
 
 # Q4 -> Q4
-q4_data <- purrr::map_dfr(hhs_data_update$`4_ma_r_mb`, function(tb) {
+q4_data <- purrr::map_dfr(old_hhs$`4_ma_r_mb`, function(tb) {
   tb_data <- tb[[1]]
   tb_string <- stringr::str_split(tb_data, ",", simplify=TRUE)
   mr <- ifelse("marine reserve" %in% tb_string, 1, 0)
@@ -339,7 +432,7 @@ q4_data <- purrr::map_dfr(hhs_data_update$`4_ma_r_mb`, function(tb) {
     "4_ma_r_mb/none" = none
   ))
 })
-hhs_data_update <- cbind(hhs_data_update, q4_data)
+old_hhs <- cbind(old_hhs, q4_data)
 
 # Q44 -> Q54
 # 44_meeting_attendance is a bunch of tibbles, difficult to work with
@@ -347,12 +440,12 @@ hhs_data_update <- cbind(hhs_data_update, q4_data)
 # ironically, this was a pain in the ass to do with purrr, so implementing as a
 # for loop instead
 out44 <- c()
-for (i in 1:nrow(hhs_data_update)) {
-  out44 <- c(out44, paste0(hhs_data_update$`44_meeting_attendance`[[i]][[1]], collapse = ","))
+for (i in 1:nrow(old_hhs)) {
+  out44 <- c(out44, paste0(old_hhs$`44_meeting_attendance`[[i]][[1]], collapse = ","))
 }
-hhs_data_update$`44_meeting_attendance` <- out44
+old_hhs$`44_meeting_attendance` <- out44
 
-q54_data <- purrr::map_dfr(hhs_data_update$`44_meeting_attendance`, function(tb) {
+q54_data <- purrr::map_dfr(old_hhs$`44_meeting_attendance`, function(tb) {
   tb_data <- tb[[1]]
   tb_string <- stringr::str_split(tb_data, ",", simplify=TRUE)
   yesmale <- ifelse("Yes male" %in% tb_string, 1, 0)
@@ -374,16 +467,16 @@ q54_data <- purrr::map_dfr(hhs_data_update$`44_meeting_attendance`, function(tb)
     "54_fisheries_management_meeting/no" = no
   ))
 })
-hhs_data_update <- cbind(hhs_data_update, q54_data)
+old_hhs <- cbind(old_hhs, q54_data)
 
 # Q45 -> Q57
 out45 <- c()
-for (i in 1:nrow(hhs_data_update)) {
-  out45 <- c(out45, paste0(hhs_data_update$`45_leadership_position`[[i]][[1]], collapse = ","))
+for (i in 1:nrow(old_hhs)) {
+  out45 <- c(out45, paste0(old_hhs$`45_leadership_position`[[i]][[1]], collapse = ","))
 }
-hhs_data_update$`45_leadership_position` <- out45
+old_hhs$`45_leadership_position` <- out45
 
-q57_data <- purrr::map_dfr(hhs_data_update$`45_leadership_position`, function(tb) {
+q57_data <- purrr::map_dfr(old_hhs$`45_leadership_position`, function(tb) {
   tb_data <- tb[[1]]
   tb_string <- stringr::str_split(tb_data, ",", simplify=TRUE)
   yesmale <- ifelse("Yes male" %in% tb_string, 1, 0)
@@ -400,16 +493,16 @@ q57_data <- purrr::map_dfr(hhs_data_update$`45_leadership_position`, function(tb
     "57_fisheries_management_leader/no" = no
   ))
 })
-hhs_data_update <- cbind(hhs_data_update, q57_data)
+old_hhs <- cbind(old_hhs, q57_data)
 
 # Q48 -> Q62
 out48 <- c()
-for (i in 1:nrow(hhs_data_update)) {
-  out48 <- c(out48, paste0(hhs_data_update$`48_enforcement_participation`[[i]][[1]], collapse = ","))
+for (i in 1:nrow(old_hhs)) {
+  out48 <- c(out48, paste0(old_hhs$`48_enforcement_participation`[[i]][[1]], collapse = ","))
 }
-hhs_data_update$`48_enforcement_participation` <- out48
+old_hhs$`48_enforcement_participation` <- out48
 
-q62_data <- purrr::map_dfr(hhs_data_update$`48_enforcement_participation`, function(tb) {
+q62_data <- purrr::map_dfr(old_hhs$`48_enforcement_participation`, function(tb) {
   tb_data <- tb[[1]]
   tb_string <- stringr::str_split(tb_data, ",", simplify=TRUE)
   yesmale <- ifelse("Yes male" %in% tb_string, 1, 0)
@@ -431,12 +524,12 @@ q62_data <- purrr::map_dfr(hhs_data_update$`48_enforcement_participation`, funct
     "62_enforcement_participation_other_specify" = otherspecify
   ))
 })
-hhs_data_update <- cbind(hhs_data_update, q62_data)
+old_hhs <- cbind(old_hhs, q62_data)
 
 # Q49 -> Q63
 # The values for 49_enforcement_responsible don't need to be cleaned like
 # the previous questions; the values are already strings
-q63_data <- purrr::map_dfr(hhs_data_update$`49_enforcement_responsible`, function(tb) {
+q63_data <- purrr::map_dfr(old_hhs$`49_enforcement_responsible`, function(tb) {
   tb_data <- tb[[1]]
   tb_string <- stringr::str_split(tb_data, ",", simplify=TRUE)
   fmb <- ifelse("Fisheries Management Body" %in% tb_string, 1, 0)
@@ -460,10 +553,10 @@ q63_data <- purrr::map_dfr(hhs_data_update$`49_enforcement_responsible`, functio
     "63_enforcement_responsible_specify" = otherspecify
   ))
 })
-hhs_data_update <- cbind(hhs_data_update, q63_data)
+old_hhs <- cbind(old_hhs, q63_data)
 
 # Drop all the columns we just used to build these past few columns
-hhs_data_update <- hhs_data_update %>% 
+old_hhs <- old_hhs %>% 
   dplyr::select(-c(`4_ma_r_mb`, `44_meeting_attendance`,
                    `45_leadership_position`, `48_enforcement_participation`,
                    `49_enforcement_responsible`
@@ -471,8 +564,8 @@ hhs_data_update <- hhs_data_update %>%
 
 # Now add every other column; these  are columns that simply have no mapping to
 # the old survey (like COVID questions)
-remaining_cols <- setdiff(names(new_hhs), names(hhs_data_update))
-hhs_data_update[remaining_cols] <- NA
+remaining_cols <- setdiff(names(new_hhs), names(old_hhs))
+old_hhs[remaining_cols] <- NA
 
 ### Add and clean some cols to new_hhs for compatability
 # While updating the previous survey data, we added some columns like
@@ -582,8 +675,8 @@ new_hhs <- new_hhs %>%
                                             "without_authorization" = "Without authorization"
     ),
     `53_ma_benefits` = dplyr::recode(`53_ma_benefits`,
-                                     `0` = "no",
-                                     `1` = "yes"
+                                     `0` = "No",
+                                     `1` = "Yes"
     ),
     `58_represent_role` = dplyr::recode(`58_represent_role`,
                                         "agree" = "Agree",
@@ -601,7 +694,7 @@ new_hhs <- new_hhs %>%
                                        "na" = as.character(NA)
     ),
     dplyr::across(
-      stringr::str_subset(names(hhs_data_update), "^65[a-e]"),
+      stringr::str_subset(names(old_hhs), "^65[a-e]"),
       ~ dplyr::recode(.x,
                       `-1` = as.double(NA) 
       )
@@ -667,7 +760,7 @@ new_hhs <- new_hhs %>%
                                              "more_than_few_times" = "More than few per week"
     ),
     `75_mgmt_rules_fair` = dplyr::recode(`75_mgmt_rules_fair`,
-                                         `-1` = as.double(NA)
+                                         `-1` = as.character(NA)
     ),
     `76_complies_reserve` = dplyr::recode(`76_complies_reserve`,
                                           "catch_up" = "Go up",
@@ -675,11 +768,18 @@ new_hhs <- new_hhs %>%
                                           "catch_down" = "Go down",
                                           "idk" = "Don't know"
     ),
+    `77_fishing_in_reserve` = dplyr::recode(`77_fishing_in_reserve`,
+      "never" = "Never",
+      "occasionally" = "Occasionally",
+      "often" = "Often",
+      "frequently" = "Frequently",
+      "always" = "Always"
+    ),
     dplyr::across(
       stringr::str_subset(names(new_hhs), "^78[a-f]"),
       ~ dplyr::recode(.x,
                       "negative_formal_sanction" = "Negative formal sanction",
-                      "negative_informal_sanction" = "Negative_informal_sanction",
+                      "negative_informal_sanction" = "Negative informal sanction",
                       "nonsanction" = "Non-sanction",
                       "na" = as.character(NA)
       )
@@ -726,23 +826,49 @@ new_hhs <- new_hhs %>%
                                              "my_nonbinary_partner" = "My nonbinary partner",
                                              "both" = "Both"
     )
-  ) %>% 
-  dplyr::select(-`77_fishing_in_reserve`)
+  )
 
 # See above comments for missing columns !!! Some are indefinitely dropped,
 # a few still need to be added (like Q15 -> Q17)
-old_dropped_cols <- setdiff(names(hhs_data_update), names(new_hhs))
+old_dropped_cols <- setdiff(names(old_hhs), names(new_hhs))
 # We will need the old 36_fish_size_restriction in order to properly handle
 # missing data for the new q47
 old_dropped_cols <- setdiff(old_dropped_cols, "36_fish_size_restriction")
-hhs_data_update <- hhs_data_update %>% dplyr::select(-dplyr::all_of(old_dropped_cols))
+old_hhs <- old_hhs %>% dplyr::select(-dplyr::all_of(old_dropped_cols))
 
 
-### Clean some hhs_data_update columns
+### Clean some old_hhs columns
 # E.g. change 10_mpa_important values from 0, 1, -1 to "no"/"yes"/NA
 # This matches the old survey's values and is more useful for counting
-hhs_data_update <- hhs_data_update %>% 
+
+# Questions that strictly have "Yes" or "No" or NA in new_hhs
+yesno_cols <- c()
+for (x in names(new_hhs)) {
+  unique_values <- unique(new_hhs[x][[1]])
+  if (!all(is.na(unique_values)) & all(unique_values %in% c("no", "No", "yes", "Yes", NA))) {
+    yesno_cols <- c(yesno_cols, x)
+  }
+}
+
+# Standardize... "no" -> "No", "yes" -> "Yes"
+new_hhs <- new_hhs %>% 
   dplyr::mutate(
+    dplyr::across(
+      yesno_cols,
+      ~ dplyr::case_when(.x == "yes" ~ "Yes", .x == "no" ~ "No", TRUE ~ .x)
+    )
+  )
+
+# In old_hhs, the cols in yesno_cols are usually cols with 1/0's, or just empty
+# Some of the mutates are redundant, like the q31's mapping 1/0 to "Yes"/"No".
+# These columns are already accounted for in the first mutate with yesno_cols
+# Need to clean this up at some point, but those redundant lines are harmless
+old_hhs <- old_hhs %>% 
+  dplyr::mutate(
+    dplyr::across(
+      yesno_cols,
+      ~ dplyr::case_when(.x == 1 ~ "Yes", .x == 0 ~ "No", TRUE ~ as.character(.x))
+    ),
     `8_religion` = dplyr::recode(`8_religion`,
                                  "Católico" = "Catholic",
                                  "Evangélico" = "Christian", # accurate?
@@ -750,34 +876,33 @@ hhs_data_update <- hhs_data_update %>%
                                  "Ateu" = "Atheist",
                                  "Espírita" = "Spiritual", # accurate? no other survey has 'Spiritual'
     ),
-    `9_region_member` = dplyr::recode(`9_region_member`,
-                                      "1" = "Yes",
-                                      "0" = "No"
-    ),
     `10_mpa_important` = dplyr::recode(`10_mpa_important`,
-                                       `1` = "yes",
-                                       `0` = "no",
-                                       `-1` = "neutral",
+                                       `1` = "Yes",
+                                       `0` = "No",
+                                       `-1` = "Neutral",
                                        .missing = as.character(NA)
     ),
+    `30_save_monthly_income` = dplyr::recode(`30_save_monthly_income`,
+                                        `1` = "Yes",
+                                        `0` = "No"
+    ),
     dplyr::across(
-      stringr::str_subset(names(hhs_data_update), "^22[a-f]"),
-      ~ dplyr::recode(.x, `1` = "yes", `0` = "no")
+      setdiff(
+        stringr::str_subset(names(old_hhs), "^31"),
+        stringr::str_subset(names(old_hhs), "specify$")
+      ),
+      ~ dplyr::case_when(.x == 1 ~ "Yes", .x == 0 ~ "No")
     ),
-    `22g_gear_other` = dplyr::recode(`22g_gear_other`,
-                                     `1` = "yes",
-                                     `0` = "no"
-    ),
-    `25_job_secure` = dplyr::recode(`25_job_secure`,
-                                    `1` = "yes",
-                                    `0` = "no"
+    `35c_other_nonbank` = dplyr::recode(`35c_other_nonbank`,
+                                        `1` = "Yes",
+                                        `0` = "No"
     ),
     # Q41: Careful with the old survey; the old survey responses were on a 
     # strongly disagree - strongly agree scale as well but included a 6th option,
     # which I THINK is "I don't depend on or benefit from the fishery"
     # So the old survey data will have values 1-6, the new survey 1-5.
     dplyr::across(
-      stringr::str_subset(names(hhs_data_update), "^41[a-d]"),
+      stringr::str_subset(names(old_hhs), "^41[a-d]"),
       ~ dplyr::recode(.x,
                       `1` = "Strongly disagree",
                       `2` = "Disagree",
@@ -788,8 +913,8 @@ hhs_data_update <- hhs_data_update %>%
       )
     ),
     `43_fishery_benefit_equal` = dplyr::recode(`43_fishery_benefit_equal`,
-                                               `1` = "yes",
-                                               `0` = "no",
+                                               `1` = "Yes",
+                                               `0` = "No",
                                                `-1` = "no_dependence"
     ),
     `44_ma_familiar` = dplyr::recode(`44_ma_familiar`,
@@ -798,8 +923,8 @@ hhs_data_update <- hhs_data_update %>%
                                      `-1` = as.character(NA)
     ),
     `45_gear_restrictions` = dplyr::recode(`45_gear_restrictions`,
-                                           `1` = "yes",
-                                           `0` = "no",
+                                           `1` = "Yes",
+                                           `0` = "No",
                                            `-1` = as.character(NA)
     ),
     dplyr::across(
@@ -810,13 +935,13 @@ hhs_data_update <- hhs_data_update %>%
       )
     ),
     `48_reserve_fishing_allowed` = dplyr::recode(`48_reserve_fishing_allowed`,
-                                                 `1` = "yes",
-                                                 `0` = "no",
+                                                 `1` = "Yes",
+                                                 `0` = "No",
                                                  `-1` = "no_reserves"
     ),
     `49_reserve_boundry` = dplyr::recode(`49_reserve_boundry`,
-                                         `1` = "yes",
-                                         `0` = "no",
+                                         `1` = "Yes",
+                                         `0` = "No",
                                          `-1` = "no_reserves"
     ),
     `51_reserve_boundaries_aware` = dplyr::case_when(
@@ -846,8 +971,8 @@ hhs_data_update <- hhs_data_update %>%
     # }),
     `53_ma_benefits` = dplyr::recode(`53_ma_benefits`,
                                      `-1` = as.character(NA), # only in FSM
-                                     `0` = "no",
-                                     `1` = "yes"
+                                     `0` = "No",
+                                     `1` = "Yes"
     ),
     `58_represent_role` = dplyr::recode(`58_represent_role`,
                                         "no mgmt body" = "No management body",
@@ -862,7 +987,7 @@ hhs_data_update <- hhs_data_update %>%
                                        "na" = as.character(NA)
     ),
     dplyr::across(
-      stringr::str_subset(names(hhs_data_update), "^65[a-e]"),
+      stringr::str_subset(names(old_hhs), "^65[a-e]"),
       ~ dplyr::case_when(
         .x > 10 ~ as.double(NA),
         TRUE ~ .x
@@ -872,7 +997,7 @@ hhs_data_update <- hhs_data_update %>%
                                          "na" = as.character(NA)
     ),
     dplyr::across(
-      stringr::str_subset(names(hhs_data_update), "^69[a-e]_rules"),
+      stringr::str_subset(names(old_hhs), "^69[a-e]_rules"),
       ~ dplyr::recode(.x,
                       `0` = "No",
                       `1` = "Yes",
@@ -884,7 +1009,7 @@ hhs_data_update <- hhs_data_update %>%
                                           "Not confident" = "Confident not"
     ),
     dplyr::across(
-      stringr::str_subset(names(hhs_data_update), "^74[a-g,i]"),
+      stringr::str_subset(names(old_hhs), "^74[a-g,i]"),
       ~ dplyr::recode(.x,
                       `1` = "strongly_disagree",
                       `2` = "disagree",
@@ -906,16 +1031,7 @@ hhs_data_update <- hhs_data_update %>%
                                           "4. No sabe" = "Don't know",
                                           "na" = as.character(NA)
     ),
-    # 77 needs to be on a never-always scale.
-    # the original column, 63_fishing_in_reserve, only says yes/no a fisher fishes
-    # in reserve. 63_times_fishing_reserve gives the frequency in the past month,
-    # but as a number. Need to figure out how to translate numbers to words;
-    # is fishing in in the reserve 10 times in the past month "often"?
-    # `77_fishing_in_reserve` = dplyr::recode(`77_fishing_in_reserve`,
-    #   `1` = "yes",
-    #   `0` = "no",
-    #   `-1` = as.character(NA)
-    # ),
+    `77_fishing_in_reserve` = as.character(`77_fishing_in_reserve`),
     `78d_violate_reserve_fishing` = dplyr::recode(`78d_violate_reserve_fishing`,
                                                   "negative informal sanction" = "Negative informal sanction",
                                                   "negative formal sanction" = "Negative formal sanction",
@@ -947,10 +1063,10 @@ hhs_data_update <- hhs_data_update %>%
   ) %>% 
   dplyr::select(-updatedat_ymd)
 
-hhs_data_update$survey <- "FF 2.0"
+old_hhs$survey <- "FF 2.0"
 new_hhs$survey <- "2022 Revision"
 
-hhs_final <- dplyr::bind_rows(hhs_data_update, new_hhs)
+hhs_final <- dplyr::bind_rows(old_hhs, new_hhs)
 
 ### Recode NA's
 # Generally, we don't want blank (NA) responses. According to Courtney, there are
@@ -1081,7 +1197,7 @@ hhs_final <- hhs_final %>%
   # no longer need old q36 col
   dplyr::select(-`36_fish_size_restriction`)
 
-readr::write_csv(hhs_final, "../data/HHS/hh_survey_combined.csv")
+readr::write_csv(hhs_final, "../data/HHS/hh_survey_combined_01-04-2023.csv")
 
 
 ################################ NOTES ########################################
@@ -1098,13 +1214,6 @@ readr::write_csv(hhs_final, "../data/HHS/hh_survey_combined.csv")
 # 30_trust_reglious_leaders 30_trust_village_alert
 # Fortunately, except for 30_village_alert, these were not used
 # on the dashboard.
-#
-# Q35 other
-# Did try to salvage the 35k_ma_gear_other, but the way the question is set up
-# on the new survey, 46_ma_gear_other specifies permitted/not permitted and 
-# 46_ma_gear_other_specify specifies what the gear is.
-# 35k_ma_gear_other is a mix... sometimes it just says the gear, sometimes it says
-# "X is not allowed" So we're just dropping it.
 #
 # 36_fish_size_restriction
 #
@@ -1131,10 +1240,14 @@ readr::write_csv(hhs_final, "../data/HHS/hh_survey_combined.csv")
 # Since the original responses are not specified by gender, the columns were
 # mapped to "gender unspecified" categories:
 # 25a_financial_bank -> 27a_financial_bank/gender_unspecified
-# This new column name doesn't exist on the new hhs though.
+# This new column name was added and left blank for samples from the new survey
 #
-# 28_buyer_loans and 28_loan_purpose tie into the new 35 I think.
-# Have to tie them in somehow, but for now will drop them.
+# Q35 other
+# Did try to salvage the 35k_ma_gear_other, but the way the question is set up
+# on the new survey, 46_ma_gear_other specifies permitted/not permitted and 
+# 46_ma_gear_other_specify specifies what the gear is.
+# 35k_ma_gear_other is a mix... sometimes it just says the gear, sometimes it says
+# "X is not allowed" So we're just dropping it.
 #
 # Q66 was specifically about fishing in the reserve, the new Q78 asks about
 # fishing in the reserve and more. So old Q66 corresponds to new Q78d. The
@@ -1144,11 +1257,14 @@ readr::write_csv(hhs_final, "../data/HHS/hh_survey_combined.csv")
 # Q50: The old survey was on a scale of "strongly disagree" to "strongly agree"
 # while the new survey is one a scale of 1-10
 #
+# 77_fishing_in_reserve
+# New answers are on never-always character scale while old answers (which come from
+# old 63_times_fishing_reserve) were numbers describing frequency in the past month.
+# Is 7 considered "Often" or "Frequently"? We don't know so these answers are not
+# comparable from old survey to new survey
+#
 #### TODO
 # 
 # 15_activity (this might be the other sheets in the new hhs xlsx)
 #
-# 77_fishing_in_reserve (figure out how to standardize new answers
-# never-always character scale with old answers that were numbers
-# (using old 63_times_fishing_reserve))
 
