@@ -886,13 +886,6 @@ old_hhs <- old_hhs %>%
                                         `1` = "Yes",
                                         `0` = "No"
     ),
-    dplyr::across(
-      setdiff(
-        stringr::str_subset(names(old_hhs), "^31"),
-        stringr::str_subset(names(old_hhs), "specify$")
-      ),
-      ~ dplyr::case_when(.x == 1 ~ "Yes", .x == 0 ~ "No")
-    ),
     `35c_other_nonbank` = dplyr::recode(`35c_other_nonbank`,
                                         `1` = "Yes",
                                         `0` = "No"
@@ -945,7 +938,8 @@ old_hhs <- old_hhs %>%
                                          `-1` = "no_reserves"
     ),
     `51_reserve_boundaries_aware` = dplyr::case_when(
-      is.numeric(`51_reserve_boundaries_aware`) ~ as.character(`51_reserve_boundaries_aware`)
+      is.numeric(`51_reserve_boundaries_aware`) ~ as.character(`51_reserve_boundaries_aware`),
+      TRUE ~ as.character(NA)
     ),
     `52_ma_fishers_allowed` = dplyr::case_when(
       `52_ma_fishers_allowed` == "na" ~ "No managed access",
@@ -1197,7 +1191,7 @@ hhs_final <- hhs_final %>%
   # no longer need old q36 col
   dplyr::select(-`36_fish_size_restriction`)
 
-readr::write_csv(hhs_final, "../data/HHS/hh_survey_combined_01-04-2023.csv")
+readr::write_csv(hhs_final, "../data/HHS/hh_survey_combined_01-05-2023.csv")
 
 
 ################################ NOTES ########################################
