@@ -384,12 +384,13 @@ old_hhs <- old_hhs %>%
     `27a_financial_bank/yes_gender_unspecified` = `25a_financial_bank`,
     `27b_financial_micro/yes_gender_unspecified` = `25b_financial_micro`,
     `27c_financial_ngo/yes_gender_unspecified` = `25c_financial_ngo`,
-    `35c_other_nonbank` = `25d_financial_lender`,
-    `33_hh_insurance/yes_unspecified` = `25e_financial_insurance`,
     `30_save_monthly_income` = `26_fishing_income_save`,
+    `33_hh_insurance/yes_unspecified` = `25e_financial_insurance`,
     `35b_buyer` = `28_buyer_loans`,
+    `35c_other_nonbank` = `25d_financial_lender`,
     `46_ma_gear_trap` = `35l_ma_gear_traps`,
     `58_represent_role` = `47_represent_contributions`,
+    `61_opinions_considered` = `46_represent_interests`,
     `69a_rules_benefit_licensing` = `42a_problem_regulation`,
     `69b_rules_benefit_fishing_permission` = `42e_problem_unauthorized`,
     `69c_rules_benefit_gear` = `42b_problem_restricted_gear`,
@@ -684,6 +685,14 @@ new_hhs <- new_hhs %>%
                                         "neither" = "Neither",
                                         "no_mgmt" = "No management body"
     ),
+    `61_opinions_considered` = dplyr::recode(`61_opinions_considered`,
+      "very_low" = "Very low",
+      "low" = "Low",
+      "neither" = "Neither strong or low",
+      "strong" = "Strong",
+      "very_strong" = "Very strong",
+      "no_mgmt" = "No management body"
+    ),
     `64_ma_punishment` = dplyr::recode(`64_ma_punishment`,
                                        "no_punishment" = "No punishment",
                                        "minor" = "Minor",
@@ -973,6 +982,19 @@ old_hhs <- old_hhs %>%
                                         "No management" = "No management body",
                                         "na" = as.character(NA)
     ),
+    `61_opinions_considered` = dplyr::recode(`61_opinions_considered`,
+      # Old scale is disagree-neither-agree.
+      # New scale is very low-low-neither-strong-very strong.
+      # At first glance, not obvious how to map disagree/agree to the new scale.
+      # But according to Brittany, most analyses simply lump e.g. very low
+      # and low together. So we will just say disagree is low and agree is strong.
+      "Disagree" = "Low",
+      "Neither" = "Neither strong or low",
+      "Agree" = "Strong",
+      "No management" = "No management body",
+      "no mgmt" = "No management body",
+      "na" = as.character(NA)
+    ),
     `64_ma_punishment` = dplyr::recode(`64_ma_punishment`,
                                        "Weak" = "Minor",
                                        "Strong" = "Major",
@@ -1191,7 +1213,7 @@ hhs_final <- hhs_final %>%
   # no longer need old q36 col
   dplyr::select(-`36_fish_size_restriction`)
 
-readr::write_csv(hhs_final, "../data/HHS/hh_survey_combined_01-05-2023.csv")
+readr::write_csv(hhs_final, "../data/HHS/hh_survey_combined.csv")
 
 
 ################################ NOTES ########################################
@@ -1210,8 +1232,6 @@ readr::write_csv(hhs_final, "../data/HHS/hh_survey_combined_01-05-2023.csv")
 # on the dashboard.
 #
 # 36_fish_size_restriction
-#
-# 46_represent_interests
 #
 # 56_reduce_meal_size_adult 57_reduce_meal_size_frequency 58_reduce_meal_size_child
 #
