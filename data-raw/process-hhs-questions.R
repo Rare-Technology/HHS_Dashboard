@@ -384,6 +384,7 @@ old_hhs <- old_hhs %>%
     `27a_financial_bank/yes_gender_unspecified` = `25a_financial_bank`,
     `27b_financial_micro/yes_gender_unspecified` = `25b_financial_micro`,
     `27c_financial_ngo/yes_gender_unspecified` = `25c_financial_ngo`,
+    `27d_financial_other_specify` = `25f_financial_other`,
     `30_save_monthly_income` = `26_fishing_income_save`,
     `33_hh_insurance/yes_unspecified` = `25e_financial_insurance`,
     `35b_buyer` = `28_buyer_loans`,
@@ -404,6 +405,43 @@ old_hhs <- old_hhs %>%
   dplyr::select(
     -c(username, username_2, level2_name, level4_id)
   )
+
+### 27d_financial_other
+# Q27 asks if the respondent or their family has an account with a financial
+# institution. There is an "other" option and the respondent can specify if they
+# check off "other". So we end up with these columns:
+# [1] "27d_financial_other/yes_female"    "27d_financial_other/yes_male"     
+# [3] "27d_financial_other/yes_nonbinary" "27d_financial_other/no"           
+# [5] "27d_financial_other_specify" 
+# The first four are just yes/no. The last column is text to explain their response
+# In the old survey, we get both columns (yes/no and the explanation) in one:
+# (old) 25f_financial_other
+# Essentially, if this column was left blank, the answer is no. If it is filled in,
+# the answer is yes and the explanation is given. Answers to this column were examined
+# to see what counts as having an alternative to a bank account (common "yes" answers
+# include rotating savings and credit associations, a mobile payment app, or savings club.
+# common "no" answers are something like "at home").
+# This information was compiled in a spreadsheet and we will use that to appropriately
+# map the old survey responses to the new survey.
+hhs25f <- readxl::read_excel("../data/HHS/hhs-25f.xlsx") %>% 
+  dplyr::select(
+    `27d_financial_other_specify` = `25f_financial_other`,
+    `27d_yesno` = `yes/no`
+  )
+
+old_hhs <- dplyr::left_join(old_hhs, hhs25f, by = "27d_financial_other_specify") %>% 
+  dplyr::mutate(
+    `27d_financial_other/yes_gender_unspecified` = dplyr::case_when(
+      `27d_yesno` == 1 ~ 1,
+      TRUE ~ 0
+    ),
+    `27d_financial_other/no` = dplyr::case_when(
+      `27d_yesno` == 0 | is.na(`27d_financial_other_specify`) ~ 1,
+      TRUE ~ 0
+    )
+  ) %>% 
+  dplyr::select(-`27d_yesno`)
+rm(hhs25f)
 
 ### Removing 46_ma_gear_other
 # Old 35_ma_gear_other was mapped to new 46_ma_gear_other but the information 
@@ -579,6 +617,7 @@ new_hhs <- new_hhs %>%
     `27a_financial_bank/yes_gender_unspecified` = NA,
     `27b_financial_micro/yes_gender_unspecified` = NA,
     `27c_financial_ngo/yes_gender_unspecified` = NA,
+    `27d_financial_other/yes_gender_unspecified` = NA,
     `33_hh_insurance/yes_unspecified` = NA,
     `8_religion` = dplyr::recode(`8_religion`,
                                  "other" = "Other",
