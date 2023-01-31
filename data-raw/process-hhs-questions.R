@@ -80,51 +80,7 @@ new_hhs <- new_hhs[,c(1:431)]
 # Remove leading underscores from column names
 names(new_hhs) <- stringr::str_sub(names(new_hhs), 2)
 
-# A bit of data cleaning; rename/mutate geographic cols, change
-# variable type of some cols (e.g. turn "yes"/"no" into 1/0)
-
-##### Dec 7 2022
-# Really don't need to convert yes/no to 1/0's... the preferred answers are yes/no.
-# At some point, get around to removing this while also accounting for the changes
-# that will need to be made for the recoding that happens later on
-
-# We'll prepare some stuff for converting yes/no data to 1/0's
-yesno_to_bool <- function(yn) {
-  if (is.na(yn)) {return(NA)}
-  else {
-    yn <- stringr::str_to_lower(yn)
-    yn_bool <- switch(yn,
-                      "yes" = "Yes",
-                      "no" = "No",
-    )
-    return(yn_bool)
-  }
-}
-yesno_to_bool <- Vectorize(yesno_to_bool)
-yesno_values <- c("yes", "no", NA)
-yesno_questions <- new_hhs %>% 
-  dplyr::select(
-    where(function (x) {
-      col_values <- unique(x)
-      
-      # Some columns are empty; return false on these
-      if (is.na(col_values)) {
-        return(FALSE)
-      }
-      
-      # Take the unique values of the column. If it has any values beyond
-      # yes/no/NA, return FALSE and we'll deal with it later
-      not_yesno_values <- dplyr::setdiff(col_values, yesno_values)
-      if (length(not_yesno_values) == 0) {
-        return(TRUE)
-      } else {
-        return(FALSE)
-      }
-    })
-  ) %>% 
-  names()
-
-# Now we do the cleaning
+# A bit of data cleaning; rename/mutate geographic cols
 new_hhs <- new_hhs %>% 
   dplyr::rename(
     submissionid = uuid,
@@ -151,43 +107,18 @@ new_hhs <- new_hhs %>%
     updatedat_ymd = lubridate::as_date(updatedat),
     yearmonth = stringr::str_sub(updatedat_ymd, 1, 7),
     year = stringr::str_sub(updatedat_ymd, 1, 4) %>% as.integer(),
-  ) %>% 
-  dplyr::mutate(
-    dplyr::across(yesno_questions, yesno_to_bool)
-  ) %>% 
+  ) %>%
   dplyr::select(-updatedat_ymd) %>% 
   dplyr::filter(!(`1_interviewer` %in% c("George Stoyle", "test", "Test", "Test 2", "Teste", "Teste 2")))
-
-# Skipping this cleaning step until it looks helpful to do this
-# # Create 4_ma_r_mb col from values of four related columns
-# ma_r_mb_vec <- c("marine reserve", "management area", "management body", "none")
-# new_hhs$`4_ma_r_mb` <- purrr::pmap(
-#     new_hhs %>% dplyr::select(
-#       mr = `4_ma_r_mb/marine_reserve`,
-#       ma = `4_ma_r_mb/management_area`,
-#       mb = `4_ma_r_mb/management_body`,
-#       no = `4_ma_r_mb/none`
-#     ),
-#     function (mr, ma, mb, no) {
-#       resp <- c(mr, ma, mb, no)
-#       # resp is a row that looks like 0 1 1 0
-#       # this example would yield "management area,management body"
-#       
-#       # first, deal with NA
-#       if (any(is.na(resp)) | all(resp == 0)) {return(NA)}
-#       
-#       # next, convert resp to boolean and make a string based on that
-#       resp <- as.logical(resp) # e.g. 0 1 0 1 becomes FALSE TRUE FALSE TRUE
-#       out <- paste0(ma_r_mb_vec[resp], collapse = ",")
-#       return(out)
-#     }
-#   )
 
 ### Add geographic info
 # The only geographic columns are made up of id's, and there is not info for
 # the maa. So let's add names and maa info.
 
+# footprint_global_all_levels from https://data.world/rare/footprint/
 geo <- readr::read_csv("https://query.data.world/s/gp7hblhjzx3mx3w54yutspjnzgqi2f")
+
+# communities_managed_access from https://data.world/rare/footprint/
 maa <- readr::read_csv("https://query.data.world/s/eyvv3fdcwk7yjzhe24tt5sck2ousuj")
 
 # First, there's 5 rows missing all level1_id, level2_id, and level4_id.
@@ -226,7 +157,7 @@ new_hhs <- new_hhs %>%
     level1_id,
     level2_id,
     level4_id,
-    tore_gps,
+    tore_gps, # not a typo
     store_gps_altitude,
     store_gps_precision,
     `94_yes_no`,
@@ -606,12 +537,31 @@ old_hhs <- old_hhs %>%
 remaining_cols <- setdiff(names(new_hhs), names(old_hhs))
 old_hhs[remaining_cols] <- NA
 
-### Add and clean some cols to new_hhs for compatability
+### Add and recode some cols to new_hhs for compatability
 # While updating the previous survey data, we added some columns like
 # 27a_financial_bank/yes_gender_unspecified, which is not in the new survey
 # This was to be compatible with the columns of the new survey, like
 # 27a_financial_bank/yes_female
-# We will have to add these to the new survey dataset
+# We will have to add these to the new survey dataset.
+# Additionally, we will recode some columns to standardize answers between the
+# old and new surveys. 
+
+# As part of the recoding, we want to first collect all the columns
+# that have just yes/no responses with the goal of going from
+# Yes, No, yes, no, NA
+# to
+# Yes, No, NA
+yesno_questions <- c()
+# "Why didn't you just use purrr::map lol" idk why don't you do it then??
+for (x in names(new_hhs)) {
+  unique_values <- unique(new_hhs[[x]])
+  
+  # Ignore columns that are blank and only take the ones with yes/no values plus NA
+  if (!all(is.na(unique_values)) & all(unique_values %in% c("no", "No", "yes", "Yes", NA))) {
+    yesno_questions <- c(yesno_questions, x)
+  }
+}
+
 new_hhs <- new_hhs %>%
   dplyr::mutate(
     `27a_financial_bank/yes_gender_unspecified` = NA,
@@ -619,110 +569,110 @@ new_hhs <- new_hhs %>%
     `27c_financial_ngo/yes_gender_unspecified` = NA,
     `27d_financial_other/yes_gender_unspecified` = NA,
     `33_hh_insurance/yes_unspecified` = NA,
-    `8_religion` = dplyr::recode(`8_religion`,
-                                 "other" = "Other",
-                                 "muslim" = "Muslim",
-                                 "catholic" = "Catholic",
-                                 "hindu" = "Hindu",
-                                 "buddhist" = "Buddhist",
-                                 "christian" = "Christian",
-                                 "traditional" = "Traditional",
-                                 "jewish" = "Jewish"
+    dplyr::across(
+      yesno_questions,
+      ~ dplyr::recode(.x,
+        "no" = "No",
+        "yes" = "Yes"
+      )
     ),
-    `9_region_member` = dplyr::recode(`9_region_member`,
-                                      "1" = "Yes",
-                                      "0" = "No"
+    `8_religion` = dplyr::recode(`8_religion`,
+      "other" = "Other",
+      "muslim" = "Muslim",
+      "catholic" = "Catholic",
+      "hindu" = "Hindu",
+      "buddhist" = "Buddhist",
+      "christian" = "Christian",
+      "traditional" = "Traditional",
+      "jewish" = "Jewish"
     ),
     `18_hh_main_fisher` = dplyr::recode(`18_hh_main_fisher`,
-                                        "enterprise_owner" = "Enterprise owner",
-                                        "independently" = "Independently",
-                                        "other" = "Other",
-                                        "salaried_laborer" = "Salaried laborer",
-                                        "cooperative_member" = "Cooperative member",
-                                        "na" = as.character(NA)
+      "enterprise_owner" = "Enterprise owner",
+      "independently" = "Independently",
+      "other" = "Other",
+      "salaried_laborer" = "Salaried laborer",
+      "cooperative_member" = "Cooperative member",
+      "na" = as.character(NA)
     ),
     `19_fishing_low_profit` = dplyr::recode(`19_fishing_low_profit`,
-                                            "one_two_per_week" = "1-2 per week",
-                                            "few times_month" = "A few times per month",
-                                            "once_or_never" = "Once or never",
-                                            "few_times_season" = "A few times", # accurate?
-                                            "more_than_one_two_week" = "More than 1-2 times per week"
+      "one_two_per_week" = "1-2 per week",
+      "few times_month" = "A few times per month",
+      "once_or_never" = "Once or never",
+      "few_times_season" = "A few times", # accurate?
+      "more_than_one_two_week" = "More than 1-2 times per week"
     ),
     `20_fishing_high_profit` = dplyr::recode(`20_fishing_high_profit`,
-                                             "more_than_one_two_week" = "More than 1-2 times per week",
-                                             "few_times_season" = "A few times",
-                                             "once_or_never" = "Once or never",
-                                             "few times_month" = "A few times per month",
-                                             "one_two_per_week" = "1-2 per week"
+      "more_than_one_two_week" = "More than 1-2 times per week",
+      "few_times_season" = "A few times",
+      "once_or_never" = "Once or never",
+      "few times_month" = "A few times per month",
+      "one_two_per_week" = "1-2 per week"
     ),
     `21_current_fish_catch` = dplyr::recode(`21_current_fish_catch`,
-                                            "improved_slightly" = "Improved slightly",
-                                            "declined_slightly" = "Declined slightly",
-                                            "stayed_the_same" = "Stayed the same",
-                                            "declined_alot" = "Declined a lot",
-                                            "improved_heavily" = "Improved heavily"
+      "improved_slightly" = "Improved slightly",
+      "declined_slightly" = "Declined slightly",
+      "stayed_the_same" = "Stayed the same",
+      "declined_alot" = "Declined a lot",
+      "improved_heavily" = "Improved heavily"
     ),
     `23_boat_owner_status` = dplyr::recode(`23_boat_owner_status`,
-                                           "not_by_foat" = "Not by boat",
-                                           "employee" = "Employee",
-                                           "own" = "Own",
-                                           "collective" = "Collective",
-                                           "rent" = "Rent"
+      "not_by_foat" = "Not by boat",
+      "employee" = "Employee",
+      "own" = "Own",
+      "collective" = "Collective",
+      "rent" = "Rent"
     ),
     `24_catch_5yrs` = dplyr::recode(`24_catch_5yrs`,
-                                    "improves_heavily" = "Improves heavily",
-                                    "improves_slightly" = "Improves slightly",
-                                    "stays_the_same" = "Stays the same",
-                                    "declines_slightly" = "Declines slightly",
-                                    "declines_alot" = "Declines a lot"
+      "improves_heavily" = "Improves heavily",
+      "improves_slightly" = "Improves slightly",
+      "stays_the_same" = "Stays the same",
+      "declines_slightly" = "Declines slightly",
+      "declines_alot" = "Declines a lot"
     ),
     dplyr::across(
       stringr::str_subset(names(new_hhs), "^41[a-f]"),
       ~ dplyr::recode(.x,
-                      "strongly_disagree" = "Strongly disagree",
-                      "disagree" = "Disagree",
-                      "neither" = "Neither",
-                      "agree" = "Agree",
-                      "strongly_agree" = "Strongly agree"
+        "strongly_disagree" = "Strongly disagree",
+        "disagree" = "Disagree",
+        "neither" = "Neither",
+        "agree" = "Agree",
+        "strongly_agree" = "Strongly agree"
       )
     ),
     `42_my_community_ability` = dplyr::recode(`42_my_community_ability`,
-                                              "strongly_disagree" = "Strongly disagree",
-                                              "disagree" = "Disagree",
-                                              "neither" = "Neither",
-                                              "agree" = "Agree",
-                                              "strongly_agree" = "Strongly agree"
+      "strongly_disagree" = "Strongly disagree",
+      "disagree" = "Disagree",
+      "neither" = "Neither",
+      "agree" = "Agree",
+      "strongly_agree" = "Strongly agree"
     ),
-    `44_ma_familiar` = dplyr::recode(`44_ma_familiar`,
-                                     `1` = "Yes",
-                                     `0` = "No",
+    `43_fishery_benefit_equal` = dplyr::recode(`43_fishery_benefit_equal`,
+      "yes" = "Yes",
+      "no" = "No",
+      "no_dependence" = "I don't depend on or benefit from the fishery"
     ),
     dplyr::across(
       stringr::str_subset(names(new_hhs), "^46"),
       ~ dplyr::recode(.x,
-                      "permitted" = "Permitted",
-                      "not_permitted" = "Not permitted",
-                      "unknown" = "Unknown",
-                      "na" = as.character(NA)
+        "permitted" = "Permitted",
+        "not_permitted" = "Not permitted",
+        "unknown" = "Unknown",
+        "na" = as.character(NA)
       )
     ),
     `52_ma_fishers_allowed` = dplyr::recode(`52_ma_fishers_allowed`,
-                                            "community_only" = "Community only",
-                                            "idk" = "Don't know",
-                                            "no_managed_area" = "No managed access",
-                                            "no_restrictions" = "No restrictions",
-                                            "with_authorization" = "With authorization",
-                                            "without_authorization" = "Without authorization"
-    ),
-    `53_ma_benefits` = dplyr::recode(`53_ma_benefits`,
-                                     `0` = "No",
-                                     `1` = "Yes"
+      "community_only" = "Community only",
+      "idk" = "Don't know",
+      "no_managed_area" = "No managed access",
+      "no_restrictions" = "No restrictions",
+      "with_authorization" = "With authorization",
+      "without_authorization" = "Without authorization"
     ),
     `58_represent_role` = dplyr::recode(`58_represent_role`,
-                                        "agree" = "Agree",
-                                        "disagree" = "Disagree",
-                                        "neither" = "Neither",
-                                        "no_mgmt" = "No management body"
+      "agree" = "Agree",
+      "disagree" = "Disagree",
+      "neither" = "Neither",
+      "no_mgmt" = "No management body"
     ),
     `61_opinions_considered` = dplyr::recode(`61_opinions_considered`,
       "very_low" = "Very low",
@@ -733,88 +683,81 @@ new_hhs <- new_hhs %>%
       "no_mgmt" = "No management body"
     ),
     `64_ma_punishment` = dplyr::recode(`64_ma_punishment`,
-                                       "no_punishment" = "No punishment",
-                                       "minor" = "Minor",
-                                       "moderate" = "Moderate",
-                                       "major" = "Major",
-                                       "extreme" = "Extreme",
-                                       "no_regs" = "No regulations",
-                                       "na" = as.character(NA)
+      "no_punishment" = "No punishment",
+      "minor" = "Minor",
+      "moderate" = "Moderate",
+      "major" = "Major",
+      "extreme" = "Extreme",
+      "no_regs" = "No regulations",
+      "na" = as.character(NA)
     ),
     dplyr::across(
       stringr::str_subset(names(old_hhs), "^65[a-e]"),
       ~ dplyr::recode(.x,
-                      `-1` = as.double(NA) 
+        `-1` = as.double(NA) 
       )
     ),
     `66_ma_benefit_5yrs` = dplyr::recode(`66_ma_benefit_5yrs`,
-                                         "yes" = "Yes",
-                                         "no" = "No",
-                                         "no_mgmt" = "No management",
-                                         "unsure" = "Unsure",
-                                         "na" = as.character(NA)
+      "yes" = "Yes",
+      "no" = "No",
+      "no_mgmt" = "No management",
+      "unsure" = "Unsure",
+      "na" = as.character(NA)
     ),
     `67_encourage_regulations` = dplyr::recode(`67_encourage_regulations`,
-                                               "never" = "Never",
-                                               "rarely" = "Rarely",
-                                               "sometimes" = "Sometimes",
-                                               "often" = "Often",
-                                               "very_often" = "Very often",
-                                               "no_regulations" = "No regulations"
+      "never" = "Never",
+      "rarely" = "Rarely",
+      "sometimes" = "Sometimes",
+      "often" = "Often",
+      "very_often" = "Very often",
+      "no_regulations" = "No regulations"
     ),
     dplyr::across(
       stringr::str_subset(names(new_hhs), "^68[a-f]"),
       ~ dplyr::recode(.x,
-                      "very_difficult" = "Very difficult",
-                      "difficult" = "Difficult",
-                      "dfficult" = "Difficult",
-                      "neutral" = "Neutral",
-                      "easy" = "Easy",
-                      "very_easy" = "Very easy",
-                      "na" = as.character(NA)
-      )
-    ),
-    dplyr::across(
-      stringr::str_subset(names(new_hhs), "^69[a-e]_rules"),
-      ~ dplyr::recode(.x,
-                      `0` = "No",
-                      `1` = "Yes"
+        "very_difficult" = "Very difficult",
+        "difficult" = "Difficult",
+        "dfficult" = "Difficult",
+        "neutral" = "Neutral",
+        "easy" = "Easy",
+        "very_easy" = "Very easy",
+        "na" = as.character(NA)
       )
     ),
     `70_food_availability` = dplyr::recode(`70_food_availability`,
-                                           "very_bad" = "Very bad",
-                                           "rather_bad" = "Rather bad",
-                                           "ok" = "OK",
-                                           "good" = "Good",
-                                           "very_good" = "Very good"
+      "very_bad" = "Very bad",
+      "rather_bad" = "Rather bad",
+      "ok" = "OK",
+      "good" = "Good",
+      "very_good" = "Very good"
     ),
     `71_worry_food` = dplyr::recode(`71_worry_food`,
-                                    "never" = "Never",
-                                    "sometimes" = "Sometimes",
-                                    "often" = "Often"
+      "never" = "Never",
+      "sometimes" = "Sometimes",
+      "often" = "Often"
     ),
     `72_food_procurement` = dplyr::recode(`72_food_procurement`,
-                                          "very_confident_not" = "Very confident not",
-                                          "confident_not" = "Confident not",
-                                          "uncertain" = "Uncertain",
-                                          "high_chance" = "High chance",
-                                          "certain" = "Certain"
+      "very_confident_not" = "Very confident not",
+      "confident_not" = "Confident not",
+      "uncertain" = "Uncertain",
+      "high_chance" = "High chance",
+      "certain" = "Certain"
     ),
     `73_hh_fish_consumption` = dplyr::recode(`73_hh_fish_consumption`,
-                                             "once_or_never" = "Once or never",
-                                             "few_times" = "Few",
-                                             "few_times_per_month" = "Few per month",
-                                             "few_times_per_week" = "Few per week",
-                                             "more_than_few_times" = "More than few per week"
+      "once_or_never" = "Once or never",
+      "few_times" = "Few",
+      "few_times_per_month" = "Few per month",
+      "few_times_per_week" = "Few per week",
+      "more_than_few_times" = "More than few per week"
     ),
     `75_mgmt_rules_fair` = dplyr::recode(`75_mgmt_rules_fair`,
-                                         `-1` = as.character(NA)
+      `-1` = as.character(NA)
     ),
     `76_complies_reserve` = dplyr::recode(`76_complies_reserve`,
-                                          "catch_up" = "Go up",
-                                          "catch_same" = "Stay the same",
-                                          "catch_down" = "Go down",
-                                          "idk" = "Don't know"
+      "catch_up" = "Go up",
+      "catch_same" = "Stay the same",
+      "catch_down" = "Go down",
+      "idk" = "Don't know"
     ),
     `77_fishing_in_reserve` = dplyr::recode(`77_fishing_in_reserve`,
       "never" = "Never",
@@ -826,53 +769,53 @@ new_hhs <- new_hhs %>%
     dplyr::across(
       stringr::str_subset(names(new_hhs), "^78[a-f]"),
       ~ dplyr::recode(.x,
-                      "negative_formal_sanction" = "Negative formal sanction",
-                      "negative_informal_sanction" = "Negative informal sanction",
-                      "nonsanction" = "Non-sanction",
-                      "na" = as.character(NA)
+        "negative_formal_sanction" = "Negative formal sanction",
+        "negative_informal_sanction" = "Negative informal sanction",
+        "nonsanction" = "Non-sanction",
+        "na" = as.character(NA)
       )
     ),
     dplyr::across(
       stringr::str_subset(names(new_hhs), "^79[a-f]"),
       ~ dplyr::recode(.x,
-                      "extremely_wrong" = "Extremely wrong",
-                      "very_wrong" = "Very wrong",
-                      "moderately_wrong" = "Moderately wrong",
-                      "slightly_wrong" = "Slightly wrong",
-                      "not_wrong" = "Not wrong",
-                      "na" = as.character(NA)
+        "extremely_wrong" = "Extremely wrong",
+        "very_wrong" = "Very wrong",
+        "moderately_wrong" = "Moderately wrong",
+        "slightly_wrong" = "Slightly wrong",
+        "not_wrong" = "Not wrong",
+        "na" = as.character(NA)
       )
     ),
     `80_no_wrong_fishing_reserve` = dplyr::recode(`80_no_wrong_fishing_reserve`,
-                                                  `-1` = as.double(NA)
+      `-1` = as.double(NA)
     ),
     `85_current_economic` = dplyr::recode(`85_current_economic`,
-                                          "much_worse" = "Much worse",
-                                          "slightly_worse" = "Slightly worse",
-                                          "neither" = "Neither",
-                                          "slightly_better" = "Slightly better",
-                                          "much_better" = "Much better"
+      "much_worse" = "Much worse",
+      "slightly_worse" = "Slightly worse",
+      "neither" = "Neither",
+      "slightly_better" = "Slightly better",
+      "much_better" = "Much better"
     ),
     `86_future_economic` = dplyr::recode(`86_future_economic`,
-                                         "much_worse" = "Much worse",
-                                         "slightly_worse" = "Slightly worse",
-                                         "neither" = "Neither",
-                                         "slightly_better" = "Slightly better",
-                                         "much_better" = "Much better"
+      "much_worse" = "Much worse",
+      "slightly_worse" = "Slightly worse",
+      "neither" = "Neither",
+      "slightly_better" = "Slightly better",
+      "much_better" = "Much better"
     ),
     `90_hh_ends_meet` = dplyr::recode(`90_hh_ends_meet`,
-                                      "with_great_difficulty" = "With great difficulty",
-                                      "with_difficulty" = "With difficulty",
-                                      "fairly_easy" = "Fairly easy",
-                                      "easy" = "Easy",
-                                      "very_easy" = "Very easy"
+      "with_great_difficulty" = "With great difficulty",
+      "with_difficulty" = "With difficulty",
+      "fairly_easy" = "Fairly easy",
+      "easy" = "Easy",
+      "very_easy" = "Very easy"
     ),
     `91_financial_decisions` = dplyr::recode(`91_financial_decisions`,
-                                             "myself" = "Myself",
-                                             "my_male_partner" = "My male partner",
-                                             "my_female_partner" = "My female partner",
-                                             "my_nonbinary_partner" = "My nonbinary partner",
-                                             "both" = "Both"
+      "myself" = "Myself",
+      "my_male_partner" = "My male partner",
+      "my_female_partner" = "My female partner",
+      "my_nonbinary_partner" = "My nonbinary partner",
+      "both" = "Both"
     )
   )
 
@@ -885,58 +828,68 @@ old_dropped_cols <- setdiff(old_dropped_cols, "36_fish_size_restriction")
 old_hhs <- old_hhs %>% dplyr::select(-dplyr::all_of(old_dropped_cols))
 
 
-### Clean some old_hhs columns
-# E.g. change 10_mpa_important values from 0, 1, -1 to "no"/"yes"/NA
-# This matches the old survey's values and is more useful for counting
+### Recode some old_hhs columns
+# Just like we recoded columns in new_hhs, we will do the same for old_hhs
+# to standardize answers.
 
-# Questions that strictly have "Yes" or "No" or NA in new_hhs
-yesno_cols <- c()
-for (x in names(new_hhs)) {
-  unique_values <- unique(new_hhs[x][[1]])
-  if (!all(is.na(unique_values)) & all(unique_values %in% c("no", "No", "yes", "Yes", NA))) {
-    yesno_cols <- c(yesno_cols, x)
+# Same code as before to get yes/no question columns
+yesno_questions <- c()
+for (x in names(old_hhs)) {
+  unique_values <- unique(old_hhs[[x]])
+  if (!all(is.na(unique_values)) & all(unique_values %in% c(0, 1, -1, NA))) {
+    yesno_questions <- c(yesno_questions, x)
   }
 }
 
-# Standardize... "no" -> "No", "yes" -> "Yes"
-new_hhs <- new_hhs %>% 
-  dplyr::mutate(
-    dplyr::across(
-      yesno_cols,
-      ~ dplyr::case_when(.x == "yes" ~ "Yes", .x == "no" ~ "No", TRUE ~ .x)
-    )
-  )
+# Some y/n questions have -1's which mean NA. So in the mutate block below, we recode
+# -1's as NA. But a few y/n questions have a special meaning for -1, so we will take
+# them out of `yesno_questions` and recode them separately in the the mutate block.
+# Additionally, we have some Q's where the columns are indicator variables, so they
+# should stay as 1's and 0's.
+yesno_questions <- setdiff(yesno_questions,
+  c("43_fishery_benefit_equal", "48_reserve_fishing_allowed", "49_reserve_boundry",
+    stringr::str_subset(names(old_hhs), "^4_|^27|^54_|^57_|^62_|^63_")
+))
 
-# In old_hhs, the cols in yesno_cols are usually cols with 1/0's, or just empty
-# Some of the mutates are redundant, like the q31's mapping 1/0 to "Yes"/"No".
-# These columns are already accounted for in the first mutate with yesno_cols
-# Need to clean this up at some point, but those redundant lines are harmless
 old_hhs <- old_hhs %>% 
   dplyr::mutate(
     dplyr::across(
-      yesno_cols,
-      ~ dplyr::case_when(.x == 1 ~ "Yes", .x == 0 ~ "No", TRUE ~ as.character(.x))
+      yesno_questions,
+      ~ dplyr::recode(.x,
+        `1` = "Yes",
+        `0` = "No",
+        `-1` = as.character(NA),
+        .missing = as.character(NA)
+      )
     ),
     `8_religion` = dplyr::recode(`8_religion`,
-                                 "Católico" = "Catholic",
-                                 "Evangélico" = "Christian", # accurate?
-                                 "Outra" = "Other",
-                                 "Ateu" = "Atheist",
-                                 "Espírita" = "Spiritual", # accurate? no other survey has 'Spiritual'
+      "Católico" = "Catholic",
+      "Evangélico" = "Christian", # accurate?
+      "Outra" = "Other",
+      "Ateu" = "Atheist",
+      "Espírita" = "Spiritual", # accurate? no other survey has 'Spiritual'
     ),
     `10_mpa_important` = dplyr::recode(`10_mpa_important`,
-                                       `1` = "Yes",
-                                       `0` = "No",
-                                       `-1` = "Neutral",
-                                       .missing = as.character(NA)
+      `1` = "Yes",
+      `0` = "No",
+      `-1` = "Neutral",
+      .missing = as.character(NA)
     ),
-    `30_save_monthly_income` = dplyr::recode(`30_save_monthly_income`,
-                                        `1` = "Yes",
-                                        `0` = "No"
+    # IDK how to do the next few with dplyr::across so we're hard coding it :)))
+    `27a_financial_bank/no` = dplyr::case_when(
+      `27a_financial_bank/yes_gender_unspecified` == 1 ~ 0,
+      `27a_financial_bank/yes_gender_unspecified` == 0 ~ 1,
+      TRUE ~ as.double(NA)
     ),
-    `35c_other_nonbank` = dplyr::recode(`35c_other_nonbank`,
-                                        `1` = "Yes",
-                                        `0` = "No"
+    `27b_financial_micro/no` = dplyr::case_when(
+      `27b_financial_micro/yes_gender_unspecified` == 1 ~ 0,
+      `27b_financial_micro/yes_gender_unspecified` == 0 ~ 1,
+      TRUE ~ as.double(NA)
+    ),
+    `27c_financial_ngo/no` = dplyr::case_when(
+      `27c_financial_ngo/yes_gender_unspecified` == 1 ~ 0,
+      `27c_financial_ngo/yes_gender_unspecified` == 0 ~ 1,
+      TRUE ~ as.double(NA)
     ),
     # Q41: Careful with the old survey; the old survey responses were on a 
     # strongly disagree - strongly agree scale as well but included a 6th option,
@@ -945,45 +898,33 @@ old_hhs <- old_hhs %>%
     dplyr::across(
       stringr::str_subset(names(old_hhs), "^41[a-d]"),
       ~ dplyr::recode(.x,
-                      `1` = "Strongly disagree",
-                      `2` = "Disagree",
-                      `3` = "Neither",
-                      `4` = "Agree",
-                      `5` = "Strongly agree",
-                      `6` = as.character(NA)
+        `1` = "Strongly disagree",
+        `2` = "Disagree",
+        `3` = "Neither",
+        `4` = "Agree",
+        `5` = "Strongly agree",
+        `6` = as.character(NA)
       )
     ),
     `43_fishery_benefit_equal` = dplyr::recode(`43_fishery_benefit_equal`,
-                                               `1` = "Yes",
-                                               `0` = "No",
-                                               `-1` = "no_dependence"
-    ),
-    `44_ma_familiar` = dplyr::recode(`44_ma_familiar`,
-                                     `1` = "Yes",
-                                     `0` = "No",
-                                     `-1` = as.character(NA)
-    ),
-    `45_gear_restrictions` = dplyr::recode(`45_gear_restrictions`,
-                                           `1` = "Yes",
-                                           `0` = "No",
-                                           `-1` = as.character(NA)
+      `1` = "Yes",
+      `0` = "No",
+      `-1` = "I don't depend on or benefit from the fishery"
     ),
     dplyr::across(
       c("46_ma_gear_dynamite", "46_ma_gear_hookline", "46_ma_gear_trawl",
         "46_ma_gear_harpoon", "46_ma_gear_nets"),
-      ~ dplyr::recode(.x,
-                      "na" = as.character(NA)
-      )
+      ~ dplyr::recode(.x, "na" = as.character(NA))
     ),
     `48_reserve_fishing_allowed` = dplyr::recode(`48_reserve_fishing_allowed`,
-                                                 `1` = "Yes",
-                                                 `0` = "No",
-                                                 `-1` = "no_reserves"
+      `1` = "Yes",
+      `0` = "No",
+      `-1` = "no_reserves"
     ),
     `49_reserve_boundry` = dplyr::recode(`49_reserve_boundry`,
-                                         `1` = "Yes",
-                                         `0` = "No",
-                                         `-1` = "no_reserves"
+      `1` = "Yes",
+      `0` = "No",
+      `-1` = "no_reserves"
     ),
     `51_reserve_boundaries_aware` = dplyr::case_when(
       is.numeric(`51_reserve_boundaries_aware`) ~ as.character(`51_reserve_boundaries_aware`),
@@ -1001,25 +942,10 @@ old_hhs <- old_hhs %>%
       ) ~ `52_ma_fishers_allowed`,
       TRUE ~ as.character(NA)
     ),
-    # `52_ma_fishers_allowed` = purrr::map(`52_ma_fishers_allowed`, function(x) {
-    #   # "Without authorization,With authorization" -> NA
-    #   # "Without authorization" -> "Without authorization"
-    #   x_split <- stringr::str_split(x, ",", simplify = TRUE)
-    #   if (length(x_split) > 1) {
-    #     return(as.character(NA))
-    #   } else {
-    #     return(x)
-    #   }
-    # }),
-    `53_ma_benefits` = dplyr::recode(`53_ma_benefits`,
-                                     `-1` = as.character(NA), # only in FSM
-                                     `0` = "No",
-                                     `1` = "Yes"
-    ),
     `58_represent_role` = dplyr::recode(`58_represent_role`,
-                                        "no mgmt body" = "No management body",
-                                        "No management" = "No management body",
-                                        "na" = as.character(NA)
+      "no mgmt body" = "No management body",
+      "No management" = "No management body",
+      "na" = as.character(NA)
     ),
     `61_opinions_considered` = dplyr::recode(`61_opinions_considered`,
       # Old scale is disagree-neither-agree.
@@ -1035,11 +961,11 @@ old_hhs <- old_hhs %>%
       "na" = as.character(NA)
     ),
     `64_ma_punishment` = dplyr::recode(`64_ma_punishment`,
-                                       "Weak" = "Minor",
-                                       "Strong" = "Major",
-                                       "Severe" = "Extreme",
-                                       "No management" = "No regulations",
-                                       "na" = as.character(NA)
+      "Weak" = "Minor",
+      "Strong" = "Major",
+      "Severe" = "Extreme",
+      "No management" = "No regulations",
+      "na" = as.character(NA)
     ),
     dplyr::across(
       stringr::str_subset(names(old_hhs), "^65[a-e]"),
@@ -1048,62 +974,52 @@ old_hhs <- old_hhs %>%
         TRUE ~ .x
       )
     ),
-    `66_ma_benefit_5yrs` = dplyr::recode(`66_ma_benefit_5yrs`,
-                                         "na" = as.character(NA)
-    ),
-    dplyr::across(
-      stringr::str_subset(names(old_hhs), "^69[a-e]_rules"),
-      ~ dplyr::recode(.x,
-                      `0` = "No",
-                      `1` = "Yes",
-                      `-1` = as.character(NA)
-      )
-    ),
+    `66_ma_benefit_5yrs` = dplyr::recode(`66_ma_benefit_5yrs`,"na" = as.character(NA)),
     `72_food_procurement` = dplyr::recode(`72_food_procurement`,
-                                          "Very not confident" = "Very confident not",
-                                          "Not confident" = "Confident not"
+      "Very not confident" = "Very confident not",
+      "Not confident" = "Confident not"
     ),
     dplyr::across(
       stringr::str_subset(names(old_hhs), "^74[a-g,i]"),
       ~ dplyr::recode(.x,
-                      `1` = "strongly_disagree",
-                      `2` = "disagree",
-                      `3` = "neither",
-                      `4` = "agree",
-                      `5` = "strongly_agree",
-                      `0` = as.character(NA),
-                      `-1` = as.character(NA)
+        `1` = "strongly_disagree",
+        `2` = "disagree",
+        `3` = "neither",
+        `4` = "agree",
+        `5` = "strongly_agree",
+        `0` = as.character(NA),
+        `-1` = as.character(NA)
       )
     ),
     `76_complies_reserve` = dplyr::recode(`76_complies_reserve`,
-                                          "go up" = "Go up",
-                                          "stay same" = "Stay the same",
-                                          "go down" = "Go down",
-                                          "not know" = "Don't know",
-                                          "3. La captura de los pescadores aumentará" = "Go up",
-                                          "2. La captura de los pescadores seguirá igual" = "Stay the same",
-                                          "La captura de los pescadores disminuirá" = "Go down",
-                                          "4. No sabe" = "Don't know",
-                                          "na" = as.character(NA)
+      "go up" = "Go up",
+      "stay same" = "Stay the same",
+      "go down" = "Go down",
+      "not know" = "Don't know",
+      "3. La captura de los pescadores aumentará" = "Go up",
+      "2. La captura de los pescadores seguirá igual" = "Stay the same",
+      "La captura de los pescadores disminuirá" = "Go down",
+      "4. No sabe" = "Don't know",
+      "na" = as.character(NA)
     ),
     `77_fishing_in_reserve` = as.character(`77_fishing_in_reserve`),
     `78d_violate_reserve_fishing` = dplyr::recode(`78d_violate_reserve_fishing`,
-                                                  "negative informal sanction" = "Negative informal sanction",
-                                                  "negative formal sanction" = "Negative formal sanction",
-                                                  "non-sanction" = "Non-sanction",
-                                                  "1. Non-sanction" = "Non-sanction",
-                                                  "1. No aplicaría ninguna sanción" = "Non-sanction",
-                                                  "2. Negative informal sanction" = "Negative informal sanction",
-                                                  "2. Aplicaría una sanción negativa informal" = "Negative informal sanction",
-                                                  "3. Aplicaría una sanción negativa formal" = "Negative formal sanction"
+      "negative informal sanction" = "Negative informal sanction",
+      "negative formal sanction" = "Negative formal sanction",
+      "non-sanction" = "Non-sanction",
+      "1. Non-sanction" = "Non-sanction",
+      "1. No aplicaría ninguna sanción" = "Non-sanction",
+      "2. Negative informal sanction" = "Negative informal sanction",
+      "2. Aplicaría una sanción negativa informal" = "Negative informal sanction",
+      "3. Aplicaría una sanción negativa formal" = "Negative formal sanction"
     ),
     `80_no_wrong_fishing_reserve` = dplyr::case_when(
       `80_no_wrong_fishing_reserve` > 10 ~ as.double(NA),
       TRUE ~ `80_no_wrong_fishing_reserve`
     ),
     `91_financial_decisions` = dplyr::recode(`91_financial_decisions`,
-                                             "Male partner" = "My male partner",
-                                             "Female partner" = "My female partner"
+      "Male partner" = "My male partner",
+      "Female partner" = "My female partner"
     ),
     `84_post_hours_woman` = dplyr::case_when( # probably answered wrong? answer should be btwn 0-24
       `84_post_hours_woman` > 24 ~ as.double(NA),
@@ -1138,10 +1054,10 @@ na_dict <- na_dict %>%
   dplyr::mutate(
     colname = dplyr::recode(colname, !!!setNames(new_names, old_names)),
     na_value = dplyr::recode(na_value,
-                             # The entry error part was already accounted for; values over 10 were
-                             # set to NA.
-                             # So, all that's left to do is make these NA's into "Not Answered"
-                             "Not Answered, values >10 are entry errors" = "Not Answered")
+      # The entry error part was already accounted for; values over 10 were
+      # set to NA.
+      # So, all that's left to do is make these NA's into "Not Answered"
+      "Not Answered, values >10 are entry errors" = "Not Answered")
   ) %>% 
   dplyr::filter(colname %in% names(hhs_final)) %>% 
   dplyr::bind_rows(
