@@ -13,6 +13,18 @@ compute_summary_line <-
 
 
 ## TODO: this comes from original app and needs re-writing
+# E.g. when type=5 (strongly disagree to strongly agree scale), do the columns of
+# the resulting dataframe have the correct order? Like in q30c, this is run after
+# calculating proportions:
+# colnames(Q30c_summary) <- c("MA name", 
+#                             "N", 
+#                             "Strongly disagree", 
+#                             "Disagree",
+#                             "Neither agree nor disagree",
+#                             "Agree",
+#                             "Strongly agree")
+# This assumes the third column is actually from `30_trust_community` == 1 etc.
+# Is this accurate?
 proportion <- function(question, grouping, rounding, type)
 {
   

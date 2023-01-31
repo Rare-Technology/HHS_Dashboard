@@ -7,7 +7,7 @@ plot_q23_job_secure <- function(.data, ...){
   
   .data_plot <-  prep_data_for_plot(
     .data,
-    `9_region_member`,
+    `23_job_secure`,
     type = "bar",
     bar_column = `1`,
     rounding = 2,

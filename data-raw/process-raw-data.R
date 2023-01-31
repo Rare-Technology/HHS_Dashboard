@@ -295,22 +295,6 @@ hhs_data_filtered <- geo_filter_data(hhs_data)
 hhs_init_section <- "Basic Information"
 hhs_data_source <- "Socio-economic baseline"
 
-#Run this to make things faster for testing only.
-# hhs_data <- hhs_data %>%
-#   dplyr::select(matches("^\\D"), `3_community`, `6_gender`, `8_religion`, `9_region_member`,
-#                 `10_mpa_important`, `12a_fishing_men`, `12b_fishing_women`, `12c_fishing_children`)
-# 
-# 
-# 
-# hhs_data_filtered <- hhs_data_filtered %>%
-#   dplyr::select(matches("^\\D"), `3_community`, `6_gender`, `8_religion`, `9_region_member`,
-#                 `10_mpa_important`, `12a_fishing_men`, `12b_fishing_women`, `12c_fishing_children`)
-
-# usethis::use_data(hhs_data, overwrite = TRUE)
-# usethis::use_data(hhs_data_filtered, overwrite = TRUE)
-# usethis::use_data(hhs_questions, overwrite = TRUE)
-# usethis::use_data(hhs_q14, overwrite = TRUE)
-
 detach(package:dplyr)
 detach(package:tidyr)
 
