@@ -848,7 +848,7 @@ for (x in names(old_hhs)) {
 # should stay as 1's and 0's.
 yesno_questions <- setdiff(yesno_questions,
   c("43_fishery_benefit_equal", "48_reserve_fishing_allowed", "49_reserve_boundry",
-    stringr::str_subset(names(old_hhs), "^4_|^27|^54_|^57_|^62_|^63_")
+    stringr::str_subset(names(old_hhs), "^4_|^27|^33_|^54_|^57_|^62_|^63_")
 ))
 
 old_hhs <- old_hhs %>% 
@@ -889,6 +889,11 @@ old_hhs <- old_hhs %>%
     `27c_financial_ngo/no` = dplyr::case_when(
       `27c_financial_ngo/yes_gender_unspecified` == 1 ~ 0,
       `27c_financial_ngo/yes_gender_unspecified` == 0 ~ 1,
+      TRUE ~ as.double(NA)
+    ),
+    `33_hh_insurance/no` = dplyr::case_when(
+      `33_hh_insurance/yes_unspecified` == 1 ~ 0,
+      `33_hh_insurance/yes_unspecified` == 0 ~ 1,
       TRUE ~ as.double(NA)
     ),
     # Q41: Careful with the old survey; the old survey responses were on a 
