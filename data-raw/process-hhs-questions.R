@@ -750,6 +750,18 @@ new_hhs <- new_hhs %>%
       "few_times_per_week" = "Few per week",
       "more_than_few_times" = "More than few per week"
     ),
+    dplyr::across(
+      stringr::str_subset(names(old_hhs), "^74"),
+      ~ dplyr::recode(.x,
+        "strongly_disagree" = "Strongly disagree",
+        "disagree" = "Disagree",
+        "neither" = "Neither agree nor disagree",
+        "agree" = "Agree",
+        "strongly_agree" = "Strongly agree",
+        "na" = "Not Answered",
+        "NA" = "Not Answered"
+      )
+    ),
     `75_mgmt_rules_fair` = dplyr::recode(`75_mgmt_rules_fair`,
       `-1` = as.character(NA)
     ),
@@ -987,11 +999,11 @@ old_hhs <- old_hhs %>%
     dplyr::across(
       stringr::str_subset(names(old_hhs), "^74[a-g,i]"),
       ~ dplyr::recode(.x,
-        `1` = "strongly_disagree",
-        `2` = "disagree",
-        `3` = "neither",
-        `4` = "agree",
-        `5` = "strongly_agree",
+        `1` = "Strongly disagree",
+        `2` = "Disagree",
+        `3` = "Neither agree nor disagree",
+        `4` = "Agree",
+        `5` = "Strongly agree",
         `0` = as.character(NA),
         `-1` = as.character(NA)
       )
@@ -1173,8 +1185,19 @@ hhs_final <- hhs_final %>%
   # no longer need old q36 col
   dplyr::select(-`36_fish_size_restriction`)
 
-readr::write_csv(hhs_final, "../data/HHS/hh_survey_combined.csv")
+data_path <- "../data/HHS/hh_survey_combined.csv"
+readr::write_csv(hhs_final, data_path)
+DW_TOKEN <- Sys.getenv("DW_TOKEN")
 
+# Saving output to res for debugging if necessary
+res <- httr::PUT(
+  url = "https://api.data.world/v0/uploads/rare/hh-surveys/files/hh_survey_combined.csv",
+  config = httr::add_headers(
+    Authorization = paste("Bearer", DW_TOKEN),
+    "Content-Type" = "application/octet-stream"
+  ),
+  body = httr::upload_file(data_path)
+)
 
 ################################ NOTES ########################################
 #
