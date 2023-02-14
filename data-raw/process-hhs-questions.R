@@ -769,7 +769,11 @@ new_hhs <- new_hhs %>%
       "catch_up" = "Go up",
       "catch_same" = "Stay the same",
       "catch_down" = "Go down",
-      "idk" = "Don't know"
+      "idk" = "Don't know",
+      "Don’t know" = "Don't know", # this was annoying !
+      "Fishers’ catch will go up" = "Go up",
+      "Fishers’ catch will stay the same" = "Stay the same",
+      "Fishers’ catch will go down" = "Go down"
     ),
     `77_fishing_in_reserve` = dplyr::recode(`77_fishing_in_reserve`,
       "never" = "Never",
