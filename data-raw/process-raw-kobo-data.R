@@ -1,0 +1,187 @@
+library(httr)
+library(readxl)
+library(data.world)
+library(dplyr)
+library(stringr)
+library(lubridate)
+
+# data.world library doesn't download the data properly
+# This method of getting the kobo data will probably change. Why not
+# just download directly from kobo?
+httr::GET("https://query.data.world/s/jwd5niku3brhqgcn7smgfev4sxtw2d",
+          httr::write_disk(tf <- tempfile(fileext = ".xlsx")))
+httr_data <- readxl::read_excel(tf)
+
+# Remove some junk columns that are not supposed to be there
+# George is working on fixing this, so once that's done, this line
+# can be removed
+kobo_data <- kobo_data[,c(1:431)]
+
+# Remove leading underscores from column names
+names(kobo_data) <- stringr::str_sub(names(kobo_data), 2)
+
+# A bit of data cleaning; rename/mutate geographic cols
+kobo_data <- kobo_data %>% 
+  dplyr::rename(
+    submissionid = uuid,
+    updatedat = submission_time,
+    iso3 = country,
+    level1_id = `3_province`, # verify this and the next couple geographic columns
+    level2_id = `3_municipality`, # also, these are just ID's, not names
+    level4_id = `3_community`,
+    lon = store_gps_longitude,
+    lat = store_gps_latitude
+  ) %>%
+  dplyr::mutate(
+    country = dplyr::case_when(
+      iso3 == "IDN" ~ "Indonesia",
+      iso3 == "HND" ~ "Honduras",
+      iso3 == "PHL" ~ "Philippines",
+      iso3 == "FSM" ~ "Federated States of Micronesia",
+      iso3 == "BRA" ~ "Brazil",
+      iso3 == "GTM" ~ "Guatemala",
+      iso3 == "MOZ" ~ "Mozambique",
+      iso3 == "PLW" ~ "Palau",
+      TRUE ~ iso3 # something slips through the cracks
+    ),
+    updatedat_ymd = lubridate::as_date(updatedat),
+    yearmonth = stringr::str_sub(updatedat_ymd, 1, 7),
+    year = stringr::str_sub(updatedat_ymd, 1, 4) %>% as.integer(),
+  ) %>%
+  dplyr::select(-updatedat_ymd) %>% 
+  dplyr::filter(!(`1_interviewer` %in% c("George Stoyle", "test", "Test", "Test 2", "Teste", "Teste 2")))
+
+### Add geographic info
+# The only geographic columns are made up of id's, and there is not info for
+# the maa. So let's add names and maa info.
+
+geo <- data.world::query(
+  data.world::qry_sql("SELECT * FROM footprint_global_all_levels"),
+  "https://data.world/rare/footprint"
+)
+
+maa <- data.world::query(
+  data.world::qry_sql("SELECT * FROM communities_managed_access"),
+  "https://data.world/rare/footprint/"
+)
+
+# First, there's 5 rows missing all level1_id, level2_id, and level4_id.
+# Nothing we can really do there.
+# But, there are 14 rows missing only leve1_id, with level2_id and level4_id OK
+# So let's join on these two columns to extract the missing level1_id's
+
+kobo_data <- kobo_data %>% 
+  dplyr::select(-level1_id) %>% 
+  dplyr::left_join(
+    geo %>% dplyr::select(
+      level2_id, level4_id, level1_id
+    )
+  )
+
+# Now add names for level1/2/4
+kobo_data <- kobo_data %>% 
+  dplyr::left_join(
+    geo %>% dplyr::select(
+      level1_id, subnational = level1_name,
+      level2_id, local = level2_name,
+      level4_id, `3_community` = level4_name
+    ),
+    by = c("level1_id", "level2_id", "level4_id")
+  )
+
+# Finally, add maa info like name, status, and area. Remove cols we won't need.
+kobo_data <- kobo_data %>%
+  dplyr::left_join(
+    maa %>% dplyr::select(
+      level1_id, level2_id, level4_id,
+      maa = ma_name, ma_area, ma_status),
+    by = c("level1_id", "level2_id", "level4_id")
+  ) %>% 
+  dplyr::select(-c(
+    level1_id,
+    level2_id,
+    level4_id,
+    tore_gps, # not a typo
+    store_gps_altitude,
+    store_gps_precision,
+    `94_yes_no`,
+    id,
+    # Basically all the note columns are blank
+    stringr::str_subset(names(.), "note_")
+  ))
+
+idn_update <- data.world::query(
+  data.world::qry_sql("SELECT * FROM hh_surveys_idn_2022_revisions"),
+  "https://data.world/rare/hh-surveys"
+)
+
+idn_update <- idn_update %>% 
+  dplyr::mutate(
+    updatedat_ymd = lubridate::as_date(updatedat),
+    yearmonth = stringr::str_sub(updatedat_ymd, 1, 7),
+    year = stringr::str_sub(updatedat_ymd, 1, 4) %>% as.integer(),
+  ) %>% 
+  dplyr::select(-updatedat_ymd) %>% 
+  dplyr::filter(!(`1_interviewer` %in% c("George Stoyle", "test", "Test", "Test 2", "Teste", "Teste 2"))) %>% 
+  dplyr::select(c(intersect(names(kobo_data), names(.)), "77_fishing_in_reserve"))
+
+# Pull 2022 Indo records that were in the edited sheet.
+# There are 29 records that weren't in the edited sheet. They'll just stay
+# in the main dataset.
+idn22 <- kobo_data %>% 
+  dplyr::filter(submissionid %in% idn_update$submissionid)
+
+# Remove the idn22 rows from hhs
+kobo_data <- kobo_data %>% 
+  dplyr::filter(!(submissionid %in% idn_update$submissionid))
+
+# Take out the columns from idn22 that we are pushing in from the edit,
+# except for submissionid. We'll need that in a join in the next step
+# What's left is the columns that were NOT in the edited sheet.
+# It's not a lot:
+# [1] "iso3"                           "lat"                           
+# [3] "lon"                            "calculate_q14_total_proportion"
+# [5] "ma_area"                        "ma_status" 
+idn22 <- idn22 %>% 
+  dplyr::select(-setdiff(names(idn_update), "submissionid"))
+
+# Before joining idn22 and idn_update, I found out that idn_update has a duplicate
+# submissionid. It looks like the only difference between the two rows with this
+# submissionid is 2_affiliation. We'll just take the one that was updated most recently
+dup_id <- "45d59f45-53f5-453d-8ab6-b76dee5b12b1"
+most_recent <- idn_update %>% 
+  dplyr::filter(submissionid == dup_id) %>% 
+  dplyr::pull(updatedat) %>% 
+  max()
+idn_update <- idn_update %>% 
+  dplyr::filter(submissionid != dup_id | updatedat == most_recent)
+
+# Now just join the bit from kobo that has columns missing from the edit
+idn22 <- idn22 %>% 
+  dplyr::left_join(idn_update, by="submissionid")
+
+# Convert some columns to make sure the types are compatible
+kobo_data <- kobo_data %>% 
+  dplyr::mutate(
+    # The Indo edit introduced a string to a question on a 0-10 scale --
+    # "Rules have not been created"
+    `75_mgmt_rules_fair` = as.character(`75_mgmt_rules_fair`)
+  )
+
+idn22 <- idn22 %>% 
+  dplyr::mutate(
+    # `8_religion_other` = as.character(`8_religion_other`),
+    `37a_loan_repay_bank` = as.character(`37a_loan_repay_bank`),
+    `37b_loan_repay_buyer` = as.character(`37b_loan_repay_buyer`),
+    `37c_loan_repay_nonbank` = as.character(`37c_loan_repay_nonbank`),
+    `65a_fishers_gear_not_permitted` = as.double(`65a_fishers_gear_not_permitted`),
+    `65b_fishers_reserves` = as.double(`65b_fishers_reserves`),
+    `65c_fishers_ma_area` = as.double(`65c_fishers_ma_area`),
+    `65d_fishers_violate_fish_size` = as.double(`65d_fishers_violate_fish_size`),
+    `65e_fishers_caught` = as.double(`65e_fishers_caught`),
+    `80_no_wrong_fishing_reserve` = as.double(`80_no_wrong_fishing_reserve`),
+  )
+
+kobo_data <- dplyr::bind_rows(kobo_data, idn22)
+
+usethis::use_data(kobo_data)

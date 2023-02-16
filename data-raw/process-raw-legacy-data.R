@@ -8,23 +8,22 @@ source("data-raw/urls-data.R")
 # Read most data in ----
 #************************************************
 
-# You will see warnings because some variables do not exist in some tables
-# Load rarehhs package
-# hhs_data <- read_multi_csv(urls$hhs, col_type_spec = spec_hhs) %>%
-#   dplyr::filter(ma_name != "")
-
-hhs_data <- readr::read_csv(urls$hhs, guess_max = 1000000) %>%
+legacy_data <- data.world::query(
+  data.world::qry_sql("SELECT * FROM hh_surveys_all"),
+  "https://data.world/rare/social-science-data"
+) %>%
   dplyr::filter(ma_name != "")
+
 #************************************************
 # Remove duplicates ----
 #************************************************
 
 # Per git12 I guess this is no longer needed?
 # rename and remove duplicates that where submitted on different times
-# hhs_data <- hhs_data %>%
+# legacy_data <- legacy_data %>%
 #   dplyr::select(-c(updatedat, endformtimestamp, startformtimestamp)) %>%
 #   unique() %>%
-#   dplyr::left_join(hhs_data[, c(
+#   dplyr::left_join(legacy_data[, c(
 #     "submissionid",
 #     "updatedat",
 #     "startformtimestamp",
@@ -54,7 +53,7 @@ country <- tribble(
   "Guatemala", "GTM",
 )
 
-hhs_data <- hhs_data %>%
+legacy_data <- legacy_data %>%
   rename(
     iso3 = country,
     subnational = level1_name,
@@ -72,8 +71,8 @@ hhs_data <- hhs_data %>%
 #************************************************
 
 
-hhs_data_save <- hhs_data
-#hhs_data <- hhs_data_save
+legacy_data_save <- legacy_data
+#legacy_data <- legacy_data_save
 
 
 #************************************************
@@ -82,10 +81,10 @@ hhs_data_save <- hhs_data
 
 # Several questions have more than one response within
 # an ID so we are nesting based on submission_id
-# so that we can merge with the hhs_data
+# so that we can merge with the legacy_data
 
 
-join_with_hhs <- function(.hhs_data, .other_data, var1) {
+join_with_hhs <- function(.legacy_data, .other_data, var1) {
   .other_data <- .other_data %>%
     select(submissionid, {{ var1 }}) %>%
     dplyr::distinct() %>%
@@ -96,21 +95,21 @@ join_with_hhs <- function(.hhs_data, .other_data, var1) {
   cat(crayon::cyan(glue::glue("{n_other} rows and {n_unique} unique submissionid")), "\n")
   if (n_other != n_unique) stop("N rows and N unique submissionid should be the same")
 
-  n_hhs_data <- nrow(.hhs_data)
+  n_legacy_data <- nrow(.legacy_data)
 
-  .hhs_data <- left_join(
-    .hhs_data,
+  .legacy_data <- left_join(
+    .legacy_data,
     .other_data,
     by = "submissionid"
   )
 
-  n_after_join <- nrow(.hhs_data)
+  n_after_join <- nrow(.legacy_data)
 
-  cat(crayon::blue(glue::glue("{n_hhs_data} rows before join {n_after_join} rows after")))
+  cat(crayon::blue(glue::glue("{n_legacy_data} rows before join {n_after_join} rows after")))
 
-  if (n_hhs_data != n_after_join) stop("N rows before and after should be the same")
+  if (n_legacy_data != n_after_join) stop("N rows before and after should be the same")
   
-  .hhs_data
+  .legacy_data
 }
 
 
@@ -120,21 +119,22 @@ join_with_hhs <- function(.hhs_data, .other_data, var1) {
 
 
 # These tables all have multiple answers
+# TODO changes readr::read_csv -> data.world::query
 hhs_q14 <- readr::read_csv(urls$q14, guess_max = 1000000)
-hhs_data <- join_with_hhs(hhs_data, hhs_q14, `14_responsibility`)
+legacy_data <- join_with_hhs(legacy_data, hhs_q14, `14_responsibility`)
 
 hhs_q15 <- readr::read_csv(urls$q15, guess_max = 1000000)
-hhs_data <- join_with_hhs(hhs_data, hhs_q15, `15_activity`)
+legacy_data <- join_with_hhs(legacy_data, hhs_q15, `15_activity`)
 
 hhs_q44 <- readr::read_csv(urls$q44, guess_max = 1000000) 
-hhs_data <- join_with_hhs(hhs_data, hhs_q44, `44_meeting_attendance`)
+legacy_data <- join_with_hhs(legacy_data, hhs_q44, `44_meeting_attendance`)
 
 hhs_q45 <- readr::read_csv(urls$q45, guess_max = 1000000) 
 #hhs_q45 <- read_multi_csv(urls$q45)
-hhs_data <- join_with_hhs(hhs_data, hhs_q45, `45_leadership_position`)
+legacy_data <- join_with_hhs(legacy_data, hhs_q45, `45_leadership_position`)
   
 hhs_q48 <- readr::read_csv(urls$q48, guess_max = 1000000)
-hhs_data <- join_with_hhs(hhs_data, hhs_q48, `48_enforcement_participation`)
+legacy_data <- join_with_hhs(legacy_data, hhs_q48, `48_enforcement_participation`)
 
 
 hhs_q69 <- readr::read_csv(urls$q69) %>%
@@ -163,7 +163,7 @@ hhs_q69 <- readr::read_csv(urls$q69) %>%
     `69_other` = `69_other`
   )
 
-hhs_data <- left_join(hhs_data, hhs_q69, by = 'submissionid')
+legacy_data <- left_join(legacy_data, hhs_q69, by = 'submissionid')
 
 
 #************************************************
@@ -171,7 +171,7 @@ hhs_data <- left_join(hhs_data, hhs_q69, by = 'submissionid')
 #************************************************
 
 
-hhs_data <- hhs_data %>% 
+legacy_data <- legacy_data %>% 
   dplyr::mutate(
     level2_name = ifelse(country == "PLW", subnational, local),
     maa = ifelse(country == "PLW", subnational, maa)
@@ -182,7 +182,7 @@ hhs_data <- hhs_data %>%
 # Fix naming issue ----
 #************************************************
 
-hhs_data <- hhs_data %>% 
+legacy_data <- legacy_data %>% 
   dplyr::select(
     -`61e_violations_decrease_profit`
   ) %>% 
@@ -198,7 +198,7 @@ hhs_data <- hhs_data %>%
 # Review non-numbered variables ----
 #************************************************
 
-hhs_data %>%
+legacy_data %>%
   dplyr::select(matches("^\\D")) %>%
   dplyr::glimpse()
 
@@ -214,32 +214,32 @@ hhs_q14 %>%
 # trick doesn't work
 #************************************************
 
-hhs_data <- hhs_data %>%
+legacy_data <- legacy_data %>%
   mutate(yearmonth = lubridate::ym(substr(updatedat, 1, 7)))
 
-hhs_data$year[hhs_data$iso3 == "BRA"] <- ifelse(
-  hhs_data$yearmonth[hhs_data$iso3 == "BRA"] < lubridate::ym("2021-10"),
+legacy_data$year[legacy_data$iso3 == "BRA"] <- ifelse(
+  legacy_data$yearmonth[legacy_data$iso3 == "BRA"] < lubridate::ym("2021-10"),
   2019,
   2022
 )
-hhs_data$year[hhs_data$iso3 == "FSM"] <- 2020
-hhs_data$year[hhs_data$iso3 == "HND"] <- lubridate::year(
-  hhs_data$yearmonth[(hhs_data$iso3 == "HND")]
+legacy_data$year[legacy_data$iso3 == "FSM"] <- 2020
+legacy_data$year[legacy_data$iso3 == "HND"] <- lubridate::year(
+  legacy_data$yearmonth[(legacy_data$iso3 == "HND")]
 )
-hhs_data$year[hhs_data$iso3 == "IDN"] <- 2019
-hhs_data$year[hhs_data$iso3 == "MOZ"] <- ifelse(
-  hhs_data$yearmonth[hhs_data$iso3 == "MOZ"] < lubridate::ym("2020-02"),
+legacy_data$year[legacy_data$iso3 == "IDN"] <- 2019
+legacy_data$year[legacy_data$iso3 == "MOZ"] <- ifelse(
+  legacy_data$yearmonth[legacy_data$iso3 == "MOZ"] < lubridate::ym("2020-02"),
   2019,
   2021
 )
-hhs_data$year[hhs_data$iso3 == "PHL"] <- ifelse(
-  hhs_data$yearmonth[hhs_data$iso3 == "PHL"] < lubridate::ym("2022-09"),
+legacy_data$year[legacy_data$iso3 == "PHL"] <- ifelse(
+  legacy_data$yearmonth[legacy_data$iso3 == "PHL"] < lubridate::ym("2022-09"),
   2019,
   2022
 )
-hhs_data$year[hhs_data$iso3 == "PLW"] <- 2020
-hhs_data$year[hhs_data$iso3 == "GTM"] <- ifelse(
-  hhs_data$yearmonth[hhs_data$iso3 == "GTM"] < lubridate::ym("2022-11"),
+legacy_data$year[legacy_data$iso3 == "PLW"] <- 2020
+legacy_data$year[legacy_data$iso3 == "GTM"] <- ifelse(
+  legacy_data$yearmonth[legacy_data$iso3 == "GTM"] < lubridate::ym("2022-11"),
   2021,
   2022
 )
@@ -264,12 +264,12 @@ create_geo_table <- function(.data) {
 
 hhs_init_year_selections <- list(
   selected = 2021, # subject to change
-  choices = hhs_data$year %>% unique() %>% sort()
+  choices = legacy_data$year %>% unique() %>% sort()
 )
 
-hhs_data_geo <- create_geo_table(hhs_data)
+legacy_data_geo <- create_geo_table(legacy_data)
 hhs_init_geo_selections <- rarehhs::get_geo_selections(
-  hhs_data_geo,
+  legacy_data_geo,
   year_selected = 2021,
   country_selected = "Honduras"
 )
@@ -284,7 +284,7 @@ geo_filter_data <- function(.data) {
 }
 
 
-hhs_data_filtered <- geo_filter_data(hhs_data)
+legacy_data_filtered <- geo_filter_data(legacy_data)
 
 
 #************************************************
@@ -293,14 +293,14 @@ hhs_data_filtered <- geo_filter_data(hhs_data)
 
 
 hhs_init_section <- "Basic Information"
-hhs_data_source <- "Socio-economic baseline"
+legacy_data_source <- "Socio-economic baseline"
 
 detach(package:dplyr)
 detach(package:tidyr)
 
 usethis::use_data(
-  hhs_data,
-  hhs_data_filtered,
+  legacy_data,
+  legacy_data_filtered,
   #hhs_questions,
   # hhs_q07,
   # hhs_q14,
@@ -309,9 +309,9 @@ usethis::use_data(
   # hhs_q45,
   # hhs_q48,
   # hhs_q69,
-  hhs_data_source,
+  legacy_data_source,
   # hhs_init_data_source,
-  hhs_data_geo,
+  legacy_data_geo,
   hhs_init_year_selections,
   hhs_init_geo_selections,
   hhs_init_section,
