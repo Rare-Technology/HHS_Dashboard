@@ -6,7 +6,22 @@ hhs_questions_table <- readxl::read_excel("data-raw/hhs_questions.xlsx") %>%
     q_number = `New Question Number`,
     q_text = `Question English`
   ) %>% 
-  dplyr::left_join(hhs_sections)
+  dplyr::mutate(
+    q_number_no_letter = stringr::str_extract(q_number, "[^a-z]*"),
+    q_letter = paste0(stringr::str_extract(q_number, "[a-z]"), ")"),
+    q_text = dplyr::case_when(
+      q_number_no_letter == "65" ~ paste("65.", q_text),
+      q_number_no_letter %in% c("41", "74") ~ paste(
+        paste0(stringr::str_sub(q_number, end=2), "."),
+        q_letter,
+        q_text
+      ),
+      TRUE ~ paste(q_number, q_text, sep=". ")
+    )
+  ) %>% 
+  dplyr::select(q_number, q_text) %>% 
+  dplyr::left_join(hhs_sections) %>% 
+  dplyr::filter(!(section %in% c("Introduction", "Conclusion")))
 
 sections <- unique(hhs_questions_table$section)
 sections <- sections[!is.na(sections)]
