@@ -1,7 +1,7 @@
 library(dplyr)
 library(readxl)
 
-legacy_hhs_questions <- readr::read_csv("data-raw/hhs_questions.csv")
+legacy_hhs_questions <- readr::read_csv("data-raw/legacy_hhs_questions.csv")
 
 # Questions added
 legacy_hhs_questions <- legacy_hhs_questions %>%

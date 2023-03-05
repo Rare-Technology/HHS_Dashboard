@@ -1011,7 +1011,7 @@ hhs_data <- hhs_data %>%
   dplyr::select(-`36_fish_size_restriction`)
 
 #### Export ####
-usethis::use_data(hhs_data)
+usethis::use_data(hhs_data, overwrite=TRUE)
 
 tf <- tempfile(fileext=".csv")
 readr::write_csv(tf)

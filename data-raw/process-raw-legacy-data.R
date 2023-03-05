@@ -198,13 +198,13 @@ legacy_data <- legacy_data %>%
 # Review non-numbered variables ----
 #************************************************
 
-legacy_data %>%
-  dplyr::select(matches("^\\D")) %>%
-  dplyr::glimpse()
-
-hhs_q14 %>%
-  select(matches("^\\D")) %>%
-  glimpse()
+# legacy_data %>%
+#   dplyr::select(matches("^\\D")) %>%
+#   dplyr::glimpse()
+# 
+# hhs_q14 %>%
+#   select(matches("^\\D")) %>%
+#   glimpse()
 
 
 #************************************************
@@ -244,76 +244,4 @@ legacy_data$year[legacy_data$iso3 == "GTM"] <- ifelse(
   2022
 )
 
-#************************************************
-# Create the geotable ----
-#************************************************
-
-
-create_geo_table <- function(.data) {
-  dplyr::distinct(
-    .data,
-    year,
-    iso3,
-    country,
-    subnational,
-    local,
-    maa
-  ) %>%
-    dplyr::arrange(year, country, subnational, local, maa)
-}
-
-hhs_init_year_selections <- list(
-  selected = 2021, # subject to change
-  choices = legacy_data$year %>% unique() %>% sort()
-)
-
-legacy_data_geo <- create_geo_table(legacy_data)
-hhs_init_geo_selections <- rarehhs::get_geo_selections(
-  legacy_data_geo,
-  year_selected = 2021,
-  country_selected = "Honduras"
-)
-
-geo_filter_data <- function(.data) {
-  .data %>%
-    dplyr::filter(year == hhs_init_year_selections$selected) %>% 
-    dplyr::filter(country == hhs_init_geo_selections$country$selected) %>%
-    dplyr::filter(subnational %in% hhs_init_geo_selections$subnational$selected) %>%
-    dplyr::filter(local %in% hhs_init_geo_selections$local$selected) %>%
-    dplyr::filter(maa %in% hhs_init_geo_selections$maa$selected)
-}
-
-
-legacy_data_filtered <- geo_filter_data(legacy_data)
-
-
-#************************************************
-# Set other variables ----
-#************************************************
-
-
-hhs_init_section <- "Basic Information"
-legacy_data_source <- "Socio-economic baseline"
-
-detach(package:dplyr)
-detach(package:tidyr)
-
-usethis::use_data(
-  legacy_data,
-  legacy_data_filtered,
-  #hhs_questions,
-  # hhs_q07,
-  # hhs_q14,
-  # hhs_q15,
-  # hhs_q44,
-  # hhs_q45,
-  # hhs_q48,
-  # hhs_q69,
-  legacy_data_source,
-  # hhs_init_data_source,
-  legacy_data_geo,
-  hhs_init_year_selections,
-  hhs_init_geo_selections,
-  hhs_init_section,
-  overwrite = TRUE
-)
+usethis::use_data(legacy_data, overwrite=TRUE)
