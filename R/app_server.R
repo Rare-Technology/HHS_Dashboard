@@ -21,7 +21,7 @@ app_server <- function( input, output, session ) {
   
   # Main panel
   startServer("startUI", state)
-  dataServer("dataUI", state)
+  # dataServer("dataUI", state)
   chartServer("chartUI", state, HHS_PLOT_FUNS)
   mapServer("mapUI", state)
   #selectServer("selectUI")

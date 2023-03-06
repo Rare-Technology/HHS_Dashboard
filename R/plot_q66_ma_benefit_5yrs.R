@@ -1,17 +1,10 @@
-
-# prep_q52_ma_benefit_5yrs <- function(.data){
-# 
-# }
-
-plot_q52_ma_benefit_5yrs <- function(.data, ...){
-  
-
+plot_q66_ma_benefit_5yrs <- function(.data, ...){
   .data <- .data %>% 
-    dplyr::filter(`52_ma_benefit_5yrs` %in% c("Yes", "Unsure", "No"))
+    dplyr::filter(`66_ma_benefit_5yrs` %in% c("Yes", "Unsure", "No"))
   
   .data_plot <-prep_data_for_plot(
     .data, 
-    focus_var = `52_ma_benefit_5yrs`, 
+    focus_var = `66_ma_benefit_5yrs`, 
     type = "facet"
   )
   
