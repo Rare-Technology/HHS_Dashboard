@@ -35,6 +35,7 @@
 HHS_PLOT_FUNS <- c(
   "plot_q21_current_fish_catch", "plot_q45_gear_restrictions", "plot_q47_ability_min_size",
   "plot_q48_reserve_fishing_allowed", "plot_q58_represent_role", "plot_q65_fishers_caught",
-  "plot_q66_ma_benefit_5yrs", "plot_q74a_current_regulations", "plot_q74e_rights_distribution_fair"
+  "plot_q65_fishers_permission", "plot_q66_ma_benefit_5yrs", "plot_q74a_current_regulations",
+  "plot_q74b_catch_recording", "plot_q74e_rights_distribution_fair"
 )
 NO_PLOT_ATTEMPT <- NULL
