@@ -486,6 +486,12 @@ kobo_data <- kobo_data %>%
         "na" = as.character(NA)
       )
     ),
+    `48_reserve_fishing_allowed` = dplyr::recode(
+      `48_reserve_fishing_allowed`,
+      "no" = "No",
+      "yes" = "Yes",
+      "no_reserves" = "Community does not have reserves"
+    ),
     `52_ma_fishers_allowed` = dplyr::recode(`52_ma_fishers_allowed`,
       "community_only" = "Community only",
       "idk" = "Don't know",
@@ -764,15 +770,17 @@ legacy_data <- legacy_data %>%
         "46_ma_gear_harpoon", "46_ma_gear_nets"),
       ~ dplyr::recode(.x, "na" = as.character(NA))
     ),
-    `48_reserve_fishing_allowed` = dplyr::recode(`48_reserve_fishing_allowed`,
+    `48_reserve_fishing_allowed` = dplyr::recode(
+      `48_reserve_fishing_allowed`,
       `1` = "Yes",
       `0` = "No",
-      `-1` = "no_reserves"
+      `-1` = "Community does not have reserves"
     ),
-    `49_reserve_boundry` = dplyr::recode(`49_reserve_boundry`,
+    `49_reserve_boundry` = dplyr::recode(
+      `49_reserve_boundry`,
       `1` = "Yes",
       `0` = "No",
-      `-1` = "no_reserves"
+      `-1` = "Community does not have reserves"
     ),
     `51_reserve_boundaries_aware` = dplyr::case_when(
       is.numeric(`51_reserve_boundaries_aware`) ~ as.character(`51_reserve_boundaries_aware`),
