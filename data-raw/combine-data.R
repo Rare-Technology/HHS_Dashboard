@@ -471,6 +471,12 @@ kobo_data <- kobo_data %>%
       "no" = "No",
       "no_dependence" = "I don't depend on or benefit from the fishery"
     ),
+    `45_gear_restrictions` = dplyr::recode(
+      `45_gear_restrictions`,
+      "yes" = "Yes",
+      "no" = "No",
+      "na" = as.character(NA)
+    ),
     dplyr::across(
       stringr::str_subset(names(kobo_data), "^46"),
       ~ dplyr::recode(.x,
@@ -492,6 +498,7 @@ kobo_data <- kobo_data %>%
       "agree" = "Agree",
       "disagree" = "Disagree",
       "neither" = "Neither",
+      "Neither agree nor disagree" = "Neither",
       "no_mgmt" = "No management body"
     ),
     `61_opinions_considered` = dplyr::recode(`61_opinions_considered`,
