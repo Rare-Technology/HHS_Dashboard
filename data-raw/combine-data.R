@@ -396,6 +396,15 @@ kobo_data <- kobo_data %>%
         "yes" = "Yes"
       )
     ),
+    `6_gender` = dplyr::recode(
+      `6_gender`,
+      "f" = "F",
+      "Female" = "F",
+      "m" = "M",
+      "Male" = "M",
+      "nb" = "NB",
+      "Non-Binary" = "NB"
+    ),
     `8_religion` = dplyr::recode(`8_religion`,
       "other" = "Other",
       "muslim" = "Muslim",
@@ -537,13 +546,14 @@ kobo_data <- kobo_data %>%
       "unsure" = "Unsure",
       "na" = as.character(NA)
     ),
-    `67_encourage_regulations` = dplyr::recode(`67_encourage_regulations`,
+    `67_encourage_regulations` = dplyr::recode(
+      `67_encourage_regulations`,
       "never" = "Never",
       "rarely" = "Rarely",
       "sometimes" = "Sometimes",
       "often" = "Often",
       "very_often" = "Very often",
-      "no_regulations" = "No regulations"
+      "no_regulations" = "Community does not have fishing regulations"
     ),
     dplyr::across(
       stringr::str_subset(names(kobo_data), "^68[a-f]"),
@@ -664,6 +674,7 @@ kobo_data <- kobo_data %>%
       "my_male_partner" = "My male partner",
       "my_female_partner" = "My female partner",
       "my_nonbinary_partner" = "My nonbinary partner",
+      "My non-binary partner" = "My nonbinary partner",
       "both" = "Both"
     )
   )
