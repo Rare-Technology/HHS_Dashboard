@@ -1,17 +1,13 @@
-
-
-plot_q23_job_secure <- function(.data, ...){
-
+plot_q25_job_secure <- function(.data, ...){
   .data <- .data %>% 
-    dplyr::filter(`23_job_secure`%in% c(0,1))
+    dplyr::filter(`25_job_secure` %in% c("No","Yes"))
   
   .data_plot <-  prep_data_for_plot(
     .data,
-    `23_job_secure`,
+    `25_job_secure`,
     type = "bar",
-    bar_column = `1`,
-    rounding = 2,
-    
+    bar_column = `Yes`,
+    rounding = 2
   )
   
   p <- plot_horiz_bar(
