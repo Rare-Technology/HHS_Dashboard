@@ -1,11 +1,15 @@
 
 prep_q15_household_fishing <- function(.data) {
-
+  ### Tue Mar 7, 2023
+  # When the legacy data was combined with the 2022 revision data, missing values for Q15 were
+  # mapped to 0, so figured obtained from the dashboard previously may not match exactly.
   hhs_Q15 <- .data %>% 
     dplyr:: select(maa, `15a_fishing_men`, `15b_fishing_women`, `15c_fishing_children`) %>% 
-    dplyr::filter(`15a_fishing_men` < 10 & `15a_fishing_men` != "") %>%
-    dplyr::filter(`15b_fishing_women` < 10 & `15b_fishing_women` != "") %>%
-    dplyr::filter(`15c_fishing_children` < 10 & `15c_fishing_children` != "")
+    dplyr::filter(
+      `15a_fishing_men` < 10,
+      `15b_fishing_women` < 10,
+      `15c_fishing_children` < 10
+    )
 
   Q15_summary <- hhs_Q15 %>%
     dplyr::group_by(maa) %>%

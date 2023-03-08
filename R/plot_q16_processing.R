@@ -1,4 +1,7 @@
 prep_q16_processing <- function(.data, ...){
+  ### Tue Mar 7, 2023
+  # When the legacy data was combined with the 2022 revision data, missing values for Q15 were
+  # mapped to 0, so figured obtained from the dashboard previously may not match exactly.
   hhs_Q16 <- .data[,c("maa", 
                                "16a_processing_men",
                                "16b_processing_women",
