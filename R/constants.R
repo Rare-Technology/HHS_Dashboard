@@ -34,10 +34,12 @@ LEGACY_HHS_PLOT_FUNS <- c("clean_plot_data", "ggplot_add", "ggplot_build", "ggpl
                         "prep_data_for_plot_facet")
 HHS_PLOT_FUNS <- c(
   "plot_q14_income", "plot_q15_household_fishing", "plot_q16_processing", "plot_q18_hh_main_fisher",
-  "plot_q21_current_fish_catch", "plot_q22_gear", "plot_q25_job_secure", "plot_q26_items_owned", "plot_q45_gear_restrictions", "plot_q47_ability_min_size",
-  "plot_q48_reserve_fishing_allowed", "plot_q58_represent_role", "plot_q65_fishers_caught",
-  "plot_q65_fishers_permission", "plot_q66_ma_benefit_5yrs", 
-  "plot_q67_encourage_regulations", "plot_q74a_current_regulations",  "plot_q74b_catch_recording", "plot_q74c_community_participation", 
-  "plot_q74e_rights_distribution_fair", "plot_q91_financial_decisions"
+  "plot_q21_current_fish_catch", "plot_q22_gear", "plot_q25_job_secure", "plot_q26_items_owned", 
+  "plot_q30_save_monthly_income", "plot_q31_emergency_funds",
+  "plot_q41a_trust_local_decision", "plot_q41b_trust_regional_decision", "plot_q41c_trust_community", "plot_q45_gear_restrictions", "plot_q47_ability_min_size", "plot_q48_reserve_fishing_allowed",
+  "plot_q58_represent_role",
+  "plot_q65_fishers_caught", "plot_q65_fishers_permission", "plot_q66_ma_benefit_5yrs", "plot_q67_encourage_regulations",
+  "plot_q74a_current_regulations",  "plot_q74b_catch_recording", "plot_q74c_community_participation", "plot_q74e_rights_distribution_fair",
+  "plot_q91_financial_decisions"
 )
 NO_PLOT_ATTEMPT <- NULL
