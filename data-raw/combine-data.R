@@ -391,7 +391,8 @@ kobo_data <- kobo_data %>%
     `33_hh_insurance/yes_unspecified` = NA,
     dplyr::across(
       yesno_questions,
-      ~ dplyr::recode(.x,
+      ~ dplyr::recode(
+        .x,
         "no" = "No",
         "yes" = "Yes"
       )
@@ -405,7 +406,8 @@ kobo_data <- kobo_data %>%
       "nb" = "NB",
       "Non-Binary" = "NB"
     ),
-    `8_religion` = dplyr::recode(`8_religion`,
+    `8_religion` = dplyr::recode(
+      `8_religion`,
       "other" = "Other",
       "muslim" = "Muslim",
       "catholic" = "Catholic",
@@ -415,7 +417,8 @@ kobo_data <- kobo_data %>%
       "traditional" = "Traditional",
       "jewish" = "Jewish"
     ),
-    `18_hh_main_fisher` = dplyr::recode(`18_hh_main_fisher`,
+    `18_hh_main_fisher` = dplyr::recode(
+      `18_hh_main_fisher`,
       "enterprise_owner" = "Enterprise owner",
       "independently" = "Independently",
       "other" = "Other",
@@ -423,35 +426,40 @@ kobo_data <- kobo_data %>%
       "cooperative_member" = "Cooperative member",
       "na" = as.character(NA)
     ),
-    `19_fishing_low_profit` = dplyr::recode(`19_fishing_low_profit`,
+    `19_fishing_low_profit` = dplyr::recode(
+      `19_fishing_low_profit`,
       "one_two_per_week" = "1-2 per week",
       "few times_month" = "A few times per month",
       "once_or_never" = "Once or never",
       "few_times_season" = "A few times", # accurate?
       "more_than_one_two_week" = "More than 1-2 times per week"
     ),
-    `20_fishing_high_profit` = dplyr::recode(`20_fishing_high_profit`,
+    `20_fishing_high_profit` = dplyr::recode(
+      `20_fishing_high_profit`,
       "more_than_one_two_week" = "More than 1-2 times per week",
       "few_times_season" = "A few times",
       "once_or_never" = "Once or never",
       "few times_month" = "A few times per month",
       "one_two_per_week" = "1-2 per week"
     ),
-    `21_current_fish_catch` = dplyr::recode(`21_current_fish_catch`,
+    `21_current_fish_catch` = dplyr::recode(
+      `21_current_fish_catch`,
       "improved_slightly" = "Improved slightly",
       "declined_slightly" = "Declined slightly",
       "stayed_the_same" = "Stayed the same",
       "declined_alot" = "Declined a lot",
       "improved_heavily" = "Improved heavily"
     ),
-    `23_boat_owner_status` = dplyr::recode(`23_boat_owner_status`,
+    `23_boat_owner_status` = dplyr::recode(
+      `23_boat_owner_status`,
       "not_by_foat" = "Not by boat",
       "employee" = "Employee",
       "own" = "Own",
       "collective" = "Collective",
       "rent" = "Rent"
     ),
-    `24_catch_5yrs` = dplyr::recode(`24_catch_5yrs`,
+    `24_catch_5yrs` = dplyr::recode(
+      `24_catch_5yrs`,
       "improves_heavily" = "Improves heavily",
       "improves_slightly" = "Improves slightly",
       "stays_the_same" = "Stays the same",
@@ -460,7 +468,8 @@ kobo_data <- kobo_data %>%
     ),
     dplyr::across(
       stringr::str_subset(names(kobo_data), "^41[a-f]"),
-      ~ dplyr::recode(.x,
+      ~ dplyr::recode(
+        .x,
         "strongly_disagree" = "Strongly disagree",
         "disagree" = "Disagree",
         "neither" = "Neither",
@@ -469,14 +478,17 @@ kobo_data <- kobo_data %>%
         "Neither agree nor disagree" = "Neither"
       )
     ),
-    `42_my_community_ability` = dplyr::recode(`42_my_community_ability`,
+    `42_my_community_ability` = dplyr::recode(
+      `42_my_community_ability`,
       "strongly_disagree" = "Strongly disagree",
       "disagree" = "Disagree",
       "neither" = "Neither",
       "agree" = "Agree",
-      "strongly_agree" = "Strongly agree"
+      "strongly_agree" = "Strongly agree",
+      "Neither agree nor disagree" = "Neither"
     ),
-    `43_fishery_benefit_equal` = dplyr::recode(`43_fishery_benefit_equal`,
+    `43_fishery_benefit_equal` = dplyr::recode(
+      `43_fishery_benefit_equal`,
       "yes" = "Yes",
       "no" = "No",
       "no_dependence" = "I don't depend on or benefit from the fishery"
@@ -489,7 +501,8 @@ kobo_data <- kobo_data %>%
     ),
     dplyr::across(
       stringr::str_subset(names(kobo_data), "^46"),
-      ~ dplyr::recode(.x,
+      ~ dplyr::recode(
+        .x,
         "permitted" = "Permitted",
         "not_permitted" = "Not permitted",
         "unknown" = "Unknown",
@@ -502,7 +515,8 @@ kobo_data <- kobo_data %>%
       "yes" = "Yes",
       "no_reserves" = "Community does not have reserves"
     ),
-    `52_ma_fishers_allowed` = dplyr::recode(`52_ma_fishers_allowed`,
+    `52_ma_fishers_allowed` = dplyr::recode(
+      `52_ma_fishers_allowed`,
       "community_only" = "Community only",
       "idk" = "Don't know",
       "no_managed_area" = "No managed access",
@@ -517,7 +531,8 @@ kobo_data <- kobo_data %>%
       "Neither agree nor disagree" = "Neither",
       "no_mgmt" = "No management body"
     ),
-    `61_opinions_considered` = dplyr::recode(`61_opinions_considered`,
+    `61_opinions_considered` = dplyr::recode(
+      `61_opinions_considered`,
       "very_low" = "Very low",
       "low" = "Low",
       "neither" = "Neither strong or low",
@@ -525,7 +540,8 @@ kobo_data <- kobo_data %>%
       "very_strong" = "Very strong",
       "no_mgmt" = "No management body"
     ),
-    `64_ma_punishment` = dplyr::recode(`64_ma_punishment`,
+    `64_ma_punishment` = dplyr::recode(
+      `64_ma_punishment`,
       "no_punishment" = "No punishment",
       "minor" = "Minor",
       "moderate" = "Moderate",
@@ -536,11 +552,13 @@ kobo_data <- kobo_data %>%
     ),
     dplyr::across(
       stringr::str_subset(names(legacy_data), "^65[a-e]"),
-      ~ dplyr::recode(.x,
+      ~ dplyr::recode(
+        .x,
         `-1` = as.double(NA) 
       )
     ),
-    `66_ma_benefit_5yrs` = dplyr::recode(`66_ma_benefit_5yrs`,
+    `66_ma_benefit_5yrs` = dplyr::recode(
+      `66_ma_benefit_5yrs`,
       "yes" = "Yes",
       "no" = "No",
       "no_mgmt" = "No management",
@@ -558,7 +576,8 @@ kobo_data <- kobo_data %>%
     ),
     dplyr::across(
       stringr::str_subset(names(kobo_data), "^68[a-f]"),
-      ~ dplyr::recode(.x,
+      ~ dplyr::recode(
+        .x,
         "very_difficult" = "Very difficult",
         "difficult" = "Difficult",
         "dfficult" = "Difficult",
@@ -568,26 +587,30 @@ kobo_data <- kobo_data %>%
         "na" = as.character(NA)
       )
     ),
-    `70_food_availability` = dplyr::recode(`70_food_availability`,
+    `70_food_availability` = dplyr::recode(
+      `70_food_availability`,
       "very_bad" = "Very bad",
       "rather_bad" = "Rather bad",
       "ok" = "OK",
       "good" = "Good",
       "very_good" = "Very good"
     ),
-    `71_worry_food` = dplyr::recode(`71_worry_food`,
+    `71_worry_food` = dplyr::recode(
+      `71_worry_food`,
       "never" = "Never",
       "sometimes" = "Sometimes",
       "often" = "Often"
     ),
-    `72_food_procurement` = dplyr::recode(`72_food_procurement`,
+    `72_food_procurement` = dplyr::recode(
+      `72_food_procurement`,
       "very_confident_not" = "Very confident not",
       "confident_not" = "Confident not",
       "uncertain" = "Uncertain",
       "high_chance" = "High chance",
       "certain" = "Certain"
     ),
-    `73_hh_fish_consumption` = dplyr::recode(`73_hh_fish_consumption`,
+    `73_hh_fish_consumption` = dplyr::recode(
+      `73_hh_fish_consumption`,
       "once_or_never" = "Once or never",
       "few_times" = "Few",
       "few_times_per_month" = "Few per month",
@@ -596,7 +619,8 @@ kobo_data <- kobo_data %>%
     ),
     dplyr::across(
       stringr::str_subset(names(legacy_data), "^74"),
-      ~ dplyr::recode(.x,
+      ~ dplyr::recode(
+        .x,
         "strongly_disagree" = "Strongly disagree",
         "disagree" = "Disagree",
         "neither" = "Neither agree nor disagree",
@@ -606,10 +630,12 @@ kobo_data <- kobo_data %>%
         "NA" = "Not Answered"
       )
     ),
-    `75_mgmt_rules_fair` = dplyr::recode(`75_mgmt_rules_fair`,
+    `75_mgmt_rules_fair` = dplyr::recode(
+      `75_mgmt_rules_fair`,
       `-1` = as.character(NA)
     ),
-    `76_complies_reserve` = dplyr::recode(`76_complies_reserve`,
+    `76_complies_reserve` = dplyr::recode(
+      `76_complies_reserve`,
       "catch_up" = "Go up",
       "catch_same" = "Stay the same",
       "catch_down" = "Go down",
@@ -619,7 +645,8 @@ kobo_data <- kobo_data %>%
       "Fishers’ catch will stay the same" = "Stay the same",
       "Fishers’ catch will go down" = "Go down"
     ),
-    `77_fishing_in_reserve` = dplyr::recode(`77_fishing_in_reserve`,
+    `77_fishing_in_reserve` = dplyr::recode(
+      `77_fishing_in_reserve`,
       "never" = "Never",
       "occasionally" = "Occasionally",
       "often" = "Often",
@@ -628,7 +655,8 @@ kobo_data <- kobo_data %>%
     ),
     dplyr::across(
       stringr::str_subset(names(kobo_data), "^78[a-f]"),
-      ~ dplyr::recode(.x,
+      ~ dplyr::recode(
+        .x,
         "negative_formal_sanction" = "Negative formal sanction",
         "negative_informal_sanction" = "Negative informal sanction",
         "nonsanction" = "Non-sanction",
@@ -637,7 +665,8 @@ kobo_data <- kobo_data %>%
     ),
     dplyr::across(
       stringr::str_subset(names(kobo_data), "^79[a-f]"),
-      ~ dplyr::recode(.x,
+      ~ dplyr::recode(
+        .x,
         "extremely_wrong" = "Extremely wrong",
         "very_wrong" = "Very wrong",
         "moderately_wrong" = "Moderately wrong",
@@ -646,31 +675,36 @@ kobo_data <- kobo_data %>%
         "na" = as.character(NA)
       )
     ),
-    `80_no_wrong_fishing_reserve` = dplyr::recode(`80_no_wrong_fishing_reserve`,
+    `80_no_wrong_fishing_reserve` = dplyr::recode(
+      `80_no_wrong_fishing_reserve`,
       `-1` = as.double(NA)
     ),
-    `85_current_economic` = dplyr::recode(`85_current_economic`,
+    `85_current_economic` = dplyr::recode(
+      `85_current_economic`,
       "much_worse" = "Much worse",
       "slightly_worse" = "Slightly worse",
       "neither" = "Neither",
       "slightly_better" = "Slightly better",
       "much_better" = "Much better"
     ),
-    `86_future_economic` = dplyr::recode(`86_future_economic`,
+    `86_future_economic` = dplyr::recode(
+      `86_future_economic`,
       "much_worse" = "Much worse",
       "slightly_worse" = "Slightly worse",
       "neither" = "Neither",
       "slightly_better" = "Slightly better",
       "much_better" = "Much better"
     ),
-    `90_hh_ends_meet` = dplyr::recode(`90_hh_ends_meet`,
+    `90_hh_ends_meet` = dplyr::recode(
+      `90_hh_ends_meet`,
       "with_great_difficulty" = "With great difficulty",
       "with_difficulty" = "With difficulty",
       "fairly_easy" = "Fairly easy",
       "easy" = "Easy",
       "very_easy" = "Very easy"
     ),
-    `91_financial_decisions` = dplyr::recode(`91_financial_decisions`,
+    `91_financial_decisions` = dplyr::recode(
+      `91_financial_decisions`,
       "myself" = "Myself",
       "my_male_partner" = "My male partner",
       "my_female_partner" = "My female partner",
