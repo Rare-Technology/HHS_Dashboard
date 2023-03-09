@@ -465,7 +465,8 @@ kobo_data <- kobo_data %>%
         "disagree" = "Disagree",
         "neither" = "Neither",
         "agree" = "Agree",
-        "strongly_agree" = "Strongly agree"
+        "strongly_agree" = "Strongly agree",
+        "Neither agree nor disagree" = "Neither"
       )
     ),
     `42_my_community_ability` = dplyr::recode(`42_my_community_ability`,
