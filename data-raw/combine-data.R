@@ -417,6 +417,12 @@ kobo_data <- kobo_data %>%
       "traditional" = "Traditional",
       "jewish" = "Jewish"
     ),
+    `10_mpa_important` = dplyr::recode(
+      `10_mpa_important`,
+      "yes" = "Yes",
+      "no" = "No",
+      "neutral" = "Neutral"
+    ),
     `18_hh_main_fisher` = dplyr::recode(
       `18_hh_main_fisher`,
       "enterprise_owner" = "Enterprise owner",
