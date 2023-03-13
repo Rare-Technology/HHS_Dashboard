@@ -33,6 +33,7 @@ LEGACY_HHS_PLOT_FUNS <- c("clean_plot_data", "ggplot_add", "ggplot_build", "ggpl
                         "plot_q72_current_economic", "plot_q77_hh_ends_meet", "plot_q78_financial_decisions",
                         "prep_data_for_plot_facet")
 HHS_PLOT_FUNS <- c(
+  "plot_q08_religion", "plot_q09_region_member", "plot_q10_mpa_important",
   "plot_q14_income", "plot_q15_household_fishing", "plot_q16_processing", "plot_q18_hh_main_fisher",
   "plot_q21_current_fish_catch", "plot_q22_gear", "plot_q25_job_secure", "plot_q26_items_owned", 
   "plot_q30_save_monthly_income", "plot_q31_emergency_funds",
