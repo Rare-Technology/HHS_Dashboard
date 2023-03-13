@@ -1,14 +1,16 @@
-
-# prep_q43_ma_benefits <- function(.data){
-# 
-# }
-
-plot_q43_ma_benefits <- function(.data, ...){
-  
+plot_q53_ma_benefits <- function(.data, ...){
   .data_plot <-  .data %>% 
-    dplyr::filter(`43_ma_benefits` %in% c(0,1)) %>%
+    dplyr::select(maa, `53_ma_benefits`) %>% 
+    dplyr::mutate(
+      `53_ma_benefits` = dplyr::recode(
+        `53_ma_benefits`,
+        "Yes" = 1,
+        "No" = 0
+      )
+    ) %>% 
+    dplyr::filter(`53_ma_benefits` %in% c(0,1)) %>%
     prep_data_for_plot(
-      `42d_problem_inside_reserve`,
+      `53_ma_benefits`,
       type = "bar",
       bar_column = `1`
     )
