@@ -497,13 +497,19 @@ kobo_data <- kobo_data %>%
       `43_fishery_benefit_equal`,
       "yes" = "Yes",
       "no" = "No",
-      "no_dependence" = "I don't depend on or benefit from the fishery"
+      "I don't depend on or benefit from the fishery" = "no_dependence"
     ),
     `45_gear_restrictions` = dplyr::recode(
       `45_gear_restrictions`,
       "yes" = "Yes",
       "no" = "No",
       "na" = as.character(NA)
+    ),
+    `49_reserve_boundry` = dplyr::recode(
+      `49_reserve_boundry`,
+      "yes" = "Yes",
+      "no" = "No",
+      "Community does not have reserves" = "no_reserves"
     ),
     dplyr::across(
       stringr::str_subset(names(kobo_data), "^46"),
@@ -519,7 +525,6 @@ kobo_data <- kobo_data %>%
       `48_reserve_fishing_allowed`,
       "no" = "No",
       "yes" = "Yes",
-      "no_reserves" = "Community does not have reserves"
     ),
     `52_ma_fishers_allowed` = dplyr::recode(
       `52_ma_fishers_allowed`,
@@ -812,10 +817,11 @@ legacy_data <- legacy_data %>%
         `6` = as.character(NA)
       )
     ),
-    `43_fishery_benefit_equal` = dplyr::recode(`43_fishery_benefit_equal`,
+    `43_fishery_benefit_equal` = dplyr::recode(
+      `43_fishery_benefit_equal`,
       `1` = "Yes",
       `0` = "No",
-      `-1` = "I don't depend on or benefit from the fishery"
+      `-1` = "no_dependence"
     ),
     dplyr::across(
       c("46_ma_gear_dynamite", "46_ma_gear_hookline", "46_ma_gear_trawl",
@@ -826,13 +832,13 @@ legacy_data <- legacy_data %>%
       `48_reserve_fishing_allowed`,
       `1` = "Yes",
       `0` = "No",
-      `-1` = "Community does not have reserves"
+      `-1` = "no_reserves"
     ),
     `49_reserve_boundry` = dplyr::recode(
       `49_reserve_boundry`,
       `1` = "Yes",
       `0` = "No",
-      `-1` = "Community does not have reserves"
+      `-1` = "no_reserves"
     ),
     `51_reserve_boundaries_aware` = dplyr::case_when(
       is.numeric(`51_reserve_boundaries_aware`) ~ as.character(`51_reserve_boundaries_aware`),
