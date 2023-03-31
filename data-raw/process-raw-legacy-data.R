@@ -15,31 +15,8 @@ legacy_data <- data.world::query(
   dplyr::filter(ma_name != "")
 
 #************************************************
-# Remove duplicates ----
-#************************************************
-
-# Per git12 I guess this is no longer needed?
-# rename and remove duplicates that where submitted on different times
-# legacy_data <- legacy_data %>%
-#   dplyr::select(-c(updatedat, endformtimestamp, startformtimestamp)) %>%
-#   unique() %>%
-#   dplyr::left_join(legacy_data[, c(
-#     "submissionid",
-#     "updatedat",
-#     "startformtimestamp",
-#     "endformtimestamp"
-#   )] %>%
-#     group_by(submissionid) %>%
-#     summarise(updatedat = max(as.Date(updatedat))),
-#   by = "submissionid"
-#   )
-
-
-#************************************************
 # Add the iso3 ----
 #************************************************
-
-
 
 country <- tribble(
   ~country, ~iso3,
@@ -64,15 +41,6 @@ legacy_data <- legacy_data %>%
     country,
     by = "iso3"
   )
-
-
-#************************************************
-# Save for testing ----
-#************************************************
-
-
-legacy_data_save <- legacy_data
-#legacy_data <- legacy_data_save
 
 
 #************************************************
@@ -243,5 +211,18 @@ legacy_data$year[legacy_data$iso3 == "GTM"] <- ifelse(
   2021,
   2022
 )
+
+#### Fix HND geo info ####
+# So there was never a follow up survey from Puerto Cortes in 2021. Instead, the 2021 data labeled as
+# Puerto Cortes is most likely meant to be from Trujillo. We'll fix that here
+legacy_data <- legacy_data %>% 
+  dplyr::mutate(
+    maa = dplyr::case_when(
+      (country == "Honduras") & (year == 2021) & (maa == "Puerto Cortes") ~ "Trujillo",
+      TRUE ~ maa
+    )
+  )
+
+legacy_data <- dplyr::distinct(legacy_data)
 
 usethis::use_data(legacy_data, overwrite=TRUE)

@@ -17,70 +17,72 @@ kobo_data <- readxl::read_excel(tf)
 # can be removed
 kobo_data <- kobo_data[,c(1:431)]
 
-# Load Mozambique 2022 survey data
-KOBO_API_KEY <- Sys.getenv("KOBO_API_KEY")
-httr::GET(
-  "https://kf.kobotoolbox.org/api/v2/assets/aEe22GR8QKMe3xNGQWDoPD/export-settings/esMqBaZB3jahL4GeNqdVbAf/data.xlsx",
-  httr::add_headers(Authorization=paste("Token", KOBO_API_KEY)),
-  httr::write_disk(tf2 <- tempfile(fileext=".xlsx"))
-)
-moz22 <- readxl::read_excel(tf2)
-
 # Remove leading underscores from column names
 names(kobo_data) <- stringr::str_sub(names(kobo_data), 2)
-names(moz22) <- stringr::str_sub(names(moz22), 2)
 
-### Map Moz survey q's to complete survey q's
-remove_leading_num <- function (q) {
-  if (stringr::str_detect(q, "^[0-9]")) {
-    tokens <- stringr::str_split(q, "_", simplify = TRUE)[-1]
-    newstr <- paste0(tokens, collapse = "_")
-  } else {
-    newstr <- q
-  }
-  return(newstr)
-}
-
-moz_q_text <- purrr::map(
-  names(moz22),
-  remove_leading_num
-) %>% unlist()
-
-kobo_q_text <- purrr::map(
-  names(kobo_data),
-  remove_leading_num
-) %>% unlist()
-
-### Mapping using descriptive text
-# Now we can map based on matching column text.
-q_mapping <- purrr::imap(
-  names(moz22),
-  function(q, i) {
-    txt <- moz_q_text[i]
-    if (any(txt == kobo_q_text)) {
-      q_new <- names(kobo_data)[txt == kobo_q_text]
-    } else {
-      q_new <- NA
-    }
-    
-    return(q_new)
-  }
-)
-
-# Change output names, so we can do something like
-# > q_mapping[["11a_months_farming"]] # the old column
-# [1] "14a_months_farming" # the new column
-names(q_mapping) <- names(moz22)
-moz22_names <- names(moz22)
-kobo_names <- purrr::map(moz22_names, function (x) {
-  if (is.na(q_mapping[[x]])) {
-    return(x)
-  } else {
-    return(q_mapping[[x]])
-  }
-}) %>% unlist()
-# Rename old columns using the mapper we just made
-moz22 %>% dplyr::rename_with(~ kobo_names, dplyr::all_of(moz22_names))
+#### Moz 2022 data ####
+# # Load Mozambique 2022 survey data
+# KOBO_API_KEY <- Sys.getenv("KOBO_API_KEY")
+# httr::GET(
+#   "https://kf.kobotoolbox.org/api/v2/assets/aEe22GR8QKMe3xNGQWDoPD/export-settings/esMqBaZB3jahL4GeNqdVbAf/data.xlsx",
+#   httr::add_headers(Authorization=paste("Token", KOBO_API_KEY)),
+#   httr::write_disk(tf2 <- tempfile(fileext=".xlsx"))
+# )
+# moz22 <- readxl::read_excel(tf2)
+#
+# names(moz22) <- stringr::str_sub(names(moz22), 2)
+# 
+# ### Map Moz survey q's to complete survey q's
+# remove_leading_num <- function (q) {
+#   if (stringr::str_detect(q, "^[0-9]")) {
+#     tokens <- stringr::str_split(q, "_", simplify = TRUE)[-1]
+#     newstr <- paste0(tokens, collapse = "_")
+#   } else {
+#     newstr <- q
+#   }
+#   return(newstr)
+# }
+# 
+# moz_q_text <- purrr::map(
+#   names(moz22),
+#   remove_leading_num
+# ) %>% unlist()
+# 
+# kobo_q_text <- purrr::map(
+#   names(kobo_data),
+#   remove_leading_num
+# ) %>% unlist()
+# 
+# ### Mapping using descriptive text
+# # Now we can map based on matching column text.
+# q_mapping <- purrr::imap(
+#   names(moz22),
+#   function(q, i) {
+#     txt <- moz_q_text[i]
+#     if (any(txt == kobo_q_text)) {
+#       q_new <- names(kobo_data)[txt == kobo_q_text]
+#     } else {
+#       q_new <- NA
+#     }
+#     
+#     return(q_new)
+#   }
+# )
+# 
+# # Change output names, so we can do something like
+# # > q_mapping[["11a_months_farming"]] # the old column
+# # [1] "14a_months_farming" # the new column
+# names(q_mapping) <- names(moz22)
+# moz22_names <- names(moz22)
+# kobo_names <- purrr::map(moz22_names, function (x) {
+#   if (is.na(q_mapping[[x]])) {
+#     return(x)
+#   } else {
+#     return(q_mapping[[x]])
+#   }
+# }) %>% unlist()
+# # Rename old columns using the mapper we just made
+# moz22 %>% dplyr::rename_with(~ kobo_names, dplyr::all_of(moz22_names))
 
 
 # A bit of data cleaning; rename/mutate geographic cols
@@ -239,7 +241,7 @@ idn22 <- idn22 %>%
   tidyr::replace_na(na_list) %>% 
   dplyr::mutate(
     `8_religion_other` = as.character(`8_religion_other`),
-    `31l_emergency_ngo_group_specify` = as.character(`31l_emergency_ngo_group_specifiy`),
+    `31l_emergency_ngo_group_specify` = as.character(`31l_emergency_ngo_group_specify`),
     `37a_loan_repay_bank` = as.character(`37a_loan_repay_bank`),
     `37b_loan_repay_buyer` = as.character(`37b_loan_repay_buyer`),
     `37c_loan_repay_nonbank` = as.character(`37c_loan_repay_nonbank`),
@@ -249,13 +251,14 @@ idn22 <- idn22 %>%
     `65d_fishers_violate_fish_size` = as.double(`65d_fishers_violate_fish_size`),
     `65e_fishers_caught` = as.double(`65e_fishers_caught`),
     `80_no_wrong_fishing_reserve` = as.double(`80_no_wrong_fishing_reserve`),
-  ) %>% dplyr::bind_rows(kobo_data)
+  )
 
 kobo_data <- kobo_data %>% 
   dplyr::mutate(
     `13o_no_strategy` = as.logical(`13o_no_strategy`),
   )
 
-kobo_data <- dplyr::bind_rows(kobo_data, idn22)
+kobo_data <- dplyr::bind_rows(kobo_data, idn22) %>% 
+  dplyr::distinct()
 
-usethis::use_data(kobo_data)
+usethis::use_data(kobo_data, overwrite=TRUE)
