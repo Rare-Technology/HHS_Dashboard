@@ -62,8 +62,6 @@ get_ma_percent <- function(.fulldata, .partdata, newname = "percent"){
 hhs_table_summary <- function(.data) { 
   
   hhs_stats <- .data %>% 
-    #dplyr::filter(maa != '') %>% should already be done
-    #droplevels %>% 
     dplyr::mutate(
       updatedat = as.Date(updatedat)
     )
@@ -115,7 +113,7 @@ hhs_table_summary <- function(.data) {
   ## Proportion of male and female respondants
   gender_count <- .data %>% 
     dplyr::count(`6_gender`)
-  
+    
   gender_count$percent <- round(100 * gender_count$n/nrow(.data), 1)
   
   male_surveyed <-gender_count %>% 
@@ -126,33 +124,34 @@ hhs_table_summary <- function(.data) {
     dplyr::filter(`6_gender` == "F") %>% 
     dplyr::pull(percent)
   
+  nonbinary_surveyed <- gender_count %>% 
+    dplyr::filter(`6_gender` == "NB") %>% 
+    dplyr::pull(percent)
+  
   #Extract maas  levels
-  district_names <- hhs_stats %>% 
-    dplyr::group_by(maa) %>% 
-    dplyr::summarise(lat = mean(lat, na.rm = TRUE)) %>% 
-    dplyr::ungroup()
+  district_names <- dplyr::distinct(hhs_stats, maa)
   
   hhs_fisherhh <- .data %>% 
     dplyr::filter(
-      `12a_fishing_men` > 0 |
-        `12b_fishing_women` > 0 | 
-        `12c_fishing_children` > 0
+      `15a_fishing_men` > 0 |
+      `15b_fishing_women` > 0 | 
+      `15c_fishing_children` > 0
     )
   fisherhhs <- get_ma_percent(.data, hhs_fisherhh, "fisher_pct")
   
   #Calculate proportion of women interviewed
   hhs_womenhh <- .data %>% 
-    dplyr::filter(`6_gender` == "F") #%>% 
-    #droplevels()
-  
+    dplyr::filter(`6_gender` == "F")
   womenhhs <- get_ma_percent(hhs_stats, hhs_womenhh, "women_pct")
   
   #Calculate proportion of men interviewed
   hhs_menhh <- .data %>% 
-    dplyr::filter(`6_gender` == "M") #%>% 
-    #droplevels()
-  
+    dplyr::filter(`6_gender` == "M")
   menhhs <- get_ma_percent(hhs_stats, hhs_menhh, "men_pct")
+  
+  hhs_nonbinaryhh <- .data %>% 
+    dplyr::filter(`6_gender` == "NB")
+  nonbinaryhhs <- get_ma_percent(hhs_stats, hhs_nonbinaryhh, "nonbinary_pct")
   
   ## TABLE 3 Combine number of surveys, number of MA, number of villages, prop of fisher households ###
   table_summary <- district_names %>% 
@@ -162,7 +161,8 @@ hhs_table_summary <- function(.data) {
     dplyr::left_join(villages_per_ma, by = "maa") %>% 
     dplyr::left_join(fisherhhs, by = "maa") %>% 
     dplyr::left_join(womenhhs, by = "maa") %>% 
-    dplyr::left_join(menhhs, by = "maa")
+    dplyr::left_join(menhhs, by = "maa") %>% 
+    dplyr::left_join(nonbinaryhhs, by="maa")
   
   table_summary <- table_summary %>% 
     dplyr::rename(
@@ -173,7 +173,8 @@ hhs_table_summary <- function(.data) {
       "No. communities" = "villages.per.ma",
       "Fisher households (%)" = "fisher_pct",
       "Women interviewed (%)" = "women_pct",
-      "Men interviewed (%)"= "men_pct"
+      "Men interviewed (%)"= "men_pct",
+      "Nonbinary interviewed (%)" = "nonbinary_pct"
     )
   
   #browser()
@@ -187,7 +188,8 @@ hhs_table_summary <- function(.data) {
       "No. communities" = sum(table_summary$`No. communities`),
       "Fisher households (%)" = compute_summary_line(table_summary$`Fisher households (%)`, 1),
       "Women interviewed (%)" = compute_summary_line(table_summary$`Women interviewed (%)`, 1),
-      "Men interviewed (%)" = compute_summary_line(table_summary$`Men interviewed (%)`, 1)
+      "Men interviewed (%)" = compute_summary_line(table_summary$`Men interviewed (%)`, 1),
+      "Nonbinary interviewed (%)" = compute_summary_line(table_summary$`Nonbinary interviewed (%)`, 1)
     ),
     c(
       "MA name"= NA,
@@ -197,7 +199,8 @@ hhs_table_summary <- function(.data) {
       "No. communities" = "Total",
       "Fisher households (%)" = "Mean ± SE",
       "Women interviewed (%)" = "Mean ± SE",
-      "Men interviewed (%)" = "Mean ± SE"
+      "Men interviewed (%)" = "Mean ± SE",
+      "Nonbinary interviewed (%)" = "Mean ± SE"
     )
   )
 }

@@ -57,7 +57,7 @@ mainServer <- function(id, state){
       output$tabPanels <- renderUI({
         ui <- tabsetPanel(id = ns("tabs"),
                     tabPanel(tr(state, "Start"), startUI("startUI")),
-                    # tabPanel(tr(state, "Table"), dataUI("dataUI")),
+                    tabPanel(tr(state, "Table"), dataUI("dataUI")),
                     tabPanel(tr(state, "Survey charts"), chartUI("chartUI"))
         )
         ui
