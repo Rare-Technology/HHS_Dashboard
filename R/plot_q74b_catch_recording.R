@@ -10,7 +10,8 @@ prep_q74b_catch_recording <- function(.data){
       "Strongly agree" = 5,
       .default = as.double(NA)
     )) %>% 
-    dplyr::filter(`74b_catch_recording` %in% c(1:5))
+    dplyr::filter(`74b_catch_recording` %in% c(1:5)) %>% 
+    rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
   
   Q74b_summary <- proportion(hhs_Q74b$`74b_catch_recording`,
                              hhs_Q74b$maa,

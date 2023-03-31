@@ -10,7 +10,8 @@ prep_q74c_community_participation <- function(.data){
       "Strongly agree" = 5,
       .default = as.double(NA)
     )) %>% 
-    dplyr::filter (`74c_community_participation` %in% c(1:5))
+    dplyr::filter (`74c_community_participation` %in% c(1:5)) %>% 
+    rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
   
   Q74c_summary <- proportion (hhs_Q74c$`74c_community_participation`,
                               hhs_Q74c$maa,

@@ -9,7 +9,8 @@ prep_q74a_current_regulations <- function(.data){
       "Agree" = 4,
       "Strongly agree" = 5
     )) %>% 
-    dplyr::filter(`74a_current_regulations` %in% c(1:5))
+    dplyr::filter(`74a_current_regulations` %in% c(1:5)) %>% 
+    rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
 
     Q74a_summary <- proportion (hhs_Q74a$`74a_current_regulations`,
                                 hhs_Q74a$maa,

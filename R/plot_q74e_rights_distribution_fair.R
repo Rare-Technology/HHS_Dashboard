@@ -10,7 +10,8 @@ prep_q74e_rights_distribution_fair <- function(.data){
       "Agree" = 4,
       "Strongly agree" = 5
     )) %>% 
-    dplyr::filter(`74e_rights_distribution_fair` %in% c(1:5))
+    dplyr::filter(`74e_rights_distribution_fair` %in% c(1:5)) %>% 
+    rbind(c(NA,1),c(NA,2),c(NA,3),c(NA,4),c(NA,5))
   
   Q74e_summary <- proportion ( hhs_Q74e$`74e_rights_distribution_fair`,
                                hhs_Q74e$maa,
