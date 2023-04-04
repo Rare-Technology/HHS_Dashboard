@@ -1,6 +1,11 @@
 library(dplyr)
 library(readxl)
 
+# Don't forget to remove this when you're done updating the dashboard with new survey data
+HHS_PLOT_FUNS_q <- stringr::str_split(HHS_PLOT_FUNS, "_", simplify=TRUE)[,2] %>%
+  stringr::str_sub(2)
+HHS_PLOT_FUNS_q <- c(HHS_PLOT_FUNS_q, c("8", "9", "65a", "65b", "65c", "65d", "65e"))
+
 hhs_questions_table <- readxl::read_excel("data-raw/hhs_questions.xlsx") %>% 
   dplyr::select(
     q_number = `New Question Number`,
@@ -21,7 +26,9 @@ hhs_questions_table <- readxl::read_excel("data-raw/hhs_questions.xlsx") %>%
   ) %>% 
   dplyr::select(q_number, q_text) %>% 
   dplyr::left_join(hhs_sections) %>% 
-  dplyr::filter(!(section %in% c("Introduction", "Conclusion")))
+  dplyr::filter(!(section %in% c("Introduction", "Conclusion"))) %>% 
+  # Don't forget to remove this when you're done updating the dashboard with new survey data
+  dplyr::filter(q_number %in% HHS_PLOT_FUNS_q)
 
 sections <- unique(hhs_questions_table$section)
 sections <- sections[!is.na(sections)]
@@ -37,7 +44,7 @@ hhs_questions <- purrr::map(sections, function (s) {
         unique() %>% 
         # 3 -> 03, otherwise e.g. 62 is 62
         ifelse(
-          str_length(.) == 1,
+          stringr::str_length(.) == 1,
           formatC(as.double(.), width=2, format="d", flag="0"),
           .
         )

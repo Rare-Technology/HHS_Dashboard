@@ -5,9 +5,11 @@ library(dplyr)
 library(stringr)
 library(lubridate)
 
-# data.world library doesn't download the data properly
-# This method of getting the kobo data will probably change. Why not
-# just download directly from kobo?
+# TODO Use kobo api to download data like we do w/ the Moz data below.
+# Currently, doing it exactly the same way doesn't work because the data is too big and the request
+# can't be completed.
+# As a workaround, go on kobo and create different export settings for each country. I'm thinking 
+# that will let the requests complete. But reach out to kobo and see if they can provide any help.
 httr::GET("https://query.data.world/s/jwd5niku3brhqgcn7smgfev4sxtw2d",
           httr::write_disk(tf <- tempfile(fileext = ".xlsx")))
 kobo_data <- readxl::read_excel(tf)
@@ -21,69 +23,75 @@ kobo_data <- kobo_data[,c(1:431)]
 names(kobo_data) <- stringr::str_sub(names(kobo_data), 2)
 
 #### Moz 2022 data ####
-# # Load Mozambique 2022 survey data
-# KOBO_API_KEY <- Sys.getenv("KOBO_API_KEY")
-# httr::GET(
-#   "https://kf.kobotoolbox.org/api/v2/assets/aEe22GR8QKMe3xNGQWDoPD/export-settings/esMqBaZB3jahL4GeNqdVbAf/data.xlsx",
-#   httr::add_headers(Authorization=paste("Token", KOBO_API_KEY)),
-#   httr::write_disk(tf2 <- tempfile(fileext=".xlsx"))
-# )
-# moz22 <- readxl::read_excel(tf2)
-#
-# names(moz22) <- stringr::str_sub(names(moz22), 2)
-# 
-# ### Map Moz survey q's to complete survey q's
-# remove_leading_num <- function (q) {
-#   if (stringr::str_detect(q, "^[0-9]")) {
-#     tokens <- stringr::str_split(q, "_", simplify = TRUE)[-1]
-#     newstr <- paste0(tokens, collapse = "_")
-#   } else {
-#     newstr <- q
-#   }
-#   return(newstr)
-# }
-# 
-# moz_q_text <- purrr::map(
-#   names(moz22),
-#   remove_leading_num
-# ) %>% unlist()
-# 
-# kobo_q_text <- purrr::map(
-#   names(kobo_data),
-#   remove_leading_num
-# ) %>% unlist()
-# 
-# ### Mapping using descriptive text
-# # Now we can map based on matching column text.
-# q_mapping <- purrr::imap(
-#   names(moz22),
-#   function(q, i) {
-#     txt <- moz_q_text[i]
-#     if (any(txt == kobo_q_text)) {
-#       q_new <- names(kobo_data)[txt == kobo_q_text]
-#     } else {
-#       q_new <- NA
-#     }
-#     
-#     return(q_new)
-#   }
-# )
-# 
-# # Change output names, so we can do something like
-# # > q_mapping[["11a_months_farming"]] # the old column
-# # [1] "14a_months_farming" # the new column
-# names(q_mapping) <- names(moz22)
-# moz22_names <- names(moz22)
-# kobo_names <- purrr::map(moz22_names, function (x) {
-#   if (is.na(q_mapping[[x]])) {
-#     return(x)
-#   } else {
-#     return(q_mapping[[x]])
-#   }
-# }) %>% unlist()
-# # Rename old columns using the mapper we just made
-# moz22 %>% dplyr::rename_with(~ kobo_names, dplyr::all_of(moz22_names))
+# Load Mozambique 2022 survey data
+KOBO_API_KEY <- Sys.getenv("KOBO_API_KEY")
+httr::GET(
+  "https://kf.kobotoolbox.org/api/v2/assets/aEe22GR8QKMe3xNGQWDoPD/export-settings/esMqBaZB3jahL4GeNqdVbAf/data.xlsx",
+  httr::add_headers(Authorization=paste("Token", KOBO_API_KEY)),
+  httr::write_disk(tf2 <- tempfile(fileext=".xlsx"))
+)
+moz23 <- readxl::read_excel(tf2)
 
+names(moz23) <- stringr::str_sub(names(moz23), 2)
+
+### Map Moz survey q's to complete survey q's
+remove_leading_num <- function (q) {
+  if (stringr::str_detect(q, "^[0-9]")) {
+    tokens <- stringr::str_split(q, "_", simplify = TRUE)[-1]
+    newstr <- paste0(tokens, collapse = "_")
+  } else {
+    newstr <- q
+  }
+  return(newstr)
+}
+
+moz_q_text <- purrr::map(
+  names(moz23),
+  remove_leading_num
+) %>% unlist()
+
+kobo_q_text <- purrr::map(
+  names(kobo_data),
+  remove_leading_num
+) %>% unlist()
+
+### Mapping using descriptive text
+# Now we can map based on matching column text.
+q_mapping <- purrr::imap(
+  names(moz23),
+  function(q, i) {
+    txt <- moz_q_text[i]
+    if (any(txt == kobo_q_text)) {
+      q_new <- names(kobo_data)[txt == kobo_q_text]
+    } else {
+      q_new <- NA
+    }
+
+    return(q_new)
+  }
+)
+
+# Change output names, so we can do something like
+# > q_mapping[["11a_months_farming"]] # the old column
+# [1] "14a_months_farming" # the new column
+names(q_mapping) <- names(moz23)
+
+# Unlike how the mapping is done for the legacy data, in the Moz dataset, if q_mapping has a missing
+# value, that is just not a column we care about (it's something like "note_9" or is a column related
+# to the VCA survey). So, we will just remove these from q_mapping
+q_mapping <- q_mapping[!is.na(q_mapping)]
+
+moz23_names <- names(q_mapping)
+kobo_names <- unname(unlist(q_mapping))
+# Rename old columns using the mapper we just made
+# The Moz survey definitely has a lot less HHS questions than the rest of the kobo surveys
+moz23 <- moz23 %>% 
+  dplyr::select(dplyr::all_of(moz23_names)) %>% 
+  dplyr::rename_with(~ kobo_names, dplyr::all_of(moz23_names)) %>% 
+  dplyr::mutate(country="MOZ")
+
+kobo_data <- dplyr::bind_rows(kobo_data, moz23) %>% 
+  dplyr::distinct()
 
 # A bit of data cleaning; rename/mutate geographic cols
 kobo_data <- kobo_data %>% 
@@ -121,13 +129,8 @@ kobo_data <- kobo_data %>%
 # the maa. So let's add names and maa info.
 
 geo <- data.world::query(
-  data.world::qry_sql("SELECT * FROM footprint_global_all_levels"),
+  data.world::qry_sql("SELECT * FROM footprint_global"),
   "https://data.world/rare/footprint"
-)
-
-maa <- data.world::query(
-  data.world::qry_sql("SELECT * FROM communities_managed_access"),
-  "https://data.world/rare/footprint/"
 )
 
 # First, there's 5 rows missing all level1_id, level2_id, and level4_id.
@@ -149,19 +152,11 @@ kobo_data <- kobo_data %>%
     geo %>% dplyr::select(
       level1_id, subnational = level1_name,
       level2_id, local = level2_name,
-      level4_id, `3_community` = level4_name
+      level4_id, `3_community` = level4_name,
+      maa = ma_name, ma_area, ma_status
     ),
     by = c("level1_id", "level2_id", "level4_id")
-  )
-
-# Finally, add maa info like name, status, and area. Remove cols we won't need.
-kobo_data <- kobo_data %>%
-  dplyr::left_join(
-    maa %>% dplyr::select(
-      level1_id, level2_id, level4_id,
-      maa = ma_name, ma_area, ma_status),
-    by = c("level1_id", "level2_id", "level4_id")
-  ) %>% 
+  ) %>%
   dplyr::select(-c(
     level1_id,
     level2_id,
@@ -230,7 +225,8 @@ kobo_data <- kobo_data %>%
   dplyr::mutate(
     # The Indo edit introduced a string to a question on a 0-10 scale --
     # "Rules have not been created"
-    `75_mgmt_rules_fair` = as.character(`75_mgmt_rules_fair`)
+    `75_mgmt_rules_fair` = as.character(`75_mgmt_rules_fair`),
+    `13o_no_strategy` = as.logical(`13o_no_strategy`)
   )
 
 q46_cols <- stringr::str_subset(names(idn22), "^46")
@@ -260,5 +256,16 @@ kobo_data <- kobo_data %>%
 
 kobo_data <- dplyr::bind_rows(kobo_data, idn22) %>% 
   dplyr::distinct()
+
+# Temporary geo info fix
+kobo_data <- kobo_data %>% 
+  dplyr::mutate(
+    maa = dplyr::case_when(
+      # These responses for Moz 2023 do have snu/lgu and communities, but the match on the footprint
+      # data indicates there are no existing maa's
+      country == "Mozambique" & year == 2023 ~ "Vilankulo",
+      TRUE ~ maa
+    )
+  )
 
 usethis::use_data(kobo_data, overwrite=TRUE)

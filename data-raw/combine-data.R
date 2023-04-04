@@ -20,13 +20,18 @@ dwapi::get_dataset("rare", "hh-surveys") %>% head()
 # Get most recent data from old survey. In theory this shouldn't be necessary at
 # some point but as of right now we still get some old survey samples.
 source("data-raw/process-raw-legacy-data.R")
-devtools::document() # Need to document hhs_data for processing kobo data next
-rm(list=ls())
+
+# Remove all the vars that were made, we won't need them. Keep the DW token
+rm(list=setdiff(ls(), c("DW_TOKEN")))
+
+# Need to document hhs_data for processing kobo data next
+devtools::document()
 
 #### Update kobo dataset ####
 source("data-raw/process-raw-kobo-data.R")
+rm(list=setdiff(ls(), c("DW_TOKEN")))
 devtools::document()
-rm(list=ls())
+
 
 #### Question mapping ####
 # Extract useful text from column names
@@ -150,9 +155,10 @@ hhs25f <- readxl::read_excel("../data/HHS/hhs-25f.xlsx") %>%
   dplyr::select(
     `27d_financial_other_specify` = `25f_financial_other`,
     `27d_yesno` = `yes/no`
-  )
+  ) %>% 
+  dplyr::distinct()
 
-legacy_data <- dplyr::left_join(legacy_data, hhs25f, by = "27d_financial_other_specify") %>% 
+legacy_data <- dplyr::left_join(legacy_data, hhs25f, by = "27d_financial_other_specify") %>%
   dplyr::mutate(
     `27d_financial_other/yes_gender_unspecified` = dplyr::case_when(
       `27d_yesno` == 1 ~ 1,
@@ -210,6 +216,14 @@ legacy_data$`46_ma_gear_other` <- as.character(NA)
 q4_data <- purrr::map_dfr(legacy_data$`4_ma_r_mb`, function(tb) {
   tb_data <- tb[[1]]
   tb_string <- stringr::str_split(tb_data, ",", simplify=TRUE)
+  if (is.na(tb_string) | all(tb_string == "")) {
+    return(list(
+      "4_ma_r_mb/marine_reserve" = as.double(NA),
+      "4_ma_r_mb/management_area" = as.double(NA),
+      "4_ma_r_mb/management_body" = as.double(NA),
+      "4_ma_r_mb/none" = as.double(NA)
+    ))
+  }
   mr <- ifelse("marine reserve" %in% tb_string, 1, 0)
   ma <- ifelse("management area" %in% tb_string, 1, 0)
   mb <- ifelse("management body" %in% tb_string, 1, 0)
@@ -238,14 +252,26 @@ legacy_data$`44_meeting_attendance` <- out44
 q54_data <- purrr::map_dfr(legacy_data$`44_meeting_attendance`, function(tb) {
   tb_data <- tb[[1]]
   tb_string <- stringr::str_split(tb_data, ",", simplify=TRUE)
+  # If empty response, return all NA
+  if (is.na(tb_string) | all(tb_string == "")) {
+    return(list(
+      "54_fisheries_management_meeting/yes_male" = as.double(NA),
+      "54_fisheries_management_meeting/yes_female" = as.double(NA),
+      "54_fisheries_management_meeting/yes_nonbinary" = as.double(NA),
+      "54_fisheries_management_meeting/yes_both_gender" = as.double(NA),
+      "54_fisheries_management_meeting/no_meetings" = as.double(NA),
+      "54_fisheries_management_meeting/no_mgmt" = as.double(NA),
+      "54_fisheries_management_meeting/no" = as.double(NA)
+    ))
+  }
   yesmale <- ifelse("Yes male" %in% tb_string, 1, 0)
   yesfemale <- ifelse("Yes female" %in% tb_string, 1, 0)
-  yesboth <- NA # What does "yes_both_gender" mean when there's no correlation
+  yesboth <- as.double(NA) # What does "yes_both_gender" mean when there's no correlation
   # between it and yes_male/yes_female????
-  yesnb <- NA # No nonbinary option in old survey
+  yesnb <- as.double(NA) # No nonbinary option in old survey
   no <- ifelse("No" %in% tb_string, 1, 0)
   nomgmt <- ifelse("No management" %in% tb_string, 1, 0)
-  nomeeting <- NA # No "No meeting" option in old survey
+  nomeeting <- as.double(NA) # No "No meeting" option in old survey
   
   return(list(
     "54_fisheries_management_meeting/yes_male" = yesmale,
@@ -269,9 +295,19 @@ legacy_data$`45_leadership_position` <- out45
 q57_data <- purrr::map_dfr(legacy_data$`45_leadership_position`, function(tb) {
   tb_data <- tb[[1]]
   tb_string <- stringr::str_split(tb_data, ",", simplify=TRUE)
+  # If empty response, return all NA
+  if (is.na(tb_string) | all(tb_string == "")) {
+    return(list(
+      "57_fisheries_management_leader/yes_male" = as.double(NA),
+      "57_fisheries_management_leader/yes_female" = as.double(NA),
+      "57_fisheries_management_leader/yes_nonbinary" = as.double(NA),
+      "57_fisheries_management_leader/no_mgmt" = as.double(NA),
+      "57_fisheries_management_leader/no" = as.double(NA)
+    ))
+  }
   yesmale <- ifelse("Yes male" %in% tb_string, 1, 0)
   yesfemale <- ifelse("Yes female" %in% tb_string, 1, 0)
-  yesnb <- NA # No nonbinary option in old survey
+  yesnb <- as.double(NA) # No nonbinary option in old survey
   no <- ifelse("No" %in% tb_string, 1, 0)
   nomgmt <- ifelse("No management" %in% tb_string, 1, 0)
   
@@ -295,13 +331,25 @@ legacy_data$`48_enforcement_participation` <- out48
 q62_data <- purrr::map_dfr(legacy_data$`48_enforcement_participation`, function(tb) {
   tb_data <- tb[[1]]
   tb_string <- stringr::str_split(tb_data, ",", simplify=TRUE)
+  # If empty response, return all NA
+  if (is.na(tb_string) | all(tb_string == "")) {
+    return(list(
+      "62_enforcement_participation/yes_male" = as.double(NA),
+      "62_enforcement_participation/yes_female" = as.double(NA),
+      "62_enforcement_participation/yes_both_gender" = as.double(NA),
+      "62_enforcement_participation/yes_nonbinary" = as.double(NA),
+      "62_enforcement_participation/no_enforcement" = as.double(NA),
+      "62_enforcement_participation/other" = as.double(NA),
+      "62_enforcement_participation_other_specify" = as.character(NA)
+    ))
+  }
   yesmale <- ifelse("Yes male" %in% tb_string, 1, 0)
   yesfemale <- ifelse("Yes female" %in% tb_string, 1, 0)
-  yesboth <- NA
-  yesnb <- NA # No nonbinary option in old survey
+  yesboth <- as.double(NA)
+  yesnb <- as.double(NA) # No nonbinary option in old survey
   noenforcement <- ifelse(any(c("No enforcement system", "There is no enforcement system") %in% tb_string), 1, 0)
-  other <- NA
-  otherspecify <- NA
+  other <- as.double(NA)
+  otherspecify <- as.character(NA)
   
   # There is no column for just "No" ...
   return(list(
@@ -322,6 +370,17 @@ legacy_data <- cbind(legacy_data, q62_data)
 q63_data <- purrr::map_dfr(legacy_data$`49_enforcement_responsible`, function(tb) {
   tb_data <- tb[[1]]
   tb_string <- stringr::str_split(tb_data, ",", simplify=TRUE)
+  # If empty response, return all NA
+  if (is.na(tb_string) | all(tb_string == "")) {
+    return(list(
+      "63_enforcement_responsible/fmb" = as.double(NA),
+      "63_enforcement_responsible/national" = as.double(NA),
+      "63_enforcement_responsible/subnational" = as.double(NA),
+      "63_enforcement_responsible/no_enforcement" = as.double(NA),
+      "63_enforcement_responsible/other" = as.double(NA),
+      "63_enforcement_responsible_specify" = as.character(NA)
+    ))
+  }
   fmb <- ifelse("Fisheries Management Body" %in% tb_string, 1, 0)
   national <- ifelse("National Government" %in% tb_string, 1, 0)
   subnational <- ifelse("Subnational Government" %in% tb_string, 1, 0)
@@ -332,7 +391,7 @@ q63_data <- purrr::map_dfr(legacy_data$`49_enforcement_responsible`, function(tb
   )
   # Only put Community Bodies or Myself in the 'specify' column. Otherwise NA
   otherspecify <- ifelse("Community Bodies" %in% tb_string, "Community Bodies",
-                         ifelse("Myself" %in% tb_string, "Myself", NA))
+                         ifelse("Myself" %in% tb_string, "Myself", as.character(NA)))
   
   return(list(
     "63_enforcement_responsible/fmb" = fmb,
@@ -347,9 +406,9 @@ legacy_data <- cbind(legacy_data, q63_data)
 
 # Drop all the columns we just used to build these past few columns
 legacy_data <- legacy_data %>% 
-  dplyr::select(-c(`4_ma_r_mb`, `44_meeting_attendance`,
-                   `45_leadership_position`, `48_enforcement_participation`,
-                   `49_enforcement_responsible`
+  dplyr::select(-c(
+    `4_ma_r_mb`, `44_meeting_attendance`, `45_leadership_position`,
+    `48_enforcement_participation`, `49_enforcement_responsible`
   ))
 
 # Now add every other column; these are columns that simply have no mapping to
@@ -1085,10 +1144,7 @@ hhs_data <- hhs_data %>%
 
 #### Export ####
 usethis::use_data(hhs_data, overwrite=TRUE)
-
-tf <- tempfile(fileext=".csv")
-readr::write_csv(tf)
-dwapi::upload_file("rare", "hh-surveys", tf, "hh-surveys-all.csv")
+dwapi::upload_data_frame(hhs_data, "rare", "hh-surveys", "hh_survey_combined.csv")
 
 #### NOTES ####
 #
