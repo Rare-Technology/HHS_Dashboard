@@ -3,12 +3,14 @@ plot_q67_encourage_regulations <- function(.data, ...){
   
   .data <- .data %>% 
     dplyr::select(maa, `67_encourage_regulations`) %>% 
-    dplyr::filter(`67_encourage_regulations` %in% ok_values)
+    dplyr::filter(`67_encourage_regulations` %in% ok_values) %>% 
+    rbind(c(NA, "Never"), c(NA, "Rarely"), c(NA, "Sometimes"), c(NA, "Often"), c(NA, "Very often"))
   
   .data_plot <-prep_data_for_plot(
     .data, 
     focus_var = `67_encourage_regulations`, 
-    type = "facet"
+    type = "facet",
+    key_order = ok_values
   )
   
   

@@ -1,7 +1,8 @@
 plot_q10_mpa_important <- function(.data, ...){
   Q10 <- .data %>% 
     dplyr::select(maa, `10_mpa_important`) %>% 
-    dplyr::filter(`10_mpa_important` != "Not Answered")
+    dplyr::filter(`10_mpa_important` != "Not Answered") %>% 
+    rbind(c(NA, "No"), c(NA, "Neutral"), c(NA, "Yes"))
 
   .data_plot <-prep_data_for_plot(
    Q10, 

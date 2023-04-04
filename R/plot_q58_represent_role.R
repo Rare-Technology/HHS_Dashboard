@@ -1,6 +1,8 @@
 plot_q58_represent_role <- function(.data, ...){
   .data <- .data %>% 
-    dplyr::filter(`58_represent_role` %in% c("Agree",  "Neither",  "Disagree")) 
+    dplyr::filter(`58_represent_role` %in% c("Agree",  "Neither",  "Disagree")) %>%
+    dplyr::select(maa, `58_represent_role`) %>% 
+    rbind(c(NA, "Disagree"), c(NA, "Neither"), c(NA, "Agree"))
   
   .data_plot <-prep_data_for_plot(
     .data, 
