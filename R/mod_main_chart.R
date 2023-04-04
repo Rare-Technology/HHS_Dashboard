@@ -38,7 +38,36 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
     
     observeEvent(c(input$question, state$hhs_data_filtered), {
       req(input$question, input$question!="")
-   
+      
+      # Check if there are any responses to the question.
+      # If so, return message indicating the question was not answered without attempting any
+      # plotting logic.
+      if(input$question %in% c("q08", "q09")) {
+        # q08 -> 8
+        qnum <- stringr::str_sub(input$question, 3)
+      } else {
+        # q65d -> 65d
+        qnum <- stringr::str_sub(input$question, 2)
+      }
+      pattern <-  paste0("^", qnum, "[a-z]?_")
+      qcols <- stringr::str_subset(names(hhs_data), pattern)
+      responses <- state$hhs_data_filtered %>% 
+        dplyr::select(dplyr::all_of(qcols)) %>% 
+        unlist() %>% 
+        unique() %>% 
+        stringr::str_to_lower()
+      
+      # Question is considered unanswered if the unique responses to all relevant columns are
+      # NA or codes for NA (such as "Not Answered")
+      if(purrr::is_empty(setdiff(responses, NA_ANSWERS))) {
+        output$chart_ui <- renderUI({
+          state$current_plot <- NULL
+          return(div(
+            paste("This question was not answered 🤔 Maybe it did not appear on the survey. If you think this is a mistake, contact", EMAIL_ADDR, "and include 'dashboard' in the subject line.")
+          ))  
+        })
+        return(TRUE)
+      }
 
       f <- HHS_PLOT_FUNS[grepl(input$question, HHS_PLOT_FUNS)]
       if(input$question %in% c("q65a", "q65b", "q65c")) f <- "plot_q65_fishers_permission"
@@ -51,7 +80,9 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
       if('try-error' %in% class(result)) {
         output$chart_ui <- renderUI({
           state$current_plot <- NULL
-          return(div("There was an error in plot generation"))  
+          return(div(
+            paste("There was an error while making the plot 😱 Please report this bug to", EMAIL_ADDR, "and include 'dashboard' in the subject line.")
+           ))
         })
         return(TRUE)
       }
@@ -64,7 +95,7 @@ chartServer <- function(id, state, HHS_PLOT_FUNS) {
         if(is.null(state$maa$selected)) {
           div('Select a managed access area.')
         } else if(is.null(p)) {
-          div("There was not enough data to create this plot. Contact Rare S&T if you believe there is a mistake.")
+          div(paste("There was not enough data to create this plot 😳 If you think there is a mistake, contact", EMAIL_ADDR, "and include 'dashboard' in the subject line."))
         } else {
           state$current_plot <- p
           plot_height <- 400 + 50*length(state$sel_maa)

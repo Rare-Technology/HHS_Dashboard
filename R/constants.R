@@ -44,3 +44,5 @@ HHS_PLOT_FUNS <- c(
   "plot_q91_financial_decisions"
 )
 NO_PLOT_ATTEMPT <- NULL
+NA_ANSWERS <- c(NA, "not answered", "not applicable", "not a fisher")
+EMAIL_ADDR <- Sys.getenv("EMAIL_ADDR")
