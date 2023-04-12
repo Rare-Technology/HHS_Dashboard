@@ -12,6 +12,15 @@ legacy_data <- data.world::query(
   data.world::qry_sql("SELECT * FROM hh_surveys_all"),
   "https://data.world/rare/social-science-data"
 ) %>%
+  # This mutate block is a temporary patch; basically in the footprint data a the community w/
+  # level4_id = 1108 had its maa remapped to nothing, so the filter line below removes it from the
+  # dataset even though previous analysis included it.
+  dplyr::mutate(
+    ma_name = dplyr::case_when(
+      level4_id == 1108 ~ "Kulisusu",
+      TRUE ~ ma_name
+    )
+  ) %>% 
   dplyr::filter(ma_name != "")
 
 #************************************************
